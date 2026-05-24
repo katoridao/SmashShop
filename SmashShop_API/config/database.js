@@ -10,16 +10,11 @@ const connect = async () => {
       throw new Error("Thiếu biến môi trường MONGO_URL");
     }
 
-    await mongoose
-      .connect(mongoURL)
-      .then(() => {
-        console.log("kết nối mongodb thành công");
-      })
-      .catch((err) => {
-        console.log("kết nối thất bại");
-      });
+    await mongoose.connect(mongoURL);
+    console.log("kết nối mongodb thành công");
   } catch (error) {
     console.log("kết nối thất bại: " + error.message);
+    throw error;
   }
 };
 module.exports = { connect };

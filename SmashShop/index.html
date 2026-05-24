@@ -124,6 +124,13 @@
 
     .header-icons i:hover{ color:#ff3c00; }
 
+    .header-user-area{
+      position:relative;
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
     .login-btn{
       padding:10px 22px;
       border:none;
@@ -138,6 +145,245 @@
     .login-btn:hover{
       transform:translateY(-2px);
       opacity:.9;
+    }
+
+    .user-avatar-btn{
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      border:1px solid #2A2A2A;
+      background:#222;
+      padding:0;
+      overflow:hidden;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .user-avatar-btn img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .user-menu-dropdown{
+      position:absolute;
+      top:calc(100% + 12px);
+      right:0;
+      width:min(320px, calc(100vw - 32px));
+      border:1px solid #2A2A2A;
+      border-radius:18px;
+      background:#111827;
+      box-shadow:0 16px 32px rgba(0,0,0,0.35);
+      padding:16px;
+      display:none;
+      z-index:1000;
+    }
+
+    .user-menu-dropdown.show{
+      display:block;
+    }
+
+    .user-menu-header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .user-menu-title{
+      color:#cbd5e1;
+      font-size:13px;
+      margin-bottom:4px;
+    }
+
+    .user-menu-header h3{
+      font-size:18px;
+      margin:0;
+    }
+
+    .user-menu-role{
+      border-radius:999px;
+      background:#1D4ED8;
+      color:#fff;
+      padding:4px 10px;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .user-menu-notice{
+      background:#1E293B;
+      border:1px solid #334155;
+      border-radius:12px;
+      padding:12px;
+      color:#e2e8f0;
+      font-size:14px;
+      margin-bottom:14px;
+    }
+
+    .user-menu-actions{ 
+      display:grid;
+      gap:10px;
+    }
+
+    .user-menu-action{
+      width:100%;
+      text-align:left;
+      border:none;
+      border-radius:12px;
+      padding:12px 14px;
+      background:#1F2937;
+      color:#fff;
+      font-weight:600;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .user-menu-action:hover{
+      background:#2563EB;
+    }
+
+    .user-menu-action.admin-only{
+      display:none;
+    }
+
+    .user-menu-action.admin-only.show{
+      display:block;
+    }
+
+    .user-menu-action.logout{
+      background:#7F1D1D;
+    }
+
+    .auth-modal-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.8);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:2000;
+    }
+
+    .auth-modal-overlay.show{
+      display:flex;
+    }
+
+    .auth-modal-card{
+      width:min(520px, 100%);
+      background:#111827;
+      border:1px solid #2A2A2A;
+      border-radius:24px;
+      padding:24px;
+      box-shadow:0 24px 48px rgba(0,0,0,0.45);
+    }
+
+    .auth-modal-header h2{
+      margin-bottom:8px;
+      font-size:26px;
+    }
+
+    .auth-modal-header p{
+      color:#cbd5e1;
+      margin-bottom:18px;
+    }
+
+    .auth-tabs{
+      display:flex;
+      gap:8px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+
+    .auth-tab{
+      border:none;
+      border-radius:999px;
+      background:#1F2937;
+      color:#fff;
+      padding:10px 14px;
+      font-weight:600;
+      cursor:pointer;
+    }
+
+    .auth-tab.active{
+      background:#2563EB;
+    }
+
+    .auth-form{
+      display:none;
+    }
+
+    .auth-form.active{
+      display:block;
+    }
+
+    .auth-field{
+      display:grid;
+      gap:8px;
+      margin-bottom:14px;
+    }
+
+    .auth-field label{
+      font-size:14px;
+      color:#e2e8f0;
+    }
+
+    .auth-field input{
+      width:100%;
+      border-radius:12px;
+      border:1px solid #334155;
+      background:#0F172A;
+      color:#fff;
+      padding:12px 14px;
+      outline:none;
+    }
+
+    .auth-field input:focus{
+      border-color:#2563EB;
+    }
+
+    .auth-actions{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-top:6px;
+    }
+
+    .auth-submit-btn{
+      border:none;
+      background:linear-gradient(135deg, #2563EB, #1D4ED8);
+      color:#fff;
+      border-radius:999px;
+      padding:12px 20px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .auth-secondary-btn{
+      border:1px solid #334155;
+      background:transparent;
+      color:#fff;
+      border-radius:999px;
+      padding:10px 16px;
+      cursor:pointer;
+    }
+
+    .auth-status{
+      min-height:24px;
+      margin-top:12px;
+      font-size:14px;
+    }
+
+    .auth-status.error{
+      color:#fca5a5;
+    }
+
+    .auth-status.success{
+      color:#86efac;
     }
 
     /* NAVBAR & DROPDOWN */
@@ -451,10 +697,36 @@
         <i class="fa-solid fa-magnifying-glass"></i>
       </div>
 
-      <div class="header-icons">
-        <a href="wishlist.html"><i class="fa-regular fa-heart"></i></a>
-        <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
-        <button class="login-btn">Login</button>
+      <div class="header-user-area">
+        <div class="header-icons">
+          <a href="wishlist.html"><i class="fa-regular fa-heart"></i></a>
+          <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
+        </div>
+
+        <button id="loginBtn" class="login-btn" type="button">Login</button>
+
+        <button id="userAvatarBtn" class="user-avatar-btn" type="button" aria-label="Tài khoản" style="display:none;">
+          <img id="userAvatarImg" src="public/img/user_loginned.png" alt="User logged in">
+        </button>
+
+        <div id="userMenu" class="user-menu-dropdown" aria-hidden="true">
+          <div class="user-menu-header">
+            <div>
+              <p class="user-menu-title">Xin chào</p>
+              <h3 id="userMenuName">Khách</h3>
+            </div>
+            <span id="userMenuRole" class="user-menu-role">Guest</span>
+          </div>
+          <div id="userMenuNotice" class="user-menu-notice">Chọn một chức năng để mở.</div>
+          <div class="user-menu-actions">
+            <button class="user-menu-action" type="button" data-action="profile">Thông tin cá nhân</button>
+            <button class="user-menu-action" type="button" data-action="history">Lịch sử đặt hàng</button>
+            <button class="user-menu-action admin-only" type="button" data-action="products">Quản lý sản phẩm</button>
+            <button class="user-menu-action admin-only" type="button" data-action="orders">Quản lý đơn hàng</button>
+            <button class="user-menu-action admin-only" type="button" data-action="revenue">Thống kê doanh thu</button>
+            <button class="user-menu-action logout" type="button" data-action="logout">Đăng xuất</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -661,6 +933,84 @@
     </div>
   </section>
 
+  <div id="authModal" class="auth-modal-overlay" aria-hidden="true">
+    <div class="auth-modal-card">
+      <div class="auth-modal-header">
+        <h2>Tài khoản SmashShop</h2>
+        <p>Đăng ký, đăng nhập hoặc đặt lại mật khẩu để tiếp tục trải nghiệm.</p>
+      </div>
+
+      <div class="auth-tabs">
+        <button id="loginTabBtn" class="auth-tab active" type="button" data-tab="login">Đăng nhập</button>
+        <button id="registerTabBtn" class="auth-tab" type="button" data-tab="register">Đăng ký</button>
+        <button id="forgotTabBtn" class="auth-tab" type="button" data-tab="forgot">Quên mật khẩu</button>
+      </div>
+
+      <form id="loginForm" class="auth-form active">
+        <div class="auth-field">
+          <label for="loginIdentifier">Email hoặc tên đăng nhập</label>
+          <input id="loginIdentifier" name="identifier" type="text" placeholder="admin hoặc admin@smashshop.vn" required>
+        </div>
+        <div class="auth-field">
+          <label for="loginPassword">Mật khẩu</label>
+          <input id="loginPassword" name="password" type="password" placeholder="Nhập mật khẩu" required>
+        </div>
+        <div class="auth-actions">
+          <button type="button" class="auth-secondary-btn" data-close-auth>Đóng</button>
+          <button type="submit" class="auth-submit-btn">Đăng nhập</button>
+        </div>
+      </form>
+
+      <form id="registerForm" class="auth-form">
+        <div class="auth-field">
+          <label for="registerName">Họ và tên</label>
+          <input id="registerName" name="name" type="text" placeholder="Nguyễn Văn A" required>
+        </div>
+        <div class="auth-field">
+          <label for="registerEmail">Email</label>
+          <input id="registerEmail" name="email" type="email" placeholder="name@example.com" required>
+        </div>
+        <div class="auth-field">
+          <label for="registerPhone">Số điện thoại</label>
+          <input id="registerPhone" name="phone" type="tel" placeholder="0123456789" required>
+        </div>
+        <div class="auth-field">
+          <label for="registerPassword">Mật khẩu</label>
+          <input id="registerPassword" name="password" type="password" placeholder="Tối thiểu 6 ký tự" required>
+        </div>
+        <div class="auth-field">
+          <label for="registerConfirmPassword">Xác nhận mật khẩu</label>
+          <input id="registerConfirmPassword" name="confirmPassword" type="password" placeholder="Nhập lại mật khẩu" required>
+        </div>
+        <div class="auth-actions">
+          <button type="button" class="auth-secondary-btn" data-close-auth>Đóng</button>
+          <button type="submit" class="auth-submit-btn">Đăng ký</button>
+        </div>
+      </form>
+
+      <form id="forgotForm" class="auth-form">
+        <div class="auth-field">
+          <label for="forgotEmail">Email</label>
+          <input id="forgotEmail" name="email" type="email" placeholder="name@example.com" required>
+        </div>
+        <div class="auth-field">
+          <label for="forgotNewPassword">Mật khẩu mới</label>
+          <input id="forgotNewPassword" name="newPassword" type="password" placeholder="Tối thiểu 6 ký tự" required>
+        </div>
+        <div class="auth-field">
+          <label for="forgotConfirmPassword">Xác nhận mật khẩu mới</label>
+          <input id="forgotConfirmPassword" name="confirmPassword" type="password" placeholder="Nhập lại mật khẩu" required>
+        </div>
+        <div class="auth-actions">
+          <button type="button" class="auth-secondary-btn" data-close-auth>Đóng</button>
+          <button type="submit" class="auth-submit-btn">Đổi mật khẩu</button>
+        </div>
+      </form>
+
+      <div id="authStatus" class="auth-status"></div>
+    </div>
+  </div>
+
   <footer>
     <div class="container footer-grid">
       <div class="footer-col">
@@ -704,6 +1054,284 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
+    const API_BASE = 'http://localhost:3000/api';
+    const AUTH_KEY = 'smashshop_auth';
+
+    const loginBtn = document.getElementById('loginBtn');
+    const userAvatarBtn = document.getElementById('userAvatarBtn');
+    const userMenu = document.getElementById('userMenu');
+    const userMenuName = document.getElementById('userMenuName');
+    const userMenuRole = document.getElementById('userMenuRole');
+    const userMenuNotice = document.getElementById('userMenuNotice');
+    const authModal = document.getElementById('authModal');
+    const authStatus = document.getElementById('authStatus');
+
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const forgotForm = document.getElementById('forgotForm');
+    const loginTabBtn = document.getElementById('loginTabBtn');
+    const registerTabBtn = document.getElementById('registerTabBtn');
+    const forgotTabBtn = document.getElementById('forgotTabBtn');
+
+    let currentAuth = null;
+
+    function getStoredAuth() {
+      try {
+        const raw = localStorage.getItem(AUTH_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (error) {
+        localStorage.removeItem(AUTH_KEY);
+        return null;
+      }
+    }
+
+    function saveAuth(auth) {
+      currentAuth = auth;
+      localStorage.setItem(AUTH_KEY, JSON.stringify(auth));
+      updateAuthUI();
+    }
+
+    function clearAuth() {
+      currentAuth = null;
+      localStorage.removeItem(AUTH_KEY);
+      updateAuthUI();
+    }
+
+    function setAuthStatus(message, type = 'success') {
+      authStatus.textContent = message;
+      authStatus.className = `auth-status ${type}`;
+    }
+
+    function clearAuthStatus() {
+      authStatus.textContent = '';
+      authStatus.className = 'auth-status';
+    }
+
+    function setUserMenuNotice(message) {
+      userMenuNotice.textContent = message;
+    }
+
+    function updateAuthUI() {
+      const auth = currentAuth || getStoredAuth();
+
+      if (auth && auth.user) {
+        loginBtn.style.display = 'none';
+        userAvatarBtn.style.display = 'flex';
+        userMenuName.textContent = auth.user.name || 'Người dùng';
+        userMenuRole.textContent = auth.user.role === 'admin' ? 'Admin' : 'Guest';
+        document.querySelectorAll('.admin-only').forEach((item) => {
+          item.classList.toggle('show', auth.user.role === 'admin');
+        });
+      } else {
+        loginBtn.style.display = 'inline-block';
+        userAvatarBtn.style.display = 'none';
+        userMenu.classList.remove('show');
+        userMenuName.textContent = 'Khách';
+        userMenuRole.textContent = 'Guest';
+        document.querySelectorAll('.admin-only').forEach((item) => {
+          item.classList.remove('show');
+        });
+      }
+    }
+
+    function openAuthModal(tab = 'login') {
+      authModal.classList.add('show');
+      authModal.setAttribute('aria-hidden', 'false');
+      clearAuthStatus();
+
+      loginTabBtn.classList.toggle('active', tab === 'login');
+      registerTabBtn.classList.toggle('active', tab === 'register');
+      forgotTabBtn.classList.toggle('active', tab === 'forgot');
+
+      loginForm.classList.toggle('active', tab === 'login');
+      registerForm.classList.toggle('active', tab === 'register');
+      forgotForm.classList.toggle('active', tab === 'forgot');
+    }
+
+    function closeAuthModal() {
+      authModal.classList.remove('show');
+      authModal.setAttribute('aria-hidden', 'true');
+      clearAuthStatus();
+      loginForm.reset();
+      registerForm.reset();
+      forgotForm.reset();
+    }
+
+    function toggleUserMenu() {
+      userMenu.classList.toggle('show');
+      userMenu.setAttribute('aria-hidden', String(!userMenu.classList.contains('show')));
+      if (userMenu.classList.contains('show')) {
+        const auth = currentAuth || getStoredAuth();
+        if (auth && auth.user) {
+          setUserMenuNotice(`Bạn đang đăng nhập với tư cách ${auth.user.role === 'admin' ? 'admin' : 'khách hàng'}.`);
+        }
+      }
+    }
+
+    function closeUserMenu() {
+      userMenu.classList.remove('show');
+      userMenu.setAttribute('aria-hidden', 'true');
+    }
+
+    async function apiRequest(endpoint, method, body) {
+      const response = await fetch(`${API_BASE}${endpoint}`, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: body ? JSON.stringify(body) : undefined,
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Có lỗi xảy ra');
+      }
+
+      return data;
+    }
+
+    async function handleLoginSubmit(event) {
+      event.preventDefault();
+      const identifier = document.getElementById('loginIdentifier').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        const data = await apiRequest('/login', 'POST', { identifier, password });
+        saveAuth(data);
+        setAuthStatus('Đăng nhập thành công', 'success');
+        closeUserMenu();
+        setTimeout(() => {
+          closeAuthModal();
+        }, 600);
+      } catch (error) {
+        setAuthStatus(error.message, 'error');
+      }
+    }
+
+    async function handleRegisterSubmit(event) {
+      event.preventDefault();
+      const name = document.getElementById('registerName').value.trim();
+      const email = document.getElementById('registerEmail').value.trim();
+      const phone = document.getElementById('registerPhone').value.trim();
+      const password = document.getElementById('registerPassword').value;
+      const confirmPassword = document.getElementById('registerConfirmPassword').value;
+
+      if (password !== confirmPassword) {
+        setAuthStatus('Mật khẩu xác nhận không khớp', 'error');
+        return;
+      }
+
+      try {
+        await apiRequest('/register', 'POST', { name, email, password, phone });
+        setAuthStatus('Đăng ký thành công. Bạn có thể đăng nhập ngay bây giờ.', 'success');
+        openAuthModal('login');
+      } catch (error) {
+        setAuthStatus(error.message, 'error');
+      }
+    }
+
+    async function handleForgotSubmit(event) {
+      event.preventDefault();
+      const email = document.getElementById('forgotEmail').value.trim();
+      const newPassword = document.getElementById('forgotNewPassword').value;
+      const confirmPassword = document.getElementById('forgotConfirmPassword').value;
+
+      if (newPassword !== confirmPassword) {
+        setAuthStatus('Mật khẩu xác nhận không khớp', 'error');
+        return;
+      }
+
+      try {
+        await apiRequest('/forgot-password', 'PUT', { email, newPassword });
+        setAuthStatus('Đổi mật khẩu thành công. Vui lòng đăng nhập lại.', 'success');
+        openAuthModal('login');
+      } catch (error) {
+        setAuthStatus(error.message, 'error');
+      }
+    }
+
+    function handleUserAction(action) {
+      closeUserMenu();
+
+      const auth = currentAuth || getStoredAuth();
+      const isAdmin = auth?.user?.role === 'admin';
+
+      switch (action) {
+        case 'profile':
+          setUserMenuNotice('Thông tin cá nhân: bạn có thể mở trang hồ sơ để cập nhật dữ liệu người dùng.');
+          break;
+        case 'history':
+          setUserMenuNotice('Lịch sử đặt hàng: danh sách đơn hàng sẽ hiển thị sau khi bạn có giao dịch.');
+          break;
+        case 'products':
+          if (!isAdmin) {
+            setUserMenuNotice('Bạn là guest. Vui lòng đăng nhập bằng tài khoản admin để sử dụng quản lý sản phẩm.');
+            return;
+          }
+          setUserMenuNotice('Quản lý sản phẩm: admin có toàn quyền thao tác với danh mục sản phẩm.');
+          break;
+        case 'orders':
+          if (!isAdmin) {
+            setUserMenuNotice('Bạn là guest. Vui lòng đăng nhập bằng tài khoản admin để sử dụng quản lý đơn hàng.');
+            return;
+          }
+          setUserMenuNotice('Quản lý đơn hàng: admin có toàn quyền xem và xử lý đơn hàng.');
+          break;
+        case 'revenue':
+          if (!isAdmin) {
+            setUserMenuNotice('Bạn là guest. Vui lòng đăng nhập bằng tài khoản admin để xem thống kê doanh thu.');
+            return;
+          }
+          setUserMenuNotice('Thống kê doanh thu: admin có thể theo dõi báo cáo doanh thu tại đây.');
+          break;
+        case 'logout':
+          clearAuth();
+          setUserMenuNotice('Bạn đã đăng xuất.');
+          break;
+        default:
+          break;
+      }
+    }
+
+    loginBtn.addEventListener('click', () => openAuthModal('login'));
+    userAvatarBtn.addEventListener('click', toggleUserMenu);
+
+    document.querySelectorAll('[data-close-auth]').forEach((button) => {
+      button.addEventListener('click', closeAuthModal);
+    });
+
+    loginTabBtn.addEventListener('click', () => openAuthModal('login'));
+    registerTabBtn.addEventListener('click', () => openAuthModal('register'));
+    forgotTabBtn.addEventListener('click', () => openAuthModal('forgot'));
+
+    loginForm.addEventListener('submit', handleLoginSubmit);
+    registerForm.addEventListener('submit', handleRegisterSubmit);
+    forgotForm.addEventListener('submit', handleForgotSubmit);
+
+    authModal.addEventListener('click', (event) => {
+      if (event.target === authModal) {
+        closeAuthModal();
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!event.target.closest('.header-user-area')) {
+        closeUserMenu();
+      }
+    });
+
+    document.querySelectorAll('.user-menu-action').forEach((button) => {
+      button.addEventListener('click', () => handleUserAction(button.dataset.action));
+    });
+
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeUserMenu();
+        closeAuthModal();
+      }
+    });
+
     // MAIN SLIDER (GIỮ NGUYÊN)
     const slides = document.querySelector('.slides');
     const slide = document.querySelectorAll('.slide');
@@ -769,6 +1397,9 @@
         alert("Đã thêm sản phẩm vào giỏ hàng!");
       });
     });
+
+    currentAuth = getStoredAuth();
+    updateAuthUI();
   </script>
 </body>
 </html>

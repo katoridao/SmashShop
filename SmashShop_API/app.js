@@ -18,7 +18,58 @@ const bcrypt = require("bcryptjs");
 
 var app = express();
 
-db.connect();
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+  );
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
+
+async function seedDefaultAdmin() {
+  try {
+    const adminEmail = "admin@smashshop.vn";
+    const defaultPassword = "123456";
+
+    const existingAdmin = await User.findOne({
+      $or: [{ email: adminEmail }, { name: "admin" }],
+    });
+
+    if (existingAdmin) {
+      return;
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(defaultPassword, salt);
+
+    await User.create({
+      name: "admin",
+      email: adminEmail,
+      password: hashedPassword,
+      phone: "0000000000",
+      role: "admin",
+    });
+
+    console.log("Đã tạo tài khoản admin mặc định");
+  } catch (error) {
+    console.error("Không thể tạo tài khoản admin mặc định:", error.message);
+  }
+}
+
+(async function bootstrap() {
+  try {
+    await db.connect();
+    await seedDefaultAdmin();
+  } catch (error) {
+    console.error("Khởi động API thất bại:", error.message);
+  }
+})();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
