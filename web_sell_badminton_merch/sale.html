@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SmashShop - Khuyến mại</title>
+
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins',sans-serif;
+    }
+
+    body{
+        background:#121212;
+        color:#FFFFFF;
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    ul{
+      list-style:none;
+    }
+
+    img{
+      width:100%;
+      display:block;
+    }
+
+    button{
+        transition:.3s ease;
+    }
+
+    .container{
+        width:100%;
+        padding:0 16px;
+        margin:auto;
+    }
+
+    @media(min-width:768px){
+        .container{ max-width:720px; }
+    }
+
+    @media(min-width:992px){
+        .container{ max-width:960px; }
+    }
+
+    @media(min-width:1200px){
+        .container{ max-width:1280px; }
+    }
+
+    /* HEADER */
+
+    header{
+      background:#1A1A1A;
+      box-shadow:0 2px 10px rgba(0,0,0,0.4);
+      position:sticky;
+      top:0;
+      z-index:999;
+    }
+
+    .top-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding:18px 0;
+      flex-wrap:wrap;
+      flex-direction:column;
+      align-items:stretch;
+    }
+
+    .logo{
+      font-size:30px;
+      font-weight:700;
+      color:#2563EB;
+      text-align:center;
+    }
+
+    @media(min-width:992px){
+      .top-header{
+          flex-direction:row;
+          align-items:center;
+      }
+      .logo{
+          text-align:left;
+      }
+    }
+
+    .search-box{
+      flex:1;
+      max-width:100%;
+      position:relative;
+    }
+
+    .search-box input{
+      width:100%;
+      padding:12px 50px 12px 16px;
+      border-radius:50px;
+      background:#222;
+      border:1px solid #333;
+      color:#fff;
+      outline:none;
+    }
+
+    .search-box input::placeholder{
+        color:#999;
+    }
+
+    .search-box i{
+      position:absolute;
+      right:18px;
+      top:50%;
+      transform:translateY(-50%);
+      color:#777;
+    }
+
+    .header-icons{
+      display:flex;
+      align-items:center;
+      gap:20px;
+      justify-content:center;
+    }
+
+    .header-icons i{
+      font-size:22px;
+      cursor:pointer;
+      transition:.3s;
+    }
+
+    .header-icons i:hover{
+      color:#ff3c00;
+    }
+
+    .login-btn{
+      padding:10px 22px;
+      border:none;
+      background:linear-gradient(135deg, #2563EB, #1D4ED8);
+      color:#fff;
+      border-radius:30px;
+      cursor:pointer;
+      font-weight:600;
+      transition:.3s;
+    }
+
+    .login-btn:hover{
+      transform:translateY(-2px);
+      opacity:.9;
+    }
+
+    /* NAVBAR & DROPDOWN */
+
+    .nav-link.active{
+        color:#2563EB !important;
+    }
+
+    nav{
+      background:#121212;
+    }
+
+    .main-navbar{
+      display:flex;
+      align-items:center;
+      gap:30px;
+      position:relative;
+    }
+
+    .main-navbar > li > a{
+      display:block;
+      padding:16px 0;
+      color:#fff;
+      font-weight:500;
+    }
+
+    /* Kích hoạt Hover mở dropdown menu trên Desktop màn hình lớn */
+    @media(min-width:992px) {
+      .main-navbar li.dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0; 
+      }
+    }
+
+    /* Định dạng menu Dropdown đồng nhất */
+    .dropdown-menu-dark {
+      background:#1E1E1E !important;
+      border:1px solid #2A2A2A !important;
+      border-radius:10px;
+      box-shadow:0 10px 20px rgba(0,0,0,0.3);
+      padding: 8px 0;
+    }
+
+    .dropdown-menu-dark .dropdown-item {
+      padding: 10px 20px;
+      color: #fff;
+      transition: .2s ease;
+    }
+
+    .dropdown-menu-dark .dropdown-item:hover {
+      background: #2563EB !important;
+      color: #fff !important;
+    }
+
+    @media(max-width:991px){
+      .navbar-collapse{
+          background:#1A1A1A;
+          padding:15px;
+          border-radius:16px;
+          margin-top:12px;
+      }
+      .navbar-nav{
+          gap:10px;
+      }
+      .main-navbar{
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+      }
+      .main-navbar > li > a {
+          padding: 8px 0;
+      }
+      .dropdown-menu{
+          border:none !important;
+          background:#222 !important;
+          box-shadow: none;
+          width: 100%;
+      }
+    }
+
+    /* SALE CONTENT */
+
+    .section-title{
+      margin:60px 0 25px;
+      font-size:30px;
+      font-weight:700;
+    }
+
+    .sale-banner{
+      height:260px;
+      border-radius:20px;
+      overflow:hidden;
+      position:relative;
+      margin-top:20px;
+    }
+
+    @media(min-width:768px){
+      .sale-banner{ height:350px; }
+    }
+
+    .sale-banner img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .sale-overlay{
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,.55);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      padding:30px;
+    }
+
+    .sale-overlay h1{
+      font-size:34px;
+      font-weight:700;
+      margin-bottom:15px;
+    }
+
+    @media(min-width:768px){
+      .sale-overlay h1{ font-size:54px; }
+    }
+
+    .sale-overlay p{
+      max-width:600px;
+      line-height:1.7;
+      color:#ddd;
+      font-size:15px;
+    }
+
+    .products{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:20px;
+    }
+
+    @media(min-width:768px){
+      .products{ grid-template-columns:repeat(2,1fr); }
+    }
+
+    @media(min-width:1200px){
+      .products{ grid-template-columns:repeat(3,1fr); }
+    }
+
+    .product-card{
+      background:#1E1E1E;
+      border:1px solid #2A2A2A;
+      border-radius:18px;
+      overflow:hidden;
+      transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+    }
+
+    .product-card:hover{
+      transform:translateY(-5px);
+      box-shadow:0 15px 30px rgba(0,0,0,0.35);
+      border-color:#2563EB;
+    }
+
+    .product-card img{
+      height:250px;
+      object-fit:cover;
+      width:100%;
+      transition: transform .4s ease;
+    }
+
+    .product-card:hover img{
+        transform:scale(1.05);
+    }
+
+    .product-info{
+      padding:15px;
+      position:relative;
+    }
+
+    .product-info h3{
+      margin-bottom:10px;
+      font-size:18px;
+    }
+
+    .old-price{
+      text-decoration:line-through;
+      color:#888;
+      font-size:14px;
+    }
+
+    .price{
+      color:#2563EB;
+      font-size:22px;
+      font-weight:700;
+      margin-bottom:12px;
+    }
+
+    .discount{
+      position:absolute;
+      top:15px;
+      right:15px;
+      background:#ff3c00;
+      color:#fff;
+      padding:4px 10px;
+      border-radius:8px;
+      font-size:12px;
+      font-weight:600;
+    }
+
+    .product-info button{
+      width:100%;
+      padding:10px;
+      border:none;
+      background:#2563EB;
+      color:#fff;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:600;
+    }
+
+    .product-info button:hover{
+        background:#1D4ED8;
+    }
+
+    /* FOOTER */
+
+    footer{
+      background:#0D0D0D;
+      border-top:1px solid #222;
+      color:#fff;
+      margin-top:70px;
+      padding-top:60px;
+    }
+
+    .footer-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:30px;
+    }
+
+    @media(min-width:768px){
+      .footer-grid{ grid-template-columns:repeat(2,1fr); }
+    }
+
+    @media(min-width:1200px){
+      .footer-grid{ grid-template-columns:repeat(4,1fr); }
+    }
+
+    .footer-col{
+        display:flex;
+        flex-direction:column;
+    }
+
+    .footer-col h3{
+      margin-bottom:20px;
+    }
+
+    .footer-col p,
+    .footer-col a{
+      color:#ccc;
+      line-height:1.9;
+      font-size:14px;
+    }
+
+    .socials{
+      display:flex;
+      gap:15px;
+      margin-top:15px;
+    }
+
+    .socials i{
+      width:40px;
+      height:40px;
+      background:#222;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:50%;
+      cursor:pointer;
+      transition:.3s;
+    }
+
+    .socials i:hover{
+      background:#2563EB;
+    }
+
+    .footer-bottom{
+      text-align:center;
+      border-top:1px solid #222;
+      margin-top:40px;
+      padding:20px 0;
+      color:#999;
+      font-size:14px;
+    }
+
+    html{
+        scroll-behavior:smooth;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container top-header">
+      <div class="logo">
+        <a href="/web_sell_badminton_merch/index.html">SmashShop</a>
+      </div>
+
+      <div class="search-box">
+        <input type="text" placeholder="Tìm kiếm sản phẩm...">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+
+      <div class="header-icons">
+        <i class="fa-regular fa-heart"></i>
+        <i class="fa-solid fa-cart-shopping"></i>
+        <button class="login-btn">Login</button>
+      </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <button class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainMenu">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainMenu">
+          <ul class="navbar-nav gap-lg-4 main-navbar">
+            <li class="nav-item">
+              <a class="nav-link" href="/web_sell_badminton_merch/index.html">Trang chủ</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Sản phẩm
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#">Vợt cầu lông</a></li>
+                <li><a class="dropdown-item" href="#">Giày cầu lông</a></li>
+                <li><a class="dropdown-item" href="#">Balo cầu lông</a></li>
+                <li><a class="dropdown-item" href="#">Bao vợt cầu lông</a></li>
+                <li><a class="dropdown-item" href="#">Phụ kiện cầu lông</a></li>
+              </ul>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link active" href="/web_sell_badminton_merch/sale.html">Khuyến mãi</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/web_sell_badminton_merch/about.html">Giới thiệu</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/web_sell_badminton_merch/contact.html">Liên hệ</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+
+    <div class="sale-banner">
+      <img src="https://picsum.photos/1400/500?random=99" alt="Flash Sale">
+      <div class="sale-overlay">
+        <h1>FLASH SALE 50%</h1>
+        <p>
+          Giảm giá hàng loạt vợt cầu lông, giày thi đấu và phụ kiện chính hãng. 
+          Số lượng có hạn.
+        </p>
+      </div>
+    </div>
+
+    <h2 class="section-title">Sản phẩm khuyến mại</h2>
+
+    <div class="products">
+
+      <div class="product-card">
+        <img src="https://picsum.photos/300?random=1" alt="Yonex Astrox 99">
+        <div class="product-info">
+          <h3>Yonex Astrox 99</h3>
+          <div class="old-price">5.900.000đ</div>
+          <div class="price">4.500.000đ</div>
+          <div class="discount">-25%</div>
+          <button>Mua ngay</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <img src="https://picsum.photos/300?random=2" alt="Victor A970 Nitro">
+        <div class="product-info">
+          <h3>Victor A970 Nitro</h3>
+          <div class="old-price">2.200.000đ</div>
+          <div class="price">1.690.000đ</div>
+          <div class="discount">-20%</div>
+          <button>Mua ngay</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <img src="https://picsum.photos/300?random=3" alt="Balo Yonex Pro">
+        <div class="product-info">
+          <h3>Balo Yonex Pro</h3>
+          <div class="old-price">1.200.000đ</div>
+          <div class="price">890.000đ</div>
+          <div class="discount">-30%</div>
+          <button>Mua ngay</button>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <h3>SmashShop</h3>
+        <p>
+          Hệ thống bán vợt và phụ kiện cầu lông chính hãng với giá tốt,
+          hỗ trợ khách hàng tận tâm.
+        </p>
+        <div class="socials">
+          <a href="https://www.facebook.com/le.vinh.686378" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/leevinh_05" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://www.tiktok.com/@vinh.l70?is_from_webapp=1&sender_device=pc" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="https://www.youtube.com/watch?v=brqXbeDUBRQ" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h3>Danh mục</h3>
+        <p><a href="#">Vợt cầu lông</a></p>
+        <p><a href="#">Giày cầu lông</a></p>
+        <p><a href="#">Balo cầu lông</a></p>
+        <p><a href="#">Bao vợt cầu lông</a></p>
+      </div>
+
+      <div class="footer-col">
+        <h3>Hỗ trợ</h3>
+        <p><a href="#">Chính sách bảo hành</a></p>
+        <p><a href="#">Điều khoản dịch vụ</a></p>
+        <p><a href="#">Hướng dẫn mua hàng</a></p>
+        <p><a href="#">Liên hệ</a></p>
+      </div>
+
+      <div class="footer-col">
+        <h3>Thông tin liên hệ</h3>
+        <p>Email: support@smashshop.vn</p>
+        <p>Hotline: 0123 456 789</p>
+        <a href="https://maps.app.goo.gl/XQcabwWphX5mqsZs6" target="_blank"><p>Địa chỉ: 183 Đ. Yên Xá, Yên Xá, Thanh Liệt, Hà Nội, Vietnam</p></a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2026 SmashShop. All Rights Reserved.
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
