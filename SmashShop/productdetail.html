@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Yonex Astrox 100ZZ - SmashShop</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins',sans-serif;
+    }
+
+    body{
+        background:#121212;
+        color:#FFFFFF;
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    ul{
+      list-style:none;
+    }
+
+    img{
+      width:100%;
+      display:block;
+    }
+
+    button{
+        transition:.3s ease;
+    }
+
+    .container{
+        width:100%;
+        padding:0 16px;
+        margin:auto;
+    }
+
+    @media(min-width:768px){ .container{ max-width:720px; } }
+    @media(min-width:992px){ .container{ max-width:960px; } }
+    @media(min-width:1200px){ .container{ max-width:1280px; } }
+
+    /* HEADER */
+    header{
+      background:#1A1A1A;
+      box-shadow:0 2px 10px rgba(0,0,0,0.4);
+      position:sticky;
+      top:0;
+      z-index:999;
+    }
+
+    .top-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding:18px 0;
+      flex-wrap:wrap;
+      flex-direction:column;
+      align-items:stretch;
+    }
+
+    .logo{
+      font-size:30px;
+      font-weight:700;
+      color:#2563EB;
+      text-align:center;
+    }
+
+    @media(min-width:992px){
+      .top-header{ flex-direction:row; align-items:center; }
+      .logo{ text-align:left; }
+    }
+
+    .search-box{
+      flex:1;
+      max-width:100%;
+      position:relative;
+    }
+
+    .search-box input{
+      width:100%;
+      padding:12px 50px 12px 16px;
+      border-radius:50px;
+      background:#222;
+      border:1px solid #333;
+      color:#fff;
+      outline:none;
+    }
+
+    .search-box input::placeholder{ color:#999; }
+
+    .search-box i{
+      position:absolute;
+      right:18px;
+      top:50%;
+      transform:translateY(-50%);
+      color:#777;
+    }
+
+    .header-icons{
+      display:flex;
+      align-items:center;
+      gap:20px;
+      justify-content:center;
+    }
+
+    .header-icons i{
+      font-size:22px;
+      cursor:pointer;
+      transition:.3s;
+    }
+
+    .header-icons i:hover{ color:#ff3c00; }
+
+    .login-btn{
+      padding:10px 22px;
+      border:none;
+      background:linear-gradient(135deg, #2563EB, #1D4ED8);
+      color:#fff;
+      border-radius:30px;
+      cursor:pointer;
+      font-weight:600;
+      transition:.3s;
+    }
+
+    .login-btn:hover{
+      transform:translateY(-2px);
+      opacity:.9;
+    }
+
+    /* NAVBAR */
+    .nav-link.active{ color:#2563EB !important; }
+    nav{ background:#121212; }
+
+    .main-navbar{
+      display:flex;
+      align-items:center;
+      gap:30px;
+      position:relative;
+    }
+
+    .main-navbar > li > a{
+      display:block;
+      padding:16px 0;
+      color:#fff;
+      font-weight:500;
+    }
+
+    @media(min-width:992px) {
+      .main-navbar li.dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0; 
+      }
+    }
+
+    .dropdown-menu-dark {
+      background:#1E1E1E !important;
+      border:1px solid #2A2A2A !important;
+      border-radius:10px;
+      box-shadow:0 10px 20px rgba(0,0,0,0.3);
+      padding: 8px 0;
+    }
+
+    .dropdown-menu-dark .dropdown-item {
+      padding: 10px 20px;
+      color: #fff;
+      transition: .2s ease;
+    }
+
+    .dropdown-menu-dark .dropdown-item:hover {
+      background: #2563EB !important;
+      color: #fff !important;
+    }
+
+    @media(max-width:991px){
+      .navbar-collapse{ background:#1A1A1A; padding:15px; border-radius:16px; margin-top:12px; }
+      .navbar-nav{ gap:10px; }
+      .main-navbar{ flex-direction: column; align-items: flex-start; gap: 10px; }
+      .main-navbar > li > a { padding: 8px 0; }
+      .dropdown-menu{ border:none !important; background:#222 !important; box-shadow: none; width: 100%; }
+    }
+
+    /* BREADCRUMB */
+    .breadcrumb-section {
+      padding: 20px 0 10px;
+    }
+
+    .breadcrumb-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #999;
+      flex-wrap: wrap;
+    }
+
+    .breadcrumb-nav a {
+      color: #999;
+      transition: color .2s;
+    }
+
+    .breadcrumb-nav a:hover { color: #2563EB; }
+
+    .breadcrumb-nav .sep { color: #555; }
+    .breadcrumb-nav .current { color: #fff; }
+
+    /* PRODUCT DETAIL LAYOUT */
+    .product-detail-section {
+      padding: 30px 0 60px;
+    }
+
+    .product-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    @media(min-width: 992px) {
+      .product-detail-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+      }
+    }
+
+    /* GALLERY */
+    .gallery-col {}
+
+    .main-image-wrapper {
+      position: relative;
+      background: #1E1E1E;
+      border: 1px solid #2A2A2A;
+      border-radius: 20px;
+      overflow: hidden;
+      aspect-ratio: 1/1;
+    }
+
+    .main-image-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .4s ease;
+    }
+
+    .main-image-wrapper:hover img {
+      transform: scale(1.05);
+    }
+
+    .badge-hot {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      background: #ff3c00;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 30px;
+      letter-spacing: 1px;
+      z-index: 2;
+    }
+
+    .thumbnail-list {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .thumbnail-list::-webkit-scrollbar { display: none; }
+
+    .thumb-item {
+      flex-shrink: 0;
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid #2A2A2A;
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+
+    .thumb-item.active,
+    .thumb-item:hover {
+      border-color: #2563EB;
+    }
+
+    .thumb-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* PRODUCT INFO COL */
+    .info-col {}
+
+    .product-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand-badge {
+      background: rgba(37,99,235,0.15);
+      border: 1px solid rgba(37,99,235,0.4);
+      color: #2563EB;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 30px;
+      letter-spacing: .5px;
+    }
+
+    .category-tag {
+      background: #1E1E1E;
+      border: 1px solid #2A2A2A;
+      color: #999;
+      font-size: 12px;
+      padding: 4px 14px;
+      border-radius: 30px;
+    }
+
+    .product-title {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 14px;
+    }
+
+    @media(min-width: 768px) { .product-title { font-size: 34px; } }
+
+    /* RATING ROW */
+    .rating-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stars { color: #F59E0B; font-size: 16px; }
+
+    .rating-count {
+      font-size: 14px;
+      color: #999;
+    }
+
+    .rating-divider {
+      width: 1px;
+      height: 16px;
+      background: #333;
+    }
+
+    .sold-count {
+      font-size: 14px;
+      color: #999;
+    }
+
+    /* PRICE BLOCK */
+    .price-block {
+      background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(29,78,216,0.04));
+      border: 1px solid rgba(37,99,235,0.2);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+
+    .price-main {
+      font-size: 36px;
+      font-weight: 700;
+      color: #2563EB;
+    }
+
+    .price-original {
+      font-size: 18px;
+      color: #666;
+      text-decoration: line-through;
+      margin-left: 12px;
+    }
+
+    .price-save {
+      display: inline-block;
+      background: rgba(255,60,0,0.15);
+      color: #ff3c00;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-top: 6px;
+    }
+
+    /* STOCK STATUS */
+    .stock-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .stock-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34,197,94,0.6);
+      flex-shrink: 0;
+    }
+
+    .stock-text {
+      font-size: 14px;
+      color: #22c55e;
+      font-weight: 500;
+    }
+
+    .stock-count {
+      font-size: 13px;
+      color: #999;
+    }
+
+    /* ATTRIBUTES TABLE */
+    .attributes {
+      background: #1A1A1A;
+      border: 1px solid #2A2A2A;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .attr-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      border-bottom: 1px solid #222;
+    }
+
+    .attr-row:last-child { border-bottom: none; }
+
+    .attr-label {
+      padding: 13px 18px;
+      background: #1E1E1E;
+      color: #999;
+      font-size: 13px;
+      font-weight: 500;
+      border-right: 1px solid #222;
+    }
+
+    .attr-value {
+      padding: 13px 18px;
+      font-size: 14px;
+      color: #fff;
+    }
+
+    /* QUANTITY + ACTIONS */
+    .quantity-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .qty-label {
+      font-size: 14px;
+      color: #999;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .qty-control {
+      display: flex;
+      align-items: center;
+      background: #1E1E1E;
+      border: 1px solid #2A2A2A;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .qty-btn {
+      width: 40px;
+      height: 44px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .2s;
+    }
+
+    .qty-btn:hover { background: #2563EB; }
+
+    .qty-input {
+      width: 52px;
+      height: 44px;
+      background: none;
+      border: none;
+      color: #fff;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 600;
+      outline: none;
+      border-left: 1px solid #2A2A2A;
+      border-right: 1px solid #2A2A2A;
+    }
+
+    .qty-input::-webkit-inner-spin-button,
+    .qty-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+    .action-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .btn-cart {
+      padding: 14px 20px;
+      border: 2px solid #2563EB;
+      background: transparent;
+      color: #2563EB;
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: .3s;
+    }
+
+    .btn-cart:hover {
+      background: rgba(37,99,235,0.1);
+      transform: translateY(-2px);
+    }
+
+    .btn-buy {
+      padding: 14px 20px;
+      border: none;
+      background: linear-gradient(135deg, #2563EB, #1D4ED8);
+      color: #fff;
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: .3s;
+      box-shadow: 0 4px 20px rgba(37,99,235,0.35);
+    }
+
+    .btn-buy:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(37,99,235,0.5);
+    }
+
+    .btn-wishlist {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #2A2A2A;
+      background: #1E1E1E;
+      color: #fff;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: .3s;
+    }
+
+    .btn-wishlist:hover {
+      border-color: #ff3c00;
+      color: #ff3c00;
+    }
+
+    .btn-wishlist.active {
+      border-color: #ff3c00;
+      color: #ff3c00;
+      background: rgba(255,60,0,0.08);
+    }
+
+    /* GUARANTEES */
+    .guarantees {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .guarantee-item {
+      background: #1A1A1A;
+      border: 1px solid #2A2A2A;
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #ccc;
+    }
+
+    .guarantee-item i {
+      color: #2563EB;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    /* TABS */
+    .product-tabs-section {
+      padding: 40px 0 60px;
+    }
+
+    .tabs-header {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid #2A2A2A;
+      margin-bottom: 30px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .tabs-header::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      padding: 14px 24px;
+      background: none;
+      border: none;
+      color: #999;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -1px;
+      white-space: nowrap;
+      transition: .2s;
+    }
+
+    .tab-btn.active {
+      color: #2563EB;
+      border-bottom-color: #2563EB;
+    }
+
+    .tab-btn:hover:not(.active) { color: #fff; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* DESCRIPTION TAB */
+    .description-content {
+      background: #1A1A1A;
+      border: 1px solid #2A2A2A;
+      border-radius: 20px;
+      padding: 32px;
+      line-height: 1.8;
+      color: #ccc;
+    }
+
+    .description-content h4 {
+      color: #fff;
+      font-size: 18px;
+      margin-bottom: 12px;
+      margin-top: 20px;
+    }
+
+    .description-content h4:first-child { margin-top: 0; }
+
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+
+    .spec-table tr {
+      border-bottom: 1px solid #2A2A2A;
+    }
+
+    .spec-table tr:last-child { border-bottom: none; }
+
+    .spec-table td {
+      padding: 12px 16px;
+      font-size: 14px;
+    }
+
+    .spec-table td:first-child {
+      color: #999;
+      width: 180px;
+      background: #1E1E1E;
+    }
+
+    .spec-table td:last-child { color: #fff; }
+
+    /* REVIEWS TAB */
+    .reviews-summary {
+      display: flex;
+      gap: 30px;
+      align-items: center;
+      background: #1A1A1A;
+      border: 1px solid #2A2A2A;
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .avg-score {
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .avg-number {
+      font-size: 56px;
+      font-weight: 700;
+      color: #F59E0B;
+      line-height: 1;
+    }
+
+    .avg-stars { font-size: 20px; color: #F59E0B; margin: 6px 0; }
+    .avg-label { font-size: 13px; color: #999; }
+
+    .rating-bars {
+      flex: 1;
+      min-width: 200px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .bar-label { color: #999; width: 30px; text-align: right; }
+    .bar-track {
+      flex: 1;
+      height: 8px;
+      background: #2A2A2A;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: #F59E0B;
+      border-radius: 4px;
+    }
+
+    .bar-count { color: #999; width: 24px; }
+
+    .review-card {
+      background: #1A1A1A;
+      border: 1px solid #2A2A2A;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .review-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .reviewer-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2563EB, #1D4ED8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .reviewer-info h5 { font-size: 15px; margin-bottom: 3px; }
+    .review-stars { font-size: 13px; color: #F59E0B; }
+    .review-date { font-size: 12px; color: #666; margin-left: auto; }
+
+    .review-text {
+      color: #ccc;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* RELATED PRODUCTS */
+    .related-section {
+      padding: 0 0 70px;
+    }
+
+    .section-title {
+      margin: 0 0 25px;
+      font-size: 26px;
+      font-weight: 700;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    @media(min-width: 768px) { .related-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media(min-width: 1200px) { .related-grid { grid-template-columns: repeat(4, 1fr); } }
+
+    /* PRODUCT CARD (same as index) */
+    .product-card { 
+      background: #1E1E1E; 
+      border: 1px solid #2A2A2A; 
+      border-radius: 18px; 
+      overflow: hidden; 
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; 
+      position: relative; 
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card:hover { 
+      transform: translateY(-5px); 
+      box-shadow: 0 15px 30px rgba(0,0,0,0.35); 
+      border-color: #2563EB; 
+    }
+
+    .product-img-wrapper { 
+      position: relative; 
+      overflow: hidden; 
+    }
+
+    .product-img-wrapper img { 
+      height: 220px; 
+      object-fit: cover; 
+      width: 100%; 
+      transition: transform 0.4s ease; 
+    }
+
+    .product-card:hover .product-img-wrapper img { 
+      transform: scale(1.05); 
+    }
+
+    .fav-badge {
+      position: absolute; 
+      top: 15px; 
+      right: 15px; 
+      width: 40px; 
+      height: 40px;
+      background: rgba(30,30,30,0.8); 
+      backdrop-filter: blur(5px); 
+      border-radius: 50%;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      color: #fff;
+      font-size: 18px; 
+      cursor: pointer; 
+      z-index: 10;
+      transition: 0.3s; 
+      border: 1px solid #333;
+    }
+
+    .fav-badge:hover { 
+      background: #ff3c00; 
+      color: #fff; 
+      border-color: #ff3c00; 
+      transform: scale(1.1); 
+    }
+
+    .fav-badge.active {
+      background: #ff3c00;
+      color: #fff;
+      border-color: #ff3c00;
+    }
+
+    .product-info { 
+      padding: 15px; 
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .product-info h3 { 
+      margin-bottom: 10px; 
+      font-size: 16px; 
+      white-space: nowrap; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+      transition: color 0.2s;
+    }
+
+    .product-info h3:hover { color: #2563EB; }
+
+    .price { 
+      color: #2563EB; 
+      font-size: 18px; 
+      font-weight: 700; 
+      margin-bottom: 12px; 
+    }
+
+    .add-cart-btn { 
+      width: 100%; 
+      padding: 10px; 
+      border: none; 
+      background: #2563EB; 
+      color: #fff; 
+      border-radius: 10px; 
+      cursor: pointer; 
+      font-weight: 600; 
+      transition: 0.3s;
+      margin-top: auto;
+    }
+
+    .add-cart-btn i { margin-right: 5px; }
+    .add-cart-btn:hover { background: #1D4ED8; }
+
+    /* TOAST */
+    .toast-wrap {
+      position: fixed;
+      bottom: 30px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toast-msg {
+      background: #1E1E1E;
+      border: 1px solid #2A2A2A;
+      color: #fff;
+      padding: 14px 20px;
+      border-radius: 14px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      animation: slideIn .3s ease;
+    }
+
+    .toast-msg i { font-size: 18px; }
+    .toast-msg.success i { color: #22c55e; }
+    .toast-msg.info i { color: #2563EB; }
+
+    @keyframes slideIn {
+      from { transform: translateX(40px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* FOOTER */
+    footer{ background:#0D0D0D; border-top:1px solid #222; color:#fff; margin-top:0; padding-top:60px; }
+    .footer-grid{ display:grid; grid-template-columns:1fr; gap:30px; }
+    @media(min-width:768px){ .footer-grid{ grid-template-columns:repeat(2,1fr); } }
+    @media(min-width:1200px){ .footer-grid{ grid-template-columns:repeat(4,1fr); } }
+    .footer-col{ display:flex; flex-direction:column; }
+    .footer-col h3{ margin-bottom:20px; }
+    .footer-col p, .footer-col a{ color:#ccc; line-height:1.9; font-size:14px; }
+    .socials{ display:flex; gap:15px; margin-top:15px; }
+    .socials i{ width:40px; height:40px; background:#222; display:flex; align-items:center; justify-content:center; border-radius:50%; cursor:pointer; transition:.3s; }
+    .socials i:hover{ background:#2563EB; }
+    .footer-bottom{ text-align:center; border-top:1px solid #222; margin-top:40px; padding:20px 0; color:#999; font-size:14px; }
+
+    html{ scroll-behavior: smooth; }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header>
+    <div class="container top-header">
+      <div class="logo">
+        <a href="/SmashShop/index.html">SmashShop</a>
+      </div>
+      <div class="search-box">
+        <input type="text" placeholder="Tìm kiếm sản phẩm...">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+      <div class="header-icons">
+        <a href="wishlist.html"><i class="fa-regular fa-heart"></i></a>
+        <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
+        <button class="login-btn">Login</button>
+      </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainMenu">
+          <ul class="navbar-nav gap-lg-4 main-navbar">
+            <li class="nav-item"><a class="nav-link" href="/SmashShop/index.html">Trang chủ</a></li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">Sản phẩm</a>
+              <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/SmashShop/vot.html">Vợt cầu lông</a></li>
+                <li><a class="dropdown-item" href="/SmashShop/giay.html">Giày cầu lông</a></li>
+                <li><a class="dropdown-item" href="/SmashShop/balo.html">Balo cầu lông</a></li>
+                <li><a class="dropdown-item" href="/SmashShop/tuivot.html">Túi vợt cầu lông</a></li>
+                <li><a class="dropdown-item" href="/SmashShop/phukien.html">Phụ kiện cầu lông</a></li>
+              </ul>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="/SmashShop/sale.html">Khuyến mãi</a></li>
+            <li class="nav-item"><a class="nav-link" href="/SmashShop/about.html">Giới thiệu</a></li>
+            <li class="nav-item"><a class="nav-link" href="/SmashShop/contact.html">Liên hệ</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ===== BREADCRUMB ===== -->
+  <div class="container breadcrumb-section">
+    <nav class="breadcrumb-nav">
+      <a href="/SmashShop/index.html"><i class="fa-solid fa-house" style="font-size:12px;"></i> Trang chủ</a>
+      <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i></span>
+      <a href="/SmashShop/vot.html">Vợt cầu lông</a>
+      <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i></span>
+      <a href="#">Yonex</a>
+      <span class="sep"><i class="fa-solid fa-chevron-right" style="font-size:10px;"></i></span>
+      <span class="current">Yonex Astrox 100ZZ</span>
+    </nav>
+  </div>
+
+  <!-- ===== PRODUCT DETAIL ===== -->
+  <section class="container product-detail-section">
+    <div class="product-detail-grid">
+
+      <!-- LEFT: GALLERY -->
+      <div class="gallery-col">
+        <div class="main-image-wrapper">
+          <span class="badge-hot">HOT</span>
+          <img id="mainImg" src="https://picsum.photos/600/600?random=101" alt="Yonex Astrox 100ZZ">
+        </div>
+        <div class="thumbnail-list" id="thumbList">
+          <div class="thumb-item active" data-src="https://picsum.photos/600/600?random=101">
+            <img src="https://picsum.photos/600/600?random=101" alt="Ảnh 1">
+          </div>
+          <div class="thumb-item" data-src="https://picsum.photos/600/600?random=102">
+            <img src="https://picsum.photos/600/600?random=102" alt="Ảnh 2">
+          </div>
+          <div class="thumb-item" data-src="https://picsum.photos/600/600?random=103">
+            <img src="https://picsum.photos/600/600?random=103" alt="Ảnh 3">
+          </div>
+          <div class="thumb-item" data-src="https://picsum.photos/600/600?random=104">
+            <img src="https://picsum.photos/600/600?random=104" alt="Ảnh 4">
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: INFO -->
+      <div class="info-col">
+        <div class="product-meta">
+          <span class="brand-badge"><i class="fa-solid fa-tag" style="font-size:10px; margin-right:4px;"></i> Yonex</span>
+          <span class="category-tag">Vợt cầu lông</span>
+        </div>
+
+        <h1 class="product-title">Yonex Astrox 100ZZ</h1>
+
+        <div class="rating-row">
+          <div class="stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star-half-stroke"></i>
+          </div>
+          <span class="rating-count">4.5 (128 đánh giá)</span>
+          <div class="rating-divider"></div>
+          <span class="sold-count"><i class="fa-solid fa-bag-shopping" style="margin-right:4px;"></i> 342 đã bán</span>
+        </div>
+
+        <div class="price-block">
+          <div>
+            <span class="price-main">5.200.000đ</span>
+            <span class="price-original">6.500.000đ</span>
+          </div>
+          <span class="price-save">Tiết kiệm 1.300.000đ (20%)</span>
+        </div>
+
+        <div class="stock-row">
+          <div class="stock-dot"></div>
+          <span class="stock-text">Còn hàng</span>
+          <span class="stock-count">(10 sản phẩm có sẵn)</span>
+        </div>
+
+        <div class="attributes">
+          <div class="attr-row">
+            <div class="attr-label">Thương hiệu</div>
+            <div class="attr-value">Yonex</div>
+          </div>
+          <div class="attr-row">
+            <div class="attr-label">Danh mục</div>
+            <div class="attr-value">Vợt cầu lông</div>
+          </div>
+          <div class="attr-row">
+            <div class="attr-label">Phong cách</div>
+            <div class="attr-value">Vợt tấn công</div>
+          </div>
+          <div class="attr-row">
+            <div class="attr-label">Mã sản phẩm</div>
+            <div class="attr-value" style="color:#666; font-size:12px; font-family:monospace;">ObjectId("6845a2f10c3d5e7f1b2a9c8d")</div>
+          </div>
+          <div class="attr-row">
+            <div class="attr-label">Ngày nhập</div>
+            <div class="attr-value">01/01/2026</div>
+          </div>
+        </div>
+
+        <div class="quantity-row">
+          <span class="qty-label">Số lượng:</span>
+          <div class="qty-control">
+            <button class="qty-btn" id="qtyMinus"><i class="fa-solid fa-minus"></i></button>
+            <input class="qty-input" type="number" id="qtyInput" value="1" min="1" max="10">
+            <button class="qty-btn" id="qtyPlus"><i class="fa-solid fa-plus"></i></button>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn-cart" id="btnCart">
+            <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ
+          </button>
+          <button class="btn-buy" id="btnBuy">
+            <i class="fa-solid fa-bolt"></i> Mua ngay
+          </button>
+        </div>
+
+        <button class="btn-wishlist" id="btnWishlist">
+          <i class="fa-regular fa-heart"></i> Thêm vào danh sách yêu thích
+        </button>
+
+        <div class="guarantees">
+          <div class="guarantee-item">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Bảo hành chính hãng 12 tháng</span>
+          </div>
+          <div class="guarantee-item">
+            <i class="fa-solid fa-truck-fast"></i>
+            <span>Giao hàng toàn quốc 2–3 ngày</span>
+          </div>
+          <div class="guarantee-item">
+            <i class="fa-solid fa-rotate-left"></i>
+            <span>Đổi trả trong 30 ngày</span>
+          </div>
+          <div class="guarantee-item">
+            <i class="fa-solid fa-headset"></i>
+            <span>Hỗ trợ 24/7</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TABS ===== -->
+  <section class="container product-tabs-section">
+    <div class="tabs-header">
+      <button class="tab-btn active" data-tab="description">Mô tả sản phẩm</button>
+      <button class="tab-btn" data-tab="specs">Thông số kỹ thuật</button>
+      <button class="tab-btn" data-tab="reviews">Đánh giá (128)</button>
+    </div>
+
+    <!-- Description Tab -->
+    <div class="tab-content active" id="tab-description">
+      <div class="description-content">
+        <h4>Giới thiệu Yonex Astrox 100ZZ</h4>
+        <p>Yonex Astrox 100ZZ là cây vợt đỉnh cao trong dòng Astrox của Yonex, được thiết kế dành riêng cho những người chơi ưa thích lối đánh tấn công mạnh mẽ. Đây là cây vợt mà huyền thoại cầu lông người Nhật Kento Momota sử dụng để giành vô số danh hiệu quốc tế.</p>
+
+        <h4>Công nghệ nổi bật</h4>
+        <p>Vợt áp dụng công nghệ <strong>Rotational Generator System</strong> — hệ thống truyền tải lực quay giúp cây vợt tích lũy năng lượng từ gốc vợt rồi giải phóng mạnh mẽ tại điểm tiếp xúc cầu, tạo ra cú đập lực thấp nhưng cực kỳ uy lực.</p>
+        <p>Khung vợt được làm từ <strong>Toray M30X Carbon Nanotube</strong> mang lại sự cứng cáp vượt trội, giảm tổn thất năng lượng, giúp từng cú swing đều trở nên sắc bén và dứt khoát.</p>
+
+        <h4>Đặc điểm kỹ thuật</h4>
+        <p>Thân vợt nặng đầu (head-heavy) cùng độ cứng trung bình giúp người chơi dễ dàng tạo ra những cú smash xuyên phá. Đây là lựa chọn lý tưởng cho các tay vợt đơn chuyên nghiệp hoặc bán chuyên muốn nâng tầm lối chơi tấn công.</p>
+      </div>
+    </div>
+
+    <!-- Specs Tab -->
+    <div class="tab-content" id="tab-specs">
+      <div class="description-content" style="padding: 0; overflow: hidden;">
+        <table class="spec-table">
+          <tr><td>Thương hiệu</td><td>Yonex</td></tr>
+          <tr><td>Model</td><td>Astrox 100ZZ</td></tr>
+          <tr><td>Phong cách</td><td>Tấn công (Offensive)</td></tr>
+          <tr><td>Chất liệu khung</td><td>HM Graphite + Tungsten</td></tr>
+          <tr><td>Chất liệu cán</td><td>HM Graphite + Tungsten</td></tr>
+          <tr><td>Độ cứng thân</td><td>Extra Stiff</td></tr>
+          <tr><td>Trọng lượng</td><td>4U (80–84g)</td></tr>
+          <tr><td>Cỡ tay cầm</td><td>G5</td></tr>
+          <tr><td>Chiều dài</td><td>675mm</td></tr>
+          <tr><td>Lực căng tối đa</td><td>35 lbs</td></tr>
+          <tr><td>Điểm cân bằng</td><td>Nặng đầu (Head-heavy)</td></tr>
+          <tr><td>Xuất xứ</td><td>Nhật Bản</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Reviews Tab -->
+    <div class="tab-content" id="tab-reviews">
+      <div class="reviews-summary">
+        <div class="avg-score">
+          <div class="avg-number">4.5</div>
+          <div class="avg-stars">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star-half-stroke"></i>
+          </div>
+          <div class="avg-label">128 đánh giá</div>
+        </div>
+        <div class="rating-bars">
+          <div class="bar-row">
+            <span class="bar-label">5★</span>
+            <div class="bar-track"><div class="bar-fill" style="width:72%"></div></div>
+            <span class="bar-count">92</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">4★</span>
+            <div class="bar-track"><div class="bar-fill" style="width:17%"></div></div>
+            <span class="bar-count">22</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">3★</span>
+            <div class="bar-track"><div class="bar-fill" style="width:7%"></div></div>
+            <span class="bar-count">9</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">2★</span>
+            <div class="bar-track"><div class="bar-fill" style="width:3%"></div></div>
+            <span class="bar-count">4</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">1★</span>
+            <div class="bar-track"><div class="bar-fill" style="width:1%"></div></div>
+            <span class="bar-count">1</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-header">
+          <div class="reviewer-avatar">NV</div>
+          <div class="reviewer-info">
+            <h5>Nguyễn Văn A</h5>
+            <div class="review-stars">
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+            </div>
+          </div>
+          <span class="review-date">15/03/2026</span>
+        </div>
+        <p class="review-text">Vợt đánh cực tốt, cú smash rất lực và cảm giác cầm cực kỳ chắc tay. Mình chơi đơn và đây là cây vợt tấn công tốt nhất mình từng dùng. Shop đóng gói cẩn thận, giao hàng nhanh. Rất hài lòng!</p>
+      </div>
+
+      <div class="review-card">
+        <div class="review-header">
+          <div class="reviewer-avatar" style="background: linear-gradient(135deg, #7c3aed, #5b21b6);">TM</div>
+          <div class="reviewer-info">
+            <h5>Trần Minh K</h5>
+            <div class="review-stars">
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              <i class="fa-regular fa-star"></i>
+            </div>
+          </div>
+          <span class="review-date">02/02/2026</span>
+        </div>
+        <p class="review-text">Vợt rất cứng và nặng đầu như mô tả. Nếu bạn quen chơi vợt cân bằng sẽ cần thời gian làm quen. Nhưng khi quen rồi thì cú đập rất mãn nhãn. Giá hơi cao nhưng xứng đáng với chất lượng.</p>
+      </div>
+
+      <div class="review-card">
+        <div class="review-header">
+          <div class="reviewer-avatar" style="background: linear-gradient(135deg, #059669, #047857);">LH</div>
+          <div class="reviewer-info">
+            <h5>Lê Hoàng P</h5>
+            <div class="review-stars">
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star-half-stroke"></i>
+            </div>
+          </div>
+          <span class="review-date">20/01/2026</span>
+        </div>
+        <p class="review-text">Hàng chính hãng, tem nhãn đầy đủ, smash bay rất lực. Mình dùng kèm dây BG80 căng 28 lbs rất ổn. SmashShop tư vấn nhiệt tình, sẽ ủng hộ dài dài.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RELATED PRODUCTS ===== -->
+  <section class="container related-section">
+    <h2 class="section-title">Sản phẩm liên quan</h2>
+    <div class="related-grid">
+      <div class="product-card">
+        <div class="product-img-wrapper">
+          <button class="fav-badge"><i class="fa-regular fa-heart"></i></button>
+          <a href="#"><img src="https://picsum.photos/300?random=31" alt="SP1"></a>
+        </div>
+        <div class="product-info">
+          <a href="#"><h3>Yonex Astrox 99 Pro</h3></a>
+          <div class="price">4.800.000đ</div>
+          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrapper">
+          <button class="fav-badge"><i class="fa-regular fa-heart"></i></button>
+          <a href="#"><img src="https://picsum.photos/300?random=32" alt="SP2"></a>
+        </div>
+        <div class="product-info">
+          <a href="#"><h3>Yonex Nanoflare 800</h3></a>
+          <div class="price">4.200.000đ</div>
+          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrapper">
+          <button class="fav-badge"><i class="fa-regular fa-heart"></i></button>
+          <a href="#"><img src="https://picsum.photos/300?random=33" alt="SP3"></a>
+        </div>
+        <div class="product-info">
+          <a href="#"><h3>Lining Aeronaut 9000C</h3></a>
+          <div class="price">3.800.000đ</div>
+          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrapper">
+          <button class="fav-badge"><i class="fa-regular fa-heart"></i></button>
+          <a href="#"><img src="https://picsum.photos/300?random=34" alt="SP4"></a>
+        </div>
+        <div class="product-info">
+          <a href="#"><h3>Victor Thruster K 9900</h3></a>
+          <div class="price">5.500.000đ</div>
+          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <h3>SmashShop</h3>
+        <p>Hệ thống bán vợt và phụ kiện cầu lông chính hãng với giá tốt, hỗ trợ khách hàng tận tâm.</p>
+        <div class="socials">
+          <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="#"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h3>Danh mục</h3>
+        <p><a href="/SmashShop/vot.html">Vợt cầu lông</a></p>
+        <p><a href="/SmashShop/giay.html">Giày cầu lông</a></p>
+        <p><a href="/SmashShop/balo.html">Balo cầu lông</a></p>
+        <p><a href="/SmashShop/tuivot.html">Túi vợt cầu lông</a></p>
+        <p><a href="/SmashShop/phukien.html">Phụ kiện cầu lông</a></p>
+      </div>
+      <div class="footer-col">
+        <h3>Hỗ trợ</h3>
+        <p><a href="#">Chính sách bảo hành</a></p>
+        <p><a href="#">Điều khoản dịch vụ</a></p>
+        <p><a href="#">Hướng dẫn mua hàng</a></p>
+        <p><a href="#">Liên hệ</a></p>
+      </div>
+      <div class="footer-col">
+        <h3>Thông tin liên hệ</h3>
+        <p>Email: support@smashshop.vn</p>
+        <p>Hotline: 0123 456 789</p>
+        <p>Địa chỉ: 183 Đ. Yên Xá, Thanh Liệt, Hà Nội</p>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 SmashShop. All Rights Reserved.</div>
+  </footer>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-wrap" id="toastWrap"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // ===== PRODUCT DATA (from model) =====
+    const product = {
+      _id: "ObjectId",
+      name: "Yonex Astrox 100ZZ",
+      price: 5200000,
+      brand: "Yonex",
+      category: "Vợt cầu lông",
+      description: "Vợt tấn công",
+      stock: 10,
+      images: ["img1.jpg", "img2.jpg"],
+      createdAt: "Date"
+    };
+
+    // ===== THUMBNAIL SWITCHER =====
+    const thumbItems = document.querySelectorAll('.thumb-item');
+    const mainImg = document.getElementById('mainImg');
+
+    thumbItems.forEach(item => {
+      item.addEventListener('click', function() {
+        thumbItems.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        mainImg.src = this.dataset.src;
+      });
+    });
+
+    // ===== QUANTITY CONTROL =====
+    const qtyInput = document.getElementById('qtyInput');
+    const maxStock = product.stock;
+
+    document.getElementById('qtyMinus').addEventListener('click', () => {
+      if (parseInt(qtyInput.value) > 1) qtyInput.value = parseInt(qtyInput.value) - 1;
+    });
+
+    document.getElementById('qtyPlus').addEventListener('click', () => {
+      if (parseInt(qtyInput.value) < maxStock) qtyInput.value = parseInt(qtyInput.value) + 1;
+      else showToast('Chỉ còn ' + maxStock + ' sản phẩm trong kho!', 'info');
+    });
+
+    qtyInput.addEventListener('change', () => {
+      let v = parseInt(qtyInput.value);
+      if (isNaN(v) || v < 1) qtyInput.value = 1;
+      if (v > maxStock) { qtyInput.value = maxStock; showToast('Chỉ còn ' + maxStock + ' sản phẩm!', 'info'); }
+    });
+
+    // ===== ADD TO CART =====
+    document.getElementById('btnCart').addEventListener('click', () => {
+      showToast(`Đã thêm ${qtyInput.value} x ${product.name} vào giỏ hàng!`, 'success');
+    });
+
+    // ===== BUY NOW =====
+    document.getElementById('btnBuy').addEventListener('click', () => {
+      showToast('Đang chuyển đến trang thanh toán...', 'info');
+    });
+
+    // ===== WISHLIST =====
+    const btnWishlist = document.getElementById('btnWishlist');
+    btnWishlist.addEventListener('click', function() {
+      this.classList.toggle('active');
+      const icon = this.querySelector('i');
+      if (this.classList.contains('active')) {
+        icon.classList.replace('fa-regular', 'fa-solid');
+        showToast(`Đã thêm ${product.name} vào yêu thích!`, 'success');
+      } else {
+        icon.classList.replace('fa-solid', 'fa-regular');
+        showToast('Đã xoá khỏi danh sách yêu thích.', 'info');
+      }
+    });
+
+    // ===== TABS =====
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+      });
+    });
+
+    // ===== FAV BADGES (related) =====
+    document.querySelectorAll('.fav-badge').forEach(badge => {
+      badge.addEventListener('click', function(e) {
+        e.preventDefault();
+        this.classList.toggle('active');
+        const icon = this.querySelector('i');
+        if (this.classList.contains('active')) {
+          icon.classList.replace('fa-regular', 'fa-solid');
+        } else {
+          icon.classList.replace('fa-solid', 'fa-regular');
+        }
+      });
+    });
+
+    // ===== ADD CART (related) =====
+    document.querySelectorAll('.add-cart-btn').forEach(btn => {
+      btn.addEventListener('click', () => showToast('Đã thêm sản phẩm vào giỏ hàng!', 'success'));
+    });
+
+    // ===== TOAST UTILITY =====
+    function showToast(message, type = 'success') {
+      const wrap = document.getElementById('toastWrap');
+      const toast = document.createElement('div');
+      toast.className = `toast-msg ${type}`;
+      toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-info'}"></i> ${message}`;
+      wrap.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+  </script>
+</body>
+</html>
