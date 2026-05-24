@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SmashShop - Giày Cầu Lông Chính Hãng</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* CÁC STYLE CỐT LÕI ĐỒNG BỘ 100% VỚI TRANG CHỦ VÀ TRANG VOT.HTML */
+    *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+    body{ background:#121212; color:#FFFFFF; }
+    a{ text-decoration:none; color:inherit; }
+    ul{ list-style:none; padding:0; margin:0; }
+    img{ width:100%; display:block; }
+    button{ transition:.3s ease; }
+    .container{ width:100%; padding:0 16px; margin:auto; }
+
+    @media(min-width:768px){ .container{ max-width:720px; } }
+    @media(min-width:992px){ .container{ max-width:960px; } }
+    @media(min-width:1200px){ .container{ max-width:1280px; } }
+
+    /* HEADER NGUYÊN BẢN */
+    header{ background:#1A1A1A; box-shadow:0 2px 10px rgba(0,0,0,0.4); position:sticky; top:0; z-index:999; }
+    .top-header{ display:flex; align-items:center; justify-content:space-between; gap:20px; padding:18px 0; flex-wrap:wrap; flex-direction:column; align-items:stretch; }
+    .logo{ font-size:30px; font-weight:700; color:#2563EB; text-align:center; }
+    
+    @media(min-width:992px){
+      .top-header{ flex-direction:row; align-items:center; }
+      .logo{ text-align:left; }
+    }
+
+    .search-box{ flex:1; max-width:100%; position:relative; }
+    .search-box input{ width:100%; padding:12px 50px 12px 16px; border-radius:50px; background:#222; border:1px solid #333; color:#fff; outline:none; }
+    .search-box input::placeholder{ color:#999; }
+    .search-box i{ position:absolute; right:18px; top:50%; transform:translateY(-50%); color:#777; }
+    
+    .header-icons{ display:flex; align-items:center; gap:20px; justify-content:center; }
+    .header-icons i{ font-size:22px; cursor:pointer; transition:.3s; }
+    .header-icons i:hover{ color:#ff3c00; }
+    .login-btn{ padding:10px 22px; border:none; background:linear-gradient(135deg, #2563EB, #1D4ED8); color:#fff; border-radius:30px; cursor:pointer; font-weight:600; transition:.3s; }
+    .login-btn:hover{ transform:translateY(-2px); opacity:.9; }
+
+    /* NAVBAR & DROPDOWN */
+    .nav-link.active{ color:#2563EB !important; }
+    nav{ background:#121212; }
+    .main-navbar{ display:flex; align-items:center; gap:30px; position:relative; }
+    .main-navbar > li > a{ display:block; padding:16px 0; color:#fff; font-weight:500; }
+    
+    @media(min-width:992px) {
+      .main-navbar li.dropdown:hover .dropdown-menu { display: block; margin-top: 0; }
+    }
+    
+    .dropdown-menu-dark { background:#1E1E1E !important; border:1px solid #2A2A2A !important; border-radius:10px; box-shadow:0 10px 20px rgba(0,0,0,0.3); padding: 8px 0; }
+    .dropdown-menu-dark .dropdown-item { padding: 10px 20px; color: #fff; transition: .2s ease; }
+    .dropdown-menu-dark .dropdown-item:hover { background: #2563EB !important; color: #fff !important; }
+    
+    @media(max-width:991px){
+      .navbar-collapse{ background:#1A1A1A; padding:15px; border-radius:16px; margin-top:12px; }
+      .navbar-nav{ gap:10px; }
+      .main-navbar{ flex-direction: column; align-items: flex-start; gap: 10px; }
+      .main-navbar > li > a { padding: 8px 0; }
+      .dropdown-menu{ border:none !important; background:#222 !important; box-shadow: none; width: 100%; }
+    }
+
+    /* TIÊU ĐỀ SECTION */
+    .section-title { margin: 50px 0 25px; font-size: 30px; font-weight: 700; }
+
+    /* LƯỚI SẢN PHẨM */
+    .products { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    @media(min-width:576px) { .products { grid-template-columns: repeat(2, 1fr); } }
+    @media(min-width:992px) { .products { grid-template-columns: repeat(3, 1fr); } }
+    @media(min-width:1200px) { .products { grid-template-columns: repeat(4, 1fr); } }
+
+    .product-card { 
+      background:#1E1E1E; border:1px solid #2A2A2A; border-radius:18px; overflow:hidden; 
+      transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease; 
+      position: relative; display: flex; flex-direction: column;
+    }
+    .product-card:hover { transform:translateY(-5px); box-shadow:0 15px 30px rgba(0,0,0,0.35); border-color:#2563EB; }
+    .product-img-wrapper { position: relative; overflow: hidden; }
+    .product-img-wrapper img { height:250px; object-fit:cover; width:100%; transition:transform .4s ease; }
+    .product-card:hover .product-img-wrapper img { transform:scale(1.05); }
+    .fav-badge {
+      position: absolute; top: 15px; right: 15px;
+      width: 40px; height: 40px;
+      background: rgba(30,30,30,0.8); backdrop-filter: blur(5px); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 18px; cursor: pointer; z-index: 10;
+      transition: 0.3s; border: 1px solid #333;
+    }
+    .fav-badge:hover { background: #ff3c00; color: #fff; border-color: #ff3c00; transform: scale(1.1); }
+    .fav-badge.active { background: #ff3c00; color: #fff; border-color: #ff3c00; }
+    .product-info { padding:15px; display: flex; flex-direction: column; flex-grow: 1; }
+    .product-info h3 { margin-bottom:10px; font-size:18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.2s; }
+    .product-info h3:hover { color: #2563EB; }
+    .price { color:#2563EB; font-size:20px; font-weight:700; margin-bottom:12px; }
+    .add-cart-btn { width:100%; padding:10px; border:none; background:#2563EB; color:#fff; border-radius:10px; cursor:pointer; font-weight: 600; margin-top: auto; }
+    .add-cart-btn i { margin-right: 5px; }
+    .add-cart-btn:hover { background:#1D4ED8; }
+
+    /* DANH MỤC LIÊN QUAN */
+    .categories { display: flex; overflow-x: auto; gap: 16px; padding-bottom: 10px; scroll-snap-type: x mandatory; }
+    .category-card { background:#1E1E1E; border:1px solid #2A2A2A; border-radius:20px; overflow:hidden; cursor:pointer; transition:.3s; text-align:center; padding-bottom:15px; min-width:220px; flex-shrink:0; scroll-snap-align:start; }
+    @media(min-width:992px) {
+      .categories { display: grid; grid-template-columns: repeat(4, 1fr); overflow: visible; }
+      .category-card { min-width: unset; }
+    }
+    .category-card:hover { transform:translateY(-8px); border-color:#2563EB; }
+    .category-card img { height:180px; object-fit:cover; }
+    .category-card h3 { margin-top:15px; font-size: 18px; }
+
+    @media(max-width:768px) {
+      .categories { display: flex; grid-template-columns: none; overflow-x: auto; scrollbar-width: none; }
+      .categories::-webkit-scrollbar { display:none; }
+    }
+
+    /* FOOTER */
+    footer{ background:#0D0D0D; border-top:1px solid #222; color:#fff; margin-top:70px; padding-top:60px; }
+    .footer-grid{ display:grid; grid-template-columns:1fr; gap:30px; }
+    @media(min-width:768px){ .footer-grid{ grid-template-columns:repeat(2,1fr); } }
+    @media(min-width:1200px){ .footer-grid{ grid-template-columns:repeat(4,1fr); } }
+    .footer-col{ display:flex; flex-direction:column; }
+    .footer-col h3{ margin-bottom:20px; }
+    .footer-col p, .footer-col a{ color:#ccc; line-height:1.9; font-size:14px; }
+    .socials{ display:flex; gap:15px; margin-top:15px; }
+    .socials i{ width:40px; height:40px; background:#222; display:flex; align-items:center; justify-content:center; border-radius:50%; cursor:pointer; transition:.3s; }
+    .socials i:hover{ background:#2563EB; }
+    .footer-bottom{ text-align:center; border-top:1px solid #222; margin-top:40px; padding:20px 0; color:#999; font-size:14px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container top-header">
+      <div class="logo">
+        <a href="/SmashShop/index.html">SmashShop</a>
+      </div>
+
+      <div class="search-box">
+        <input type="text" placeholder="Tìm kiếm sản phẩm...">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+
+<div class="header-icons">
+        <a href="wishlist.html"><i class="fa-regular fa-heart"></i></a>
+        <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
+        <button class="login-btn">Login</button>
+      </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainMenu">
+          <ul class="navbar-nav gap-lg-4 main-navbar">
+            <li class="nav-item"><a class="nav-link" href="/SmashShop/index.html">Trang chủ</a></li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Sản phẩm
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/SmashShop/vot.html">Vợt cầu lông</a></li>
+                <li><a class="dropdown-item" href="/SmashShop/giay.html">Giày cầu lông</a></li>
+                <li><a class="dropdown-item" href="#">Balo cầu lông</a></li>
+                <li><a class="dropdown-item" href="#">Bao vợt cầu lông</a></li>
+                <li><a class="dropdown-item" href="#">Phụ kiện cầu lông</a></li>
+              </ul>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="/SmashShop/sale.html">Khuyến mãi</a></li>
+            <li class="nav-item"><a class="nav-link" href="/SmashShop/about.html">Giới thiệu</a></li>
+            <li class="nav-item"><a class="nav-link" href="/SmashShop/contact.html">Liên hệ</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2 class="section-title">Giày Cầu Lông Chính Hãng</h2>
+    
+    <div class="products">
+      <div class="product-card">
+        <div class="product-img-wrapper">
+          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
+          <a href="#"><img src="https://picsum.photos/300?random=201" alt="Giày 1"></a>
+        </div>
+        <div class="product-info">
+          <a href="#"><h3>Yonex Power Cushion 65Z3</h3></a>
+          <div class="price">3.200.000đ</div>
+          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrapper">
+          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
+          <a href="#"><img src="https://picsum.photos/300?random=202" alt="Giày 2"></a>
+        </div>
+        <div class="product-info">
+          <a href="#"><h3>Lining Ranger 6 Chính Hãng</h3></a>
+          <div class="price">1.850.000đ</div>
+          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrapper">
+          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
+          <a href="#"><img src="https://picsum.photos/300?random=203" alt="Giày 3"></a>
+        </div>
+        <div class="product-info">
+          <a href="#"><h3>Victor P9200TTY Đen Trắng</h3></a>
+          <div class="price">2.450.000đ</div>
+          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrapper">
+          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
+          <a href="#"><img src="https://picsum.photos/300?random=204" alt="Giày 4"></a>
+        </div>
+        <div class="product-info">
+          <a href="#"><h3>Mizuno Wave Claw 2 Fit</h3></a>
+          <div class="price">2.900.000đ</div>
+          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrapper">
+          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
+          <a href="#"><img src="https://picsum.photos/300?random=205" alt="Giày 5"></a>
+        </div>
+        <div class="product-info">
+          <a href="#"><h3>Yonex Power Cushion Aerus Z2</h3></a>
+          <div class="price">3.500.000đ</div>
+          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrapper">
+          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
+          <a href="#"><img src="https://picsum.photos/300?random=206" alt="Giày 6"></a>
+        </div>
+        <div class="product-info">
+          <a href="#"><h3>Lining Shadow Of Blade 5</h3></a>
+          <div class="price">2.150.000đ</div>
+          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrapper">
+          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
+          <a href="#"><img src="https://picsum.photos/300?random=207" alt="Giày 7"></a>
+        </div>
+        <div class="product-info">
+          <a href="#"><h3>Victor A970TD Đột Phá</h3></a>
+          <div class="price">1.990.000đ</div>
+          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img-wrapper">
+          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
+          <a href="#"><img src="https://picsum.photos/300?random=208" alt="Giày 8"></a>
+        </div>
+        <div class="product-info">
+          <a href="#"><h3>Giày Cầu Lông Lefus L85</h3></a>
+          <div class="price">590.000đ</div>
+          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Sản phẩm liên quan</h2>
+    <div class="categories">
+      <div class="category-card">
+        <img src="https://cdn.shopvnb.com/img/300x300/uploads/san_pham/vot-cau-long-vnb-v200-xanh-2.webp" alt="Vợt">
+        <h3>Vợt cầu lông</h3>
+      </div>
+
+      <div class="category-card">
+        <img src="https://cdn.shopvnb.com/img/300x300/uploads/gallery/balo-cau-long-yonex-bag525b1112z-bright-white-chinh-hang_1775610383.webp" alt="Balo">
+        <h3>Balo cầu lông</h3>
+      </div>
+
+      <div class="category-card">
+        <img src="https://cdn.shopvnb.com/img/300x300/uploads/san_pham/tui-cau-long-yonex-bag0226_1773858495.webp" alt="Túi">
+        <h3>Túi vợt cầu lông</h3>
+      </div>
+
+      <div class="category-card">
+        <img src="https://cdn.shopvnb.com/img/300x300/uploads/gallery/bang-co-chan-victor-sp191-den-chinh-hang_1761593155.webp" alt="Phụ kiện">
+        <h3>Phụ kiện cầu lông</h3>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <h3>SmashShop</h3>
+        <p>Hệ thống bán vợt và phụ kiện cầu lông chính hãng với giá tốt, hỗ trợ khách hàng tận tâm.</p>
+        <div class="socials">
+          <a href="https://www.facebook.com/le.vinh.686378" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/leevinh_05" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://www.tiktok.com/@vinh.l70?is_from_webapp=1&sender_device=pc" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="https://www.youtube.com/watch?v=brqXbeDUBRQ" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h3>Danh mục</h3>
+        <p><a href="#">Vợt cầu lông</a></p>
+        <p><a href="#">Giày cầu lông</a></p>
+        <p><a href="#">Balo cầu lông</a></p>
+        <p><a href="#">Bao vợt cầu lông</a></p>
+      </div>
+
+      <div class="footer-col">
+        <h3>Hỗ trợ</h3>
+        <p><a href="#">Chính sách bảo hành</a></p>
+        <p><a href="#">Điều khoản dịch vụ</a></p>
+        <p><a href="#">Hướng dẫn mua hàng</a></p>
+        <p><a href="#">Liên hệ</a></p>
+      </div>
+
+      <div class="footer-col">
+        <h3>Thông tin liên hệ</h3>
+        <p>Email: support@smashshop.vn</p>
+        <p>Hotline: 0123 456 789</p>
+        <a href="https://maps.app.goo.gl/XQcabwWphX5mqsZs6" target="_blank"><p>Địa chỉ: 183 Đ. Yên Xá, Yên Xá, Thanh Liệt, Hà Nội, Vietnam</p></a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 SmashShop. All Rights Reserved.</div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const headerHeartIcon = document.querySelector('.header-icons .fa-heart');
+    if (headerHeartIcon) {
+      headerHeartIcon.addEventListener('click', function() {
+        window.location.href = 'wishlist.html';
+      });
+    }
+
+    // XỬ LÝ NÚT YÊU THÍCH (THẢ TIM)
+    const favBadges = document.querySelectorAll('.fav-badge');
+    favBadges.forEach(badge => {
+      badge.addEventListener('click', function(e) {
+        e.preventDefault();
+        const icon = this.querySelector('i');
+        this.classList.toggle('active');
+        if (this.classList.contains('active')) {
+          icon.classList.remove('fa-regular');
+          icon.classList.add('fa-solid');
+        } else {
+          icon.classList.remove('fa-solid');
+          icon.classList.add('fa-regular');
+        }
+      });
+    });
+
+    // XỬ LÝ NÚT THÊM VÀO GIỎ HÀNG
+    const addCartBtns = document.querySelectorAll('.add-cart-btn');
+    addCartBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        alert("Đã thêm sản phẩm vào giỏ hàng!");
+      });
+    });
+  </script>
+</body>
+</html>

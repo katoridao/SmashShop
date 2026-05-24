@@ -5,11 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SmashShop - Badminton Store</title>
 
-  <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -50,20 +47,11 @@
         margin:auto;
     }
 
-    @media(min-width:768px){
-        .container{ max-width:720px; }
-    }
-
-    @media(min-width:992px){
-        .container{ max-width:960px; }
-    }
-
-    @media(min-width:1200px){
-        .container{ max-width:1280px; }
-    }
+    @media(min-width:768px){ .container{ max-width:720px; } }
+    @media(min-width:992px){ .container{ max-width:960px; } }
+    @media(min-width:1200px){ .container{ max-width:1280px; } }
 
     /* HEADER */
-
     header{
       background:#1A1A1A;
       box-shadow:0 2px 10px rgba(0,0,0,0.4);
@@ -91,13 +79,8 @@
     }
 
     @media(min-width:992px){
-      .top-header{
-          flex-direction:row;
-          align-items:center;
-      }
-      .logo{
-          text-align:left;
-      }
+      .top-header{ flex-direction:row; align-items:center; }
+      .logo{ text-align:left; }
     }
 
     .search-box{
@@ -116,9 +99,7 @@
       outline:none;
     }
 
-    .search-box input::placeholder{
-        color:#999;
-    }
+    .search-box input::placeholder{ color:#999; }
 
     .search-box i{
       position:absolute;
@@ -141,9 +122,7 @@
       transition:.3s;
     }
 
-    .header-icons i:hover{
-      color:#ff3c00;
-    }
+    .header-icons i:hover{ color:#ff3c00; }
 
     .login-btn{
       padding:10px 22px;
@@ -162,14 +141,9 @@
     }
 
     /* NAVBAR & DROPDOWN */
+    .nav-link.active{ color:#2563EB !important; }
 
-    .nav-link.active{
-        color:#2563EB !important;
-    }
-
-    nav{
-      background:#121212;
-    }
+    nav{ background:#121212; }
 
     .main-navbar{
       display:flex;
@@ -185,7 +159,6 @@
       font-weight:500;
     }
 
-    /* Hiệu ứng Hover mở dropdown trên Desktop (min-width: 992px) */
     @media(min-width:992px) {
       .main-navbar li.dropdown:hover .dropdown-menu {
         display: block;
@@ -193,7 +166,6 @@
       }
     }
 
-    /* Tối ưu giao diện dropdown menu Bootstrap */
     .dropdown-menu-dark {
       background:#1E1E1E !important;
       border:1px solid #2A2A2A !important;
@@ -214,33 +186,14 @@
     }
 
     @media(max-width:991px){
-      .navbar-collapse{
-          background:#1A1A1A;
-          padding:15px;
-          border-radius:16px;
-          margin-top:12px;
-      }
-      .navbar-nav{
-          gap:10px;
-      }
-      .main-navbar{
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 10px;
-      }
-      .main-navbar > li > a {
-          padding: 8px 0;
-      }
-      .dropdown-menu{
-          border:none !important;
-          background:#222 !important;
-          box-shadow: none;
-          width: 100%;
-      }
+      .navbar-collapse{ background:#1A1A1A; padding:15px; border-radius:16px; margin-top:12px; }
+      .navbar-nav{ gap:10px; }
+      .main-navbar{ flex-direction: column; align-items: flex-start; gap: 10px; }
+      .main-navbar > li > a { padding: 8px 0; }
+      .dropdown-menu{ border:none !important; background:#222 !important; box-shadow: none; width: 100%; }
     }
 
     /* SLIDER */
-
     .slider{
       margin-top:20px;
       position:relative;
@@ -258,47 +211,22 @@
       position:relative;
     }
 
-    .slide img{
-      height:260px;
-      object-fit:cover;
-    }
+    .slide img{ height:260px; object-fit:cover; }
 
-    @media(min-width:768px){
-      .slide img{ height:420px; }
-    }
-
-    @media(min-width:1200px){
-      .slide img{ height:520px; }
-    }
+    @media(min-width:768px){ .slide img{ height:420px; } }
+    @media(min-width:1200px){ .slide img{ height:520px; } }
 
     .slide::before{
-        content:"";
-        position:absolute;
-        inset:0;
-        background:rgba(0,0,0,0.45);
-        z-index:1;
+        content:""; position:absolute; inset:0; background:rgba(0,0,0,0.45); z-index:1;
     }
 
     .slide-content{
-      position:absolute;
-      top:50%;
-      left:20px;
-      right:20px;
-      transform:translateY(-50%);
-      color:#fff;
-      z-index:2;
+      position:absolute; top:50%; left:20px; right:20px;
+      transform:translateY(-50%); color:#fff; z-index:2;
     }
 
-    .slide-content h1{
-      font-size:28px;
-      margin-bottom:10px;
-    }
-
-    .slide-content p{
-      margin-bottom:20px;
-      max-width:500px;
-      font-size:14px;
-    }
+    .slide-content h1{ font-size:28px; margin-bottom:10px; }
+    .slide-content p{ margin-bottom:20px; max-width:500px; font-size:14px; }
 
     @media(min-width:992px){
       .slide-content h1{ font-size:52px; }
@@ -306,348 +234,208 @@
     }
 
     .slide-content button{
-      padding:12px 28px;
-      border:none;
-      border-radius:30px;
-      background:#2563EB;
-      color:#fff;
-      font-weight:600;
-      cursor:pointer;
+      padding:12px 28px; border:none; border-radius:30px;
+      background:#2563EB; color:#fff; font-weight:600; cursor:pointer;
     }
 
     .slider-btn{
-      position:absolute;
-      top:50%;
-      transform:translateY(-50%);
-      background:rgba(20,20,20,0.7);
-      color:#fff;
-      backdrop-filter:blur(8px);
-      border:none;
-      width:45px;
-      height:45px;
-      border-radius:50%;
-      cursor:pointer;
-      font-size:18px;
-      z-index:10;
+      position:absolute; top:50%; transform:translateY(-50%);
+      background:rgba(20,20,20,0.7); color:#fff; backdrop-filter:blur(8px);
+      border:none; width:45px; height:45px; border-radius:50%; cursor:pointer;
+      font-size:18px; z-index:10;
     }
 
-    .slider-btn:hover{
-        background:#2563EB;
-    }
-
+    .slider-btn:hover{ background:#2563EB; }
     .prev{ left:20px; }
     .next{ right:20px; }
 
     /* CATEGORIES */
-
-    .section-title{
-      margin:60px 0 25px;
-      font-size:30px;
-      font-weight:700;
-    }
-
+    .section-title{ margin:60px 0 25px; font-size:30px; font-weight:700; }
     .categories{
-        display:flex;
-        overflow-x:auto;
-        gap:16px;
-        padding-bottom:10px;
-        scroll-snap-type:x mandatory;
+        display:flex; overflow-x:auto; gap:16px; padding-bottom:10px; scroll-snap-type:x mandatory;
     }
-
     .category-card{
-      background:#1E1E1E;
-      border:1px solid #2A2A2A;
-      border-radius:20px;
-      overflow:hidden;
-      cursor:pointer;
-      transition:.3s;
-      text-align:center;
-      padding-bottom:15px;
-      min-width:220px;
-      flex-shrink:0;
-      scroll-snap-align:start;
+      background:#1E1E1E; border:1px solid #2A2A2A; border-radius:20px; overflow:hidden;
+      cursor:pointer; transition:.3s; text-align:center; padding-bottom:15px; min-width:220px;
+      flex-shrink:0; scroll-snap-align:start;
     }
 
     @media(min-width:992px){
-      .categories{
-          display:grid;
-          grid-template-columns:repeat(5,1fr);
-          overflow:visible;
-      }
+      .categories{ display:grid; grid-template-columns:repeat(5,1fr); overflow:visible; }
       .category-card{ min-width:unset; }
     }
 
-    .category-card:hover{
-      transform:translateY(-8px);
-      border-color:#2563EB;
-    }
-
-    .category-card img{
-      height:180px;
-      object-fit:cover;
-    }
-
+    .category-card:hover{ transform:translateY(-8px); border-color:#2563EB; }
+    .category-card img{ height:180px; object-fit:cover; }
     .category-card h3{ margin-top:15px; font-size: 18px; }
 
-    /* PRODUCTS */
-
+    /* BỐ CỤC CHUNG PHẦN SẢN PHẨM */
     .product-layout{
-      display:grid;
-      grid-template-columns:3fr 1fr;
-      gap:25px;
+      display:grid; grid-template-columns:3fr 1fr; gap:25px;
     }
-
     .products{
-        display:grid;
-        grid-template-columns:1fr;
-        gap:20px;
+        display:grid; grid-template-columns:1fr; gap:20px;
     }
+    @media(min-width:768px){ .products{ grid-template-columns:repeat(2,1fr); } }
+    @media(min-width:1200px){ .products{ grid-template-columns:repeat(3,1fr); } }
 
-    @media(min-width:768px){
-      .products{ grid-template-columns:repeat(2,1fr); }
+    /* --- CẤU TRÚC CSS MỚI CHO PRODUCT CARD (DÙNG CHUNG) --- */
+    .product-card { 
+      background: #1E1E1E; 
+      border: 1px solid #2A2A2A; 
+      border-radius: 18px; 
+      overflow: hidden; 
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; 
+      position: relative; 
+      display: flex;
+      flex-direction: column;
     }
-
-    @media(min-width:1200px){
-      .products{ grid-template-columns:repeat(3,1fr); }
+    .product-card:hover { 
+      transform: translateY(-5px); 
+      box-shadow: 0 15px 30px rgba(0,0,0,0.35); 
+      border-color: #2563EB; 
     }
-
-    .product-card{
-      background:#1E1E1E;
-      border:1px solid #2A2A2A;
-      border-radius:18px;
-      overflow:hidden;
-      transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+    .product-img-wrapper { 
+      position: relative; 
+      overflow: hidden; 
     }
-
-    .product-card:hover{
-      transform:translateY(-5px);
-      box-shadow:0 15px 30px rgba(0,0,0,0.35);
-      border-color:#2563EB;
+    .product-img-wrapper img { 
+      height: 250px; 
+      object-fit: cover; 
+      width: 100%; 
+      transition: transform 0.4s ease; 
     }
-
-    .product-card img{
-      height:250px;
-      object-fit:cover;
-      width:100%;
-      transition:transform .4s ease;
+    .product-card:hover .product-img-wrapper img { 
+      transform: scale(1.05); 
     }
-
-    .product-card:hover img{
-        transform:scale(1.05);
+    .fav-badge {
+      position: absolute; 
+      top: 15px; 
+      right: 15px; 
+      width: 40px; 
+      height: 40px;
+      background: rgba(30,30,30,0.8); 
+      backdrop-filter: blur(5px); 
+      border-radius: 50%;
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      color: #fff;
+      font-size: 18px; 
+      cursor: pointer; 
+      z-index: 10;
+      transition: 0.3s; 
+      border: 1px solid #333;
     }
-
-    .product-info{
-      padding:15px;
+    .fav-badge:hover { 
+      background: #ff3c00; 
+      color: #fff; 
+      border-color: #ff3c00; 
+      transform: scale(1.1); 
     }
-
-    .product-info h3{
-      margin-bottom:10px;
-      font-size:18px;
+    .fav-badge.active {
+      background: #ff3c00;
+      color: #fff;
+      border-color: #ff3c00;
     }
-
-    .price{
-      color:#2563EB;
-      font-size:20px;
-      font-weight:700;
-      margin-bottom:12px;
+    .product-info { 
+      padding: 15px; 
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
     }
-
-    .product-info button{
-      width:100%;
-      padding:10px;
-      border:none;
-      background:#2563EB;
-      color:#fff;
-      border-radius:10px;
-      cursor:pointer;
-      font-weight: 600;
+    .product-info h3 { 
+      margin-bottom: 10px; 
+      font-size: 18px; 
+      white-space: nowrap; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+      transition: color 0.2s;
     }
-
-    .product-info button:hover{
-        background:#1D4ED8;
+    .product-info h3:hover {
+      color: #2563EB;
     }
+    .price { 
+      color: #2563EB; 
+      font-size: 20px; 
+      font-weight: 700; 
+      margin-bottom: 12px; 
+    }
+    .add-cart-btn { 
+      width: 100%; 
+      padding: 10px; 
+      border: none; 
+      background: #2563EB; 
+      color: #fff; 
+      border-radius: 10px; 
+      cursor: pointer; 
+      font-weight: 600; 
+      transition: 0.3s;
+      margin-top: auto;
+    }
+    .add-cart-btn i {
+      margin-right: 5px;
+    }
+    .add-cart-btn:hover { 
+      background: #1D4ED8; 
+    }
+    /* --- KẾT THÚC CSS PRODUCT CARD --- */
 
+    /* ASIDE BANNER */
     .aside-banner{
-      background:#121212;
-      color:#fff;
-      border-radius:20px;
-      overflow:hidden;
-      position:relative;
+      background:#121212; color:#fff; border-radius:20px; overflow:hidden; position:relative;
     }
-
-    @media(max-width:1200px){
-      .aside-banner{ min-height:300px; }
-    }
-
-    .aside-banner img{
-      height:100%;
-      object-fit:cover;
-      opacity:.5;
-    }
-
+    @media(max-width:1200px){ .aside-banner{ min-height:300px; } }
+    .aside-banner img{ height:100%; object-fit:cover; opacity:.5; }
     .banner-content{
-      position:absolute;
-      top:50%;
-      left:50%;
-      transform:translate(-50%,-50%);
-      text-align:center;
-      width:80%;
+      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; width:80%;
     }
-
-    .banner-content h2{
-      font-size:32px;
-      margin-bottom:15px;
-      font-weight: 700;
-    }
-
+    .banner-content h2{ font-size:32px; margin-bottom:15px; font-weight: 700; }
     .banner-content button{
-      padding:12px 20px;
-      border:none;
-      background:#2563EB;
-      color:#fff;
-      border-radius:30px;
-      cursor:pointer;
-      font-weight: 600;
+      padding:12px 20px; border:none; background:#2563EB; color:#fff; border-radius:30px; cursor:pointer; font-weight: 600;
     }
 
     /* TESTIMONIAL */
-
-    .testimonial-wrapper{
-      overflow:hidden;
-      position:relative;
-    }
-
-    .testimonial-slider{
-      display:flex;
-      transition:.5s;
-    }
-
+    .testimonial-wrapper{ overflow:hidden; position:relative; }
+    .testimonial-slider{ display:flex; transition:.5s; }
     .testimonial{
-      min-width:100%;
-      background:#1E1E1E;
-      border:1px solid #2A2A2A;
-      padding:40px;
-      border-radius:20px;
-      text-align:center;
+      min-width:100%; background:#1E1E1E; border:1px solid #2A2A2A; padding:40px; border-radius:20px; text-align:center;
     }
-
     .testimonial img{
-      width:90px;
-      height:90px;
-      border-radius:50%;
-      margin:auto;
-      object-fit:cover;
-      margin-bottom:20px;
+      width:90px; height:90px; border-radius:50%; margin:auto; object-fit:cover; margin-bottom:20px;
     }
-
-    .testimonial p{
-      max-width:700px;
-      margin:auto;
-      color:#B3B3B3;
-      line-height:1.7;
-    }
-
-    .testimonial h4{
-      margin-top:18px;
-    }
+    .testimonial p{ max-width:700px; margin:auto; color:#B3B3B3; line-height:1.7; }
+    .testimonial h4{ margin-top:18px; }
 
     /* FOOTER */
-
-    footer{
-      background:#0D0D0D;
-      border-top:1px solid #222;
-      color:#fff;
-      margin-top:70px;
-      padding-top:60px;
-    }
-
-    .footer-grid{
-        display:grid;
-        grid-template-columns:1fr;
-        gap:30px;
-    }
-
-    @media(min-width:768px){
-      .footer-grid{ grid-template-columns:repeat(2,1fr); }
-    }
-
-    @media(min-width:1200px){
-        .footer-grid{ grid-template-columns:repeat(4,1fr); }
-    }
-
-    .footer-col{
-        display:flex;
-        flex-direction:column;
-    }
-
-    .footer-col h3{
-      margin-bottom:20px;
-    }
-
-    .footer-col p,
-    .footer-col a{
-      color:#ccc;
-      line-height:1.9;
-      font-size:14px;
-    }
-
-    .socials{
-      display:flex;
-      gap:15px;
-      margin-top:15px;
-    }
-
-    .socials i{
-      width:40px;
-      height:40px;
-      background:#222;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border-radius:50%;
-      cursor:pointer;
-      transition:.3s;
-    }
-
-    .socials i:hover{
-      background:#2563EB;
-    }
-
-    .footer-bottom{
-      text-align:center;
-      border-top:1px solid #222;
-      margin-top:40px;
-      padding:20px 0;
-      color:#999;
-      font-size:14px;
-    }
+    footer{ background:#0D0D0D; border-top:1px solid #222; color:#fff; margin-top:70px; padding-top:60px; }
+    .footer-grid{ display:grid; grid-template-columns:1fr; gap:30px; }
+    @media(min-width:768px){ .footer-grid{ grid-template-columns:repeat(2,1fr); } }
+    @media(min-width:1200px){ .footer-grid{ grid-template-columns:repeat(4,1fr); } }
+    .footer-col{ display:flex; flex-direction:column; }
+    .footer-col h3{ margin-bottom:20px; }
+    .footer-col p, .footer-col a{ color:#ccc; line-height:1.9; font-size:14px; }
+    .socials{ display:flex; gap:15px; margin-top:15px; }
+    .socials i{ width:40px; height:40px; background:#222; display:flex; align-items:center; justify-content:center; border-radius:50%; cursor:pointer; transition:.3s; }
+    .socials i:hover{ background:#2563EB; }
+    .footer-bottom{ text-align:center; border-top:1px solid #222; margin-top:40px; padding:20px 0; color:#999; font-size:14px; }
 
     /* RESPONSIVE FIXES */
-
     @media(max-width:992px){
       .categories{ grid-template-columns:repeat(2,1fr); }
       .products{ grid-template-columns:repeat(2,1fr); }
       .product-layout{ grid-template-columns:1fr; }
     }
-
     @media(max-width:768px){
       .main-navbar{ gap:15px; }
       .slide img{ height:350px; }
       .slide-content{ left:30px; }
       .slide-content h1{ font-size:26px; line-height:1.3; }
       .products{ grid-template-columns:1fr; }
-      .categories{
-        display: flex;
-        grid-template-columns: none;
-        overflow-x: auto;
-        scrollbar-width: none;
-      }
+      .categories{ display: flex; grid-template-columns: none; overflow-x: auto; scrollbar-width: none; }
       .categories::-webkit-scrollbar{ display:none; }
     }
-
-    html{
-        scroll-behavior:smooth;
-    }
+    html{ scroll-behavior:smooth; }
   </style>
 </head>
 <body>
@@ -664,8 +452,8 @@
       </div>
 
       <div class="header-icons">
-        <i class="fa-regular fa-heart"></i>
-        <i class="fa-solid fa-cart-shopping"></i>
+        <a href="wishlist.html"><i class="fa-regular fa-heart"></i></a>
+        <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
         <button class="login-btn">Login</button>
       </div>
     </div>
@@ -695,25 +483,17 @@
                 Sản phẩm
               </a>
               <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Vợt cầu lông</a></li>
-                <li><a class="dropdown-item" href="#">Giày cầu lông</a></li>
-                <li><a class="dropdown-item" href="#">Balo cầu lông</a></li>
-                <li><a class="dropdown-item" href="#">Bao vợt cầu lông</a></li>
-                <li><a class="dropdown-item" href="#">Phụ kiện cầu lông</a></li>
+                <li><a class="dropdown-item" href="/SmashShop/vot.html">Vợt cầu lông</a></li>
+                <li><a class="dropdown-item" href="/SmashShop/giay.html">Giày cầu lông</a></li>
+                <li><a class="dropdown-item" href="/SmashShop/balo.html">Balo cầu lông</a></li>
+                <li><a class="dropdown-item" href="/SmashShop/tuivot.html">Túi vợt cầu lông</a></li>
+                <li><a class="dropdown-item" href="/SmashShop/phukien.html">Phụ kiện cầu lông</a></li>
               </ul>
             </li>
 
-            <li class="nav-item">
-              <a class="nav-link" href="/SmashShop/sale.html">Khuyến mãi</a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" href="/SmashShop/about.html">Giới thiệu</a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" href="/SmashShop/contact.html">Liên hệ</a>
-            </li>
+            <li class="nav-item"><a class="nav-link" href="/SmashShop/sale.html">Khuyến mãi</a></li>
+            <li class="nav-item"><a class="nav-link" href="/SmashShop/about.html">Giới thiệu</a></li>
+            <li class="nav-item"><a class="nav-link" href="/SmashShop/contact.html">Liên hệ</a></li>
           </ul>
         </div>
       </div>
@@ -723,67 +503,44 @@
   <section class="container slider">
     <div class="slides">
       <div class="slide">
-        <img src="https://picsum.photos/1400/500?random=1" alt="Slider 1">
-        <div class="slide-content">
-          <h1>Smash Every Match</h1>
-          <p>Khám phá những mẫu vợt và phụ kiện cầu lông chất lượng cao.</p>
-          <button>Mua ngay</button>
-        </div>
+        <img src="https://cdn.shopvnb.com/img/1920x640/uploads/slider/web_1779331692.webp" alt="Slider 1">
+        <div class="slide-content"></div>
       </div>
-
       <div class="slide">
-        <img src="https://picsum.photos/1400/500?random=2" alt="Slider 2">
-        <div class="slide-content">
-          <h1>Sale Up To 50%</h1>
-          <p>Hàng loạt sản phẩm chính hãng đang được giảm giá cực mạnh.</p>
-          <button>Xem thêm</button>
-        </div>
+        <img src="https://cdn.shopvnb.com/img/1920x640/uploads/slider/vs-long-ma_1774643350.webp" alt="Slider 2">
+        <div class="slide-content"></div>
       </div>
-
       <div class="slide">
-        <img src="https://picsum.photos/1400/500?random=3" alt="Slider 3">
-        <div class="slide-content">
-          <h1>Professional Badminton</h1>
-          <p>Thiết kế hiện đại dành cho người chơi phong trào và chuyên nghiệp.</p>
-          <button>Khám phá</button>
-        </div>
+        <img src="https://cdn.shopvnb.com/img/1920x640/uploads/slider/62-1-_1764612898.webp" alt="Slider 3">
+        <div class="slide-content"></div>
       </div>
     </div>
 
-    <button class="slider-btn prev">
-      <i class="fa-solid fa-chevron-left"></i>
-    </button>
-
-    <button class="slider-btn next">
-      <i class="fa-solid fa-chevron-right"></i>
-    </button>
+    <button class="slider-btn prev"><i class="fa-solid fa-chevron-left"></i></button>
+    <button class="slider-btn next"><i class="fa-solid fa-chevron-right"></i></button>
   </section>
 
   <section class="container">
     <h2 class="section-title">Danh mục sản phẩm</h2>
     <div class="categories">
       <div class="category-card">
-        <img src="https://picsum.photos/200?random=10" alt="Category 1">
+        <img src="https://cdn.shopvnb.com/img/300x300/uploads/san_pham/vot-cau-long-vnb-v200-xanh-2.webp" alt="Vợt">
         <h3>Vợt cầu lông</h3>
       </div>
-
       <div class="category-card">
-        <img src="https://picsum.photos/200?random=11" alt="Category 2">
+        <img src="https://cdn.shopvnb.com/img/300x300/uploads/gallery/giay-cau-long-yonex-shb-03ex-trang_1733364947.webp" alt="Giày">
         <h3>Giày cầu lông</h3>
       </div>
-
       <div class="category-card">
-        <img src="https://picsum.photos/200?random=12" alt="Category 3">
+        <img src="https://cdn.shopvnb.com/img/300x300/uploads/gallery/balo-cau-long-yonex-bag525b1112z-bright-white-chinh-hang_1775610383.webp" alt="Balo">
         <h3>Balo cầu lông</h3>
       </div>
-
       <div class="category-card">
-        <img src="https://picsum.photos/200?random=13" alt="Category 4">
-        <h3>Bao vợt cầu lông</h3>
+        <img src="https://cdn.shopvnb.com/img/300x300/uploads/san_pham/tui-cau-long-yonex-bag0226_1773858495.webp" alt="Túi Vợt">
+        <h3>Túi vợt cầu lông</h3>
       </div>
-
       <div class="category-card">
-        <img src="https://picsum.photos/200?random=14" alt="Category 5">
+        <img src="https://cdn.shopvnb.com/img/300x300/uploads/gallery/bang-co-chan-victor-sp191-den-chinh-hang_1761593155.webp" alt="Phụ Kiện">
         <h3>Phụ kiện cầu lông</h3>
       </div>
     </div>
@@ -792,60 +549,81 @@
   <section class="container">
     <h2 class="section-title">Sản phẩm nổi bật</h2>
     <div class="product-layout">
+      
       <div class="products">
+        
         <div class="product-card">
-          <img src="https://picsum.photos/300?random=21" alt="Product 1">
+          <div class="product-img-wrapper">
+            <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
+            <a href="#"><img src="https://picsum.photos/300?random=21" alt="Product 1"></a>
+          </div>
           <div class="product-info">
-            <h3>Yonex Astrox 100ZZ</h3>
+            <a href="#"><h3>Yonex Astrox 100ZZ</h3></a>
             <div class="price">5.200.000đ</div>
-            <button>Thêm vào giỏ</button>
+            <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
           </div>
         </div>
 
         <div class="product-card">
-          <img src="https://picsum.photos/300?random=22" alt="Product 2">
+          <div class="product-img-wrapper">
+            <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
+            <a href="#"><img src="https://picsum.photos/300?random=22" alt="Product 2"></a>
+          </div>
           <div class="product-info">
-            <h3>Lining Aeronaut</h3>
+            <a href="#"><h3>Lining Aeronaut 9000C</h3></a>
             <div class="price">3.800.000đ</div>
-            <button>Thêm vào giỏ</button>
+            <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
           </div>
         </div>
 
         <div class="product-card">
-          <img src="https://picsum.photos/300?random=23" alt="Product 3">
+          <div class="product-img-wrapper">
+            <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
+            <a href="#"><img src="https://picsum.photos/300?random=23" alt="Product 3"></a>
+          </div>
           <div class="product-info">
-            <h3>Giày Victor</h3>
+            <a href="#"><h3>Giày Victor P9200</h3></a>
             <div class="price">2.100.000đ</div>
-            <button>Thêm vào giỏ</button>
+            <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
           </div>
         </div>
 
         <div class="product-card">
-          <img src="https://picsum.photos/300?random=24" alt="Product 4">
+          <div class="product-img-wrapper">
+            <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
+            <a href="#"><img src="https://picsum.photos/300?random=24" alt="Product 4"></a>
+          </div>
           <div class="product-info">
-            <h3>Balo Yonex</h3>
+            <a href="#"><h3>Balo Yonex BA92012EX</h3></a>
             <div class="price">1.200.000đ</div>
-            <button>Thêm vào giỏ</button>
+            <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
           </div>
         </div>
 
         <div class="product-card">
-          <img src="https://picsum.photos/300?random=25" alt="Product 5">
+          <div class="product-img-wrapper">
+            <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
+            <a href="#"><img src="https://picsum.photos/300?random=25" alt="Product 5"></a>
+          </div>
           <div class="product-info">
-            <h3>Quấn cán cầu lông</h3>
+            <a href="#"><h3>Quấn cán cầu lông Yonex</h3></a>
             <div class="price">80.000đ</div>
-            <button>Thêm vào giỏ</button>
+            <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
           </div>
         </div>
 
         <div class="product-card">
-          <img src="https://picsum.photos/300?random=26" alt="Product 6">
+          <div class="product-img-wrapper">
+            <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
+            <a href="#"><img src="https://picsum.photos/300?random=26" alt="Product 6"></a>
+          </div>
           <div class="product-info">
-            <h3>Ống cầu thi đấu</h3>
+            <a href="#"><h3>Ống cầu thi đấu Vina Star</h3></a>
             <div class="price">350.000đ</div>
-            <button>Thêm vào giỏ</button>
+            <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
           </div>
         </div>
+
       </div>
 
       <aside class="aside-banner">
@@ -854,7 +632,7 @@
           <h2>FLASH SALE</h2>
           <p>Giảm tới 50% cho các dòng vợt cao cấp.</p>
           <br>
-          <button>Mua ngay</button>
+          <a href="/SmashShop/sale.html"><button>Mua ngay</button></a>
         </div>
       </aside>
     </div>
@@ -866,19 +644,14 @@
       <div class="testimonial-slider">
         <div class="testimonial">
           <img src="https://picsum.photos/100?random=70" alt="User 1">
-          <p>
-            Shop đóng gói cực kỳ cẩn thận, giao hàng nhanh và sản phẩm chính hãng.
-            Mình sẽ tiếp tục ủng hộ SmashShop.
-          </p>
+          <p>Shop đóng gói cực kỳ cẩn thận, giao hàng nhanh và sản phẩm chính hãng. Mình sẽ tiếp tục ủng hộ SmashShop.</p>
           <h4>Nguyễn Văn A</h4>
         </div>
-
         <div class="testimonial">
           <img src="https://picsum.photos/100?random=71" alt="User 2">
           <p>Giao diện web đẹp, dễ mua hàng. Nhân viên hỗ trợ rất nhiệt tình.</p>
           <h4>Trần Minh K</h4>
         </div>
-
         <div class="testimonial">
           <img src="https://picsum.photos/100?random=72" alt="User 3">
           <p>Mua vợt ở đây nhiều lần rồi, giá tốt và hàng rất chất lượng.</p>
@@ -903,11 +676,12 @@
 
       <div class="footer-col">
         <h3>Danh mục</h3>
-        <p><a href="#">Vợt cầu lông</a></p>
-        <p><a href="#">Giày cầu lông</a></p>
-        <p><a href="#">Balo cầu lông</a></p>
-        <p><a href="#">Bao vợt cầu lông</a></p>
-      </div>
+        <p><a href="/SmashShop/vot.html">Vợt cầu lông</a></p>
+        <p><a href="/SmashShop/giay.html">Giày cầu lông</a></p>
+        <p><a href="/SmashShop/balo.html">Balo cầu lông</a></p>
+        <p><a href="/SmashShop/tuivot.html">Túi vợt cầu lông</a></p>
+        <p><a href="/SmashShop/phukien.html">Phụ kiện cầu lông</a></p>
+      </div> 
 
       <div class="footer-col">
         <h3>Hỗ trợ</h3>
@@ -922,7 +696,6 @@
         <p>Email: support@smashshop.vn</p>
         <p>Hotline: 0123 456 789</p>
         <a href="https://maps.app.goo.gl/XQcabwWphX5mqsZs6" target="_blank"><p>Địa chỉ: 183 Đ. Yên Xá, Yên Xá, Thanh Liệt, Hà Nội, Vietnam</p></a>
-        
       </div>
     </div>
     <div class="footer-bottom">© 2026 SmashShop. All Rights Reserved.</div>
@@ -931,7 +704,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // MAIN SLIDER
+    // MAIN SLIDER (GIỮ NGUYÊN)
     const slides = document.querySelector('.slides');
     const slide = document.querySelectorAll('.slide');
     let index = 0;
@@ -958,7 +731,7 @@
       showSlide(index);
     }, 4000);
 
-    // TESTIMONIAL
+    // TESTIMONIAL (GIỮ NGUYÊN)
     const testimonialSlider = document.querySelector('.testimonial-slider');
     const testimonials = document.querySelectorAll('.testimonial');
     let testiIndex = 0;
@@ -968,6 +741,34 @@
       if(testiIndex >= testimonials.length){ testiIndex = 0; }
       testimonialSlider.style.transform = `translateX(-${testiIndex * 100}%)`;
     }, 5000);
+
+    // LOGIC CHỨC NĂNG MỚI: XỬ LÝ NÚT YÊU THÍCH (THẢ TIM)
+    const favBadges = document.querySelectorAll('.fav-badge');
+    favBadges.forEach(badge => {
+      badge.addEventListener('click', function(e) {
+        e.preventDefault(); 
+        const icon = this.querySelector('i');
+        
+        this.classList.toggle('active');
+        
+        if (this.classList.contains('active')) {
+          icon.classList.remove('fa-regular');
+          icon.classList.add('fa-solid');
+        } else {
+          icon.classList.remove('fa-solid');
+          icon.classList.add('fa-regular');
+        }
+      });
+    });
+
+    // LOGIC CHỨC NĂNG MỚI: XỬ LÝ NÚT THÊM VÀO GIỎ HÀNG
+    const addCartBtns = document.querySelectorAll('.add-cart-btn');
+    addCartBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        alert("Đã thêm sản phẩm vào giỏ hàng!");
+      });
+    });
   </script>
 </body>
 </html>
