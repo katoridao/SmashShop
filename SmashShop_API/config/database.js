@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
-const mongoURL =
-  "mongodb+srv://dha:6lxtKJ44sodNiKM2@cluster0.zzooqos.mongodb.net/SmashShop";
+const mongoURL = "mongodb://dha:6lxtKJ44sodNiKM2@ac-41ziyf0-shard-00-00.zzooqos.mongodb.net:27017,ac-41ziyf0-shard-00-01.zzooqos.mongodb.net:27017,ac-41ziyf0-shard-00-02.zzooqos.mongodb.net:27017/?ssl=true&replicaSet=atlas-odz7a1-shard-0&authSource=admin&appName=Cluster0";
 
 // connect mongodb
 const connect = async () => {
