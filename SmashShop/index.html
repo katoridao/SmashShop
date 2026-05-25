@@ -306,10 +306,19 @@
       padding:10px 14px;
       font-weight:600;
       cursor:pointer;
+      transition:.3s ease;
+      border:1px solid transparent;
+    }
+
+    .auth-tab:hover{
+      border-color:#2563EB;
+      background:#2A3f5f;
     }
 
     .auth-tab.active{
       background:#2563EB;
+      border-color:#2563EB;
+      box-shadow:0 4px 12px rgba(37, 99, 235, 0.3);
     }
 
     .auth-form{
@@ -339,10 +348,22 @@
       color:#fff;
       padding:12px 14px;
       outline:none;
+      transition:.3s ease;
+    }
+
+    .auth-field input:hover{
+      border-color:#2563EB;
+      background:#111f3a;
     }
 
     .auth-field input:focus{
       border-color:#2563EB;
+      background:#111f3a;
+      box-shadow:0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .auth-field input::placeholder{
+      color:#64748b;
     }
 
     .auth-actions{
@@ -361,6 +382,22 @@
       padding:12px 20px;
       font-weight:700;
       cursor:pointer;
+      transition:.3s ease;
+    }
+
+    .auth-submit-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 8px 16px rgba(37, 99, 235, 0.3);
+    }
+
+    .auth-submit-btn:active{
+      transform:translateY(0);
+    }
+
+    .auth-submit-btn:disabled{
+      opacity:.6;
+      cursor:not-allowed;
+      transform:none;
     }
 
     .auth-secondary-btn{
@@ -370,20 +407,47 @@
       border-radius:999px;
       padding:10px 16px;
       cursor:pointer;
+      transition:.3s ease;
+    }
+
+    .auth-secondary-btn:hover{
+      background:#1F2937;
+      border-color:#2563EB;
     }
 
     .auth-status{
       min-height:24px;
       margin-top:12px;
       font-size:14px;
+      padding:10px 12px;
+      border-radius:8px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      animation:slideIn .3s ease;
     }
 
     .auth-status.error{
       color:#fca5a5;
+      background:rgba(220, 38, 38, 0.1);
+      border:1px solid rgba(220, 38, 38, 0.3);
     }
 
     .auth-status.success{
       color:#86efac;
+      background:rgba(34, 197, 94, 0.1);
+      border:1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    @keyframes slideIn{
+      from{
+        opacity:0;
+        transform:translateY(-8px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
     }
 
     /* NAVBAR & DROPDOWN */
@@ -717,7 +781,6 @@
             </div>
             <span id="userMenuRole" class="user-menu-role">Guest</span>
           </div>
-          <div id="userMenuNotice" class="user-menu-notice">Chọn một chức năng để mở.</div>
           <div class="user-menu-actions">
             <button class="user-menu-action" type="button" data-action="profile">Thông tin cá nhân</button>
             <button class="user-menu-action" type="button" data-action="history">Lịch sử đặt hàng</button>
@@ -935,11 +998,6 @@
 
   <div id="authModal" class="auth-modal-overlay" aria-hidden="true">
     <div class="auth-modal-card">
-      <div class="auth-modal-header">
-        <h2>Tài khoản SmashShop</h2>
-        <p>Đăng ký, đăng nhập hoặc đặt lại mật khẩu để tiếp tục trải nghiệm.</p>
-      </div>
-
       <div class="auth-tabs">
         <button id="loginTabBtn" class="auth-tab active" type="button" data-tab="login">Đăng nhập</button>
         <button id="registerTabBtn" class="auth-tab" type="button" data-tab="register">Đăng ký</button>
@@ -948,8 +1006,8 @@
 
       <form id="loginForm" class="auth-form active">
         <div class="auth-field">
-          <label for="loginIdentifier">Email hoặc tên đăng nhập</label>
-          <input id="loginIdentifier" name="identifier" type="text" placeholder="admin hoặc admin@smashshop.vn" required>
+          <label for="loginIdentifier">Email, số điện thoại</label>
+          <input id="loginIdentifier" name="identifier" type="text" placeholder="email@example.com hoặc 0123456789" required>
         </div>
         <div class="auth-field">
           <label for="loginPassword">Mật khẩu</label>
@@ -991,19 +1049,14 @@
       <form id="forgotForm" class="auth-form">
         <div class="auth-field">
           <label for="forgotEmail">Email</label>
-          <input id="forgotEmail" name="email" type="email" placeholder="name@example.com" required>
+          <input id="forgotEmail" name="email" type="email" placeholder="Nhập email đã đăng ký" required>
         </div>
-        <div class="auth-field">
-          <label for="forgotNewPassword">Mật khẩu mới</label>
-          <input id="forgotNewPassword" name="newPassword" type="password" placeholder="Tối thiểu 6 ký tự" required>
-        </div>
-        <div class="auth-field">
-          <label for="forgotConfirmPassword">Xác nhận mật khẩu mới</label>
-          <input id="forgotConfirmPassword" name="confirmPassword" type="password" placeholder="Nhập lại mật khẩu" required>
-        </div>
+        <p style="font-size: 13px; color: #cbd5e1; margin-bottom: 14px; line-height: 1.5;">
+          Nhập email đã đăng ký, chúng tôi sẽ gửi mật khẩu mới tới email của bạn. Vui lòng kiểm tra cả thư mục Spam.
+        </p>
         <div class="auth-actions">
           <button type="button" class="auth-secondary-btn" data-close-auth>Đóng</button>
-          <button type="submit" class="auth-submit-btn">Đổi mật khẩu</button>
+          <button type="submit" class="auth-submit-btn">Gửi mật khẩu mới</button>
         </div>
       </form>
 
@@ -1162,9 +1215,7 @@
       userMenu.setAttribute('aria-hidden', String(!userMenu.classList.contains('show')));
       if (userMenu.classList.contains('show')) {
         const auth = currentAuth || getStoredAuth();
-        if (auth && auth.user) {
-          setUserMenuNotice(`Bạn đang đăng nhập với tư cách ${auth.user.role === 'admin' ? 'admin' : 'khách hàng'}.`);
-        }
+        
       }
     }
 
@@ -1224,8 +1275,11 @@
 
       try {
         await apiRequest('/register', 'POST', { name, email, password, phone });
-        setAuthStatus('Đăng ký thành công. Bạn có thể đăng nhập ngay bây giờ.', 'success');
-        openAuthModal('login');
+        setAuthStatus('✓ Đăng ký thành công! Chuyển sang đăng nhập...', 'success');
+        registerForm.reset();
+        setTimeout(() => {
+          openAuthModal('login');
+        }, 1500);
       } catch (error) {
         setAuthStatus(error.message, 'error');
       }
@@ -1234,18 +1288,13 @@
     async function handleForgotSubmit(event) {
       event.preventDefault();
       const email = document.getElementById('forgotEmail').value.trim();
-      const newPassword = document.getElementById('forgotNewPassword').value;
-      const confirmPassword = document.getElementById('forgotConfirmPassword').value;
-
-      if (newPassword !== confirmPassword) {
-        setAuthStatus('Mật khẩu xác nhận không khớp', 'error');
-        return;
-      }
 
       try {
-        await apiRequest('/forgot-password', 'PUT', { email, newPassword });
-        setAuthStatus('Đổi mật khẩu thành công. Vui lòng đăng nhập lại.', 'success');
-        openAuthModal('login');
+        await apiRequest('/forgot-password', 'POST', { email });
+        setAuthStatus('Email đã được gửi! Vui lòng kiểm tra hộp thư để lấy mật khẩu mới.', 'success');
+        setTimeout(() => {
+          openAuthModal('login');
+        }, 2000);
       } catch (error) {
         setAuthStatus(error.message, 'error');
       }
