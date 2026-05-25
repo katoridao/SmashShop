@@ -3,7 +3,10 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
-const { generateRandomPassword, sendPasswordResetEmail } = require("../utils/emailHelper");
+const {
+  generateRandomPassword,
+  sendPasswordResetEmail,
+} = require("../utils/emailHelper");
 
 const router = express.Router();
 
@@ -186,7 +189,8 @@ router.post("/forgot-password", async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Mật khẩu mới đã được gửi tới email của bạn. Vui lòng kiểm tra hộp thư.",
+      message:
+        "Mật khẩu mới đã được gửi tới email của bạn. Vui lòng kiểm tra hộp thư.",
     });
   } catch (error) {
     console.error("Forgot password error:", error);
@@ -229,7 +233,15 @@ router.get("/profile/:id", async (req, res) => {
 
 router.put("/profile/:id", async (req, res) => {
   try {
-    const { name, phone } = req.body;
+    const name = typeof req.body.name === "string" ? req.body.name.trim() : "";
+    const phone =
+      typeof req.body.phone === "string" ? req.body.phone.trim() : "";
+
+    if (!name || !phone) {
+      return res.status(400).json({
+        message: "Vui lòng nhập đầy đủ họ tên và số điện thoại",
+      });
+    }
 
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
@@ -239,6 +251,7 @@ router.put("/profile/:id", async (req, res) => {
       },
       {
         new: true,
+        runValidators: true,
       },
     ).select("-password");
 
@@ -252,6 +265,63 @@ router.put("/profile/:id", async (req, res) => {
       success: true,
       message: "Cập nhật thông tin thành công",
       user: sanitizeUser(updatedUser),
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+// ==============================
+// CHANGE PASSWORD
+// ==============================
+
+router.post("/change-password/:id", async (req, res) => {
+  try {
+    const currentPassword =
+      typeof req.body.currentPassword === "string"
+        ? req.body.currentPassword
+        : "";
+    const newPassword =
+      typeof req.body.newPassword === "string" ? req.body.newPassword : "";
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
+        message: "Vui lòng nhập mật khẩu hiện tại và mật khẩu mới",
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        message: "Mật khẩu mới phải có ít nhất 6 ký tự",
+      });
+    }
+
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "Không tìm thấy tài khoản",
+      });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({
+        message: "Mật khẩu hiện tại không đúng",
+      });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Đổi mật khẩu thành công",
     });
   } catch (error) {
     res.status(500).json({

@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmashShop | Thông tin cá nhân</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: rgba(15, 23, 42, 0.88);
+      --border: rgba(148, 163, 184, 0.22);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-strong: #2563eb;
+      --success: #4ade80;
+      --danger: #f87171;
+      --shadow: 0 24px 60px rgba(15, 23, 42, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(56, 189, 248, 0.22), transparent 28%),
+        linear-gradient(180deg, #020617, #111827 50%, #0f172a);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 22px;
+      background: rgba(15, 23, 42, 0.9);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .brand {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .topbar-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .topbar-btn,
+    .primary-btn,
+    .secondary-btn,
+    .danger-btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, opacity 0.18s ease, background 0.18s ease;
+    }
+
+    .topbar-btn:hover,
+    .primary-btn:hover,
+    .secondary-btn:hover,
+    .danger-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .topbar-btn,
+    .secondary-btn {
+      background: rgba(30, 41, 59, 0.95);
+      color: var(--text);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, #38bdf8, #2563eb);
+      color: #fff;
+    }
+
+    .danger-btn {
+      background: rgba(239, 68, 68, 0.14);
+      color: #fecaca;
+      border: 1px solid rgba(248, 113, 113, 0.3);
+    }
+
+    .page-shell {
+      width: min(980px, calc(100% - 32px));
+      margin: 28px auto 48px;
+    }
+
+    .hero-card,
+    .profile-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-card {
+      padding: 22px 24px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .hero-card h1 {
+      margin: 0 0 8px;
+      font-size: 1.5rem;
+    }
+
+    .hero-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.12);
+      color: #bae6fd;
+      font-size: 0.92rem;
+    }
+
+    .profile-card {
+      padding: 24px;
+    }
+
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 22px;
+    }
+
+    .info-panel,
+    .form-panel {
+      border-radius: 20px;
+      padding: 20px;
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      background: rgba(15, 23, 42, 0.6);
+    }
+
+    .section-title {
+      margin: 0 0 18px;
+      font-size: 1.1rem;
+    }
+
+    .info-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+    }
+
+    .info-label {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .info-value {
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .profile-form {
+      display: grid;
+      gap: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label {
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    .field input {
+      width: 100%;
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: rgba(15, 23, 42, 0.88);
+      color: var(--text);
+      outline: none;
+      font-size: 1rem;
+    }
+
+    .field input:focus {
+      border-color: rgba(56, 189, 248, 0.9);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+    }
+
+    .field input[readonly] {
+      color: #cbd5e1;
+      cursor: not-allowed;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-top: 6px;
+    }
+
+    .status-message {
+      margin-top: 12px;
+      font-weight: 700;
+      min-height: 24px;
+    }
+
+    .status-message.success {
+      color: var(--success);
+    }
+
+    .status-message.error {
+      color: var(--danger);
+    }
+
+    .guest-state {
+      padding: 24px;
+      text-align: center;
+      background: var(--panel);
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .guest-state h2 {
+      margin-top: 0;
+    }
+
+    .guest-state p {
+      color: var(--muted);
+      margin-bottom: 18px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 820px) {
+      .hero-card,
+      .profile-grid {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .hero-card {
+        justify-items: start;
+      }
+
+      .info-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .info-value {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a href="/SmashShop/index.html" class="brand">SmashShop</a>
+    <div class="topbar-actions">
+      <a href="/SmashShop/index.html" class="topbar-btn">Về trang chủ</a>
+      <button id="logoutBtn" class="danger-btn" type="button" style="display:none;">Đăng xuất</button>
+    </div>
+  </header>
+
+  <main class="page-shell" id="profilePage">
+    <section class="hero-card">
+      <div>
+        <p style="text-transform: uppercase; letter-spacing: 0.08em; color: #7dd3fc; font-size: 0.8rem; margin-bottom: 8px;">Thông tin cá nhân</p>
+        <h1 id="pageTitle">Chào mừng</h1>
+        <p id="pageDescription">Xem và cập nhật thông tin tài khoản của bạn tại đây.</p>
+        <div class="badge-row">
+          <span class="badge"><i class="fa-solid fa-shield-halved"></i> <span id="userRoleBadge">Guest</span></span>
+          <span class="badge"><i class="fa-solid fa-calendar-days"></i> <span id="memberSinceBadge">-</span></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="profile-card">
+      <div class="profile-grid">
+        <div class="info-panel">
+          <h2 class="section-title">Tài khoản</h2>
+          <div class="info-list">
+            <div class="info-row">
+              <span class="info-label">Họ và tên</span>
+              <span id="displayName" class="info-value">-</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Email</span>
+              <span id="displayEmail" class="info-value">-</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Số điện thoại</span>
+              <span id="displayPhone" class="info-value">-</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Vai trò</span>
+              <span id="displayRole" class="info-value">-</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Ngày tham gia</span>
+              <span id="displayCreatedAt" class="info-value">-</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-panel">
+          <h2 class="section-title">Cập nhật thông tin</h2>
+          <form id="profileForm" class="profile-form">
+            <div class="field">
+              <label for="profileName">Họ và tên</label>
+              <input id="profileName" name="name" type="text" placeholder="Nhập họ và tên" required>
+            </div>
+            <div class="field">
+              <label for="profileEmail">Email</label>
+              <input id="profileEmail" name="email" type="email" readonly>
+            </div>
+            <div class="field">
+              <label for="profilePhone">Số điện thoại</label>
+              <input id="profilePhone" name="phone" type="tel" placeholder="Nhập số điện thoại" required>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="primary-btn">Lưu thông tin</button>
+              <button id="cancelEditBtn" type="button" class="secondary-btn">Hoàn tác</button>
+            </div>
+          </form>
+
+          <h2 class="section-title" style="margin-top: 26px;">Đổi mật khẩu</h2>
+          <form id="passwordForm" class="profile-form">
+            <div class="field">
+              <label for="currentPassword">Mật khẩu hiện tại</label>
+              <input id="currentPassword" name="currentPassword" type="password" placeholder="Nhập mật khẩu hiện tại" autocomplete="current-password" required>
+            </div>
+            <div class="field">
+              <label for="newPassword">Mật khẩu mới</label>
+              <input id="newPassword" name="newPassword" type="password" placeholder="Tối thiểu 6 ký tự" autocomplete="new-password" required>
+            </div>
+            <div class="field">
+              <label for="confirmPassword">Xác nhận mật khẩu mới</label>
+              <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Nhập lại mật khẩu mới" autocomplete="new-password" required>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="primary-btn">Đổi mật khẩu</button>
+              <button id="resetPasswordBtn" type="button" class="secondary-btn">Làm mới</button>
+            </div>
+          </form>
+
+          <div id="profileStatus" class="status-message" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const API_BASE = 'http://localhost:3000/api';
+    const AUTH_KEY = 'smashshop_auth';
+
+    const profilePage = document.getElementById('profilePage');
+    const profileForm = document.getElementById('profileForm');
+    const passwordForm = document.getElementById('passwordForm');
+    const profileStatus = document.getElementById('profileStatus');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const resetPasswordBtn = document.getElementById('resetPasswordBtn');
+
+    const pageTitle = document.getElementById('pageTitle');
+    const pageDescription = document.getElementById('pageDescription');
+    const userRoleBadge = document.getElementById('userRoleBadge');
+    const memberSinceBadge = document.getElementById('memberSinceBadge');
+    const displayName = document.getElementById('displayName');
+    const displayEmail = document.getElementById('displayEmail');
+    const displayPhone = document.getElementById('displayPhone');
+    const displayRole = document.getElementById('displayRole');
+    const displayCreatedAt = document.getElementById('displayCreatedAt');
+
+    const profileName = document.getElementById('profileName');
+    const profileEmail = document.getElementById('profileEmail');
+    const profilePhone = document.getElementById('profilePhone');
+    const currentPassword = document.getElementById('currentPassword');
+    const newPassword = document.getElementById('newPassword');
+    const confirmPassword = document.getElementById('confirmPassword');
+
+    let currentAuth = null;
+
+    function getStoredAuth() {
+      try {
+        const raw = localStorage.getItem(AUTH_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (error) {
+        localStorage.removeItem(AUTH_KEY);
+        return null;
+      }
+    }
+
+    function saveAuth(auth) {
+      currentAuth = auth;
+      localStorage.setItem(AUTH_KEY, JSON.stringify(auth));
+    }
+
+    function clearAuth() {
+      currentAuth = null;
+      localStorage.removeItem(AUTH_KEY);
+    }
+
+    function setStatus(message, type = 'success') {
+      profileStatus.textContent = message;
+      profileStatus.className = `status-message ${type}`;
+    }
+
+    function resetStatus() {
+      profileStatus.textContent = '';
+      profileStatus.className = 'status-message';
+    }
+
+    function formatDate(dateValue) {
+      if (!dateValue) return '-';
+      try {
+        return new Date(dateValue).toLocaleDateString('vi-VN');
+      } catch (error) {
+        return '-';
+      }
+    }
+
+    function renderUser(user) {
+      pageTitle.textContent = `Chào ${user?.name || 'bạn'}`;
+      pageDescription.textContent = 'Xem và cập nhật thông tin tài khoản của bạn tại đây.';
+      userRoleBadge.textContent = user?.role === 'admin' ? 'Admin' : 'Khách hàng';
+      memberSinceBadge.textContent = formatDate(user?.createdAt);
+
+      displayName.textContent = user?.name || '-';
+      displayEmail.textContent = user?.email || '-';
+      displayPhone.textContent = user?.phone || '-';
+      displayRole.textContent = user?.role === 'admin' ? 'Quản trị viên' : 'Khách hàng';
+      displayCreatedAt.textContent = formatDate(user?.createdAt);
+
+      profileName.value = user?.name || '';
+      profileEmail.value = user?.email || '';
+      profilePhone.value = user?.phone || '';
+    }
+
+    async function apiRequest(endpoint, method, body) {
+      const response = await fetch(`${API_BASE}${endpoint}`, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: body ? JSON.stringify(body) : undefined,
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Có lỗi xảy ra');
+      }
+
+      return data;
+    }
+
+    async function loadProfile() {
+      const auth = currentAuth || getStoredAuth();
+
+      if (!auth?.user?._id) {
+        logoutBtn.style.display = 'none';
+        profilePage.style.display = 'none';
+        const guestState = document.createElement('div');
+        guestState.className = 'guest-state';
+        guestState.innerHTML = `
+          <h2>Vui lòng đăng nhập</h2>
+          <p>Trang thông tin cá nhân chỉ dành cho người dùng đã đăng nhập. Hãy quay về trang chủ và đăng nhập để tiếp tục.</p>
+          <div class="form-actions" style="justify-content:center;">
+            <a href="/SmashShop/index.html" class="primary-btn">Quay về trang chủ</a>
+          </div>
+        `;
+        document.body.appendChild(guestState);
+        return;
+      }
+
+      logoutBtn.style.display = 'inline-flex';
+      passwordForm.reset();
+
+      try {
+        const data = await apiRequest(`/profile/${auth.user._id}`, 'GET');
+        const user = data.user;
+        saveAuth({
+          ...auth,
+          user,
+        });
+        renderUser(user);
+        resetStatus();
+      } catch (error) {
+        setStatus(error.message, 'error');
+      }
+    }
+
+    async function handleProfileUpdate(event) {
+      event.preventDefault();
+      resetStatus();
+
+      const auth = currentAuth || getStoredAuth();
+      if (!auth?.user?._id) {
+        setStatus('Vui lòng đăng nhập để cập nhật thông tin.', 'error');
+        return;
+      }
+
+      const name = profileName.value.trim();
+      const phone = profilePhone.value.trim();
+
+      if (!name || !phone) {
+        setStatus('Vui lòng điền đầy đủ họ tên và số điện thoại.', 'error');
+        return;
+      }
+
+      try {
+        const data = await apiRequest(`/profile/${auth.user._id}`, 'PUT', { name, phone });
+        saveAuth({
+          ...auth,
+          user: data.user,
+        });
+        renderUser(data.user);
+        setStatus('Cập nhật thông tin thành công.', 'success');
+      } catch (error) {
+        setStatus(error.message, 'error');
+      }
+    }
+
+    async function handlePasswordUpdate(event) {
+      event.preventDefault();
+      resetStatus();
+
+      const auth = currentAuth || getStoredAuth();
+      if (!auth?.user?._id) {
+        setStatus('Vui lòng đăng nhập để đổi mật khẩu.', 'error');
+        return;
+      }
+
+      const currentValue = currentPassword.value;
+      const nextValue = newPassword.value;
+      const confirmValue = confirmPassword.value;
+
+      if (!currentValue || !nextValue || !confirmValue) {
+        setStatus('Vui lòng điền đầy đủ các trường mật khẩu.', 'error');
+        return;
+      }
+
+      if (nextValue.length < 6) {
+        setStatus('Mật khẩu mới phải có ít nhất 6 ký tự.', 'error');
+        return;
+      }
+
+      if (nextValue !== confirmValue) {
+        setStatus('Mật khẩu xác nhận không khớp.', 'error');
+        return;
+      }
+
+      try {
+        await apiRequest(`/change-password/${auth.user._id}`, 'POST', {
+          currentPassword: currentValue,
+          newPassword: nextValue,
+        });
+        passwordForm.reset();
+        setStatus('Đổi mật khẩu thành công.', 'success');
+      } catch (error) {
+        setStatus(error.message, 'error');
+      }
+    }
+
+    function handleLogout() {
+      clearAuth();
+      window.location.href = '/SmashShop/index.html';
+    }
+
+    function handleCancelEdit() {
+      renderUser(currentAuth?.user || getStoredAuth()?.user || {});
+      resetStatus();
+    }
+
+    function handleResetPassword() {
+      passwordForm.reset();
+      resetStatus();
+    }
+
+    profileForm.addEventListener('submit', handleProfileUpdate);
+    passwordForm.addEventListener('submit', handlePasswordUpdate);
+    cancelEditBtn.addEventListener('click', handleCancelEdit);
+    resetPasswordBtn.addEventListener('click', handleResetPassword);
+    logoutBtn.addEventListener('click', handleLogout);
+
+    loadProfile();
+  </script>
+</body>
+</html>

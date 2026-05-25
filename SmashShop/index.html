@@ -1115,7 +1115,6 @@
     const userMenu = document.getElementById('userMenu');
     const userMenuName = document.getElementById('userMenuName');
     const userMenuRole = document.getElementById('userMenuRole');
-    const userMenuNotice = document.getElementById('userMenuNotice');
     const authModal = document.getElementById('authModal');
     const authStatus = document.getElementById('authStatus');
 
@@ -1158,10 +1157,6 @@
     function clearAuthStatus() {
       authStatus.textContent = '';
       authStatus.className = 'auth-status';
-    }
-
-    function setUserMenuNotice(message) {
-      userMenuNotice.textContent = message;
     }
 
     function updateAuthUI() {
@@ -1308,35 +1303,27 @@
 
       switch (action) {
         case 'profile':
-          setUserMenuNotice('Thông tin cá nhân: bạn có thể mở trang hồ sơ để cập nhật dữ liệu người dùng.');
-          break;
+          window.location.href = '/SmashShop/profile.html';
+          return;
         case 'history':
-          setUserMenuNotice('Lịch sử đặt hàng: danh sách đơn hàng sẽ hiển thị sau khi bạn có giao dịch.');
           break;
         case 'products':
           if (!isAdmin) {
-            setUserMenuNotice('Bạn là guest. Vui lòng đăng nhập bằng tài khoản admin để sử dụng quản lý sản phẩm.');
             return;
           }
-          setUserMenuNotice('Quản lý sản phẩm: admin có toàn quyền thao tác với danh mục sản phẩm.');
           break;
         case 'orders':
           if (!isAdmin) {
-            setUserMenuNotice('Bạn là guest. Vui lòng đăng nhập bằng tài khoản admin để sử dụng quản lý đơn hàng.');
             return;
           }
-          setUserMenuNotice('Quản lý đơn hàng: admin có toàn quyền xem và xử lý đơn hàng.');
           break;
         case 'revenue':
           if (!isAdmin) {
-            setUserMenuNotice('Bạn là guest. Vui lòng đăng nhập bằng tài khoản admin để xem thống kê doanh thu.');
             return;
           }
-          setUserMenuNotice('Thống kê doanh thu: admin có thể theo dõi báo cáo doanh thu tại đây.');
           break;
         case 'logout':
           clearAuth();
-          setUserMenuNotice('Bạn đã đăng xuất.');
           break;
         default:
           break;
