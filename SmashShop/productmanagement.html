@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SmashShop - Quản lý sản phẩm</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins',sans-serif;
+    }
+
+    body{
+        background:#121212;
+        color:#FFFFFF;
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    ul{
+      list-style:none;
+    }
+
+    img{
+      width:100%;
+      display:block;
+    }
+
+    button{
+        transition:.3s ease;
+    }
+
+    .container{
+        width:100%;
+        padding:0 16px;
+        margin:auto;
+    }
+
+    @media(min-width:768px){ .container{ max-width:720px; } }
+    @media(min-width:992px){ .container{ max-width:960px; } }
+    @media(min-width:1200px){ .container{ max-width:1280px; } }
+
+    /* HEADER */
+    header{
+      background:#1A1A1A;
+      box-shadow:0 2px 10px rgba(0,0,0,0.4);
+      position:sticky;
+      top:0;
+      z-index:999;
+    }
+
+    .top-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding:18px 0;
+      flex-wrap:wrap;
+      flex-direction:column;
+      align-items:stretch;
+    }
+
+    .logo{
+      font-size:30px;
+      font-weight:700;
+      color:#2563EB;
+      text-align:center;
+    }
+
+    @media(min-width:992px){
+      .top-header{ flex-direction:row; align-items:center; }
+      .logo{ text-align:left; }
+    }
+
+    .search-box{
+      flex:1;
+      max-width:100%;
+      position:relative;
+    }
+
+    .search-box input{
+      width:100%;
+      padding:12px 50px 12px 16px;
+      border-radius:50px;
+      background:#222;
+      border:1px solid #333;
+      color:#fff;
+      outline:none;
+    }
+
+    .search-box input::placeholder{ color:#999; }
+
+    .search-box i{
+      position:absolute;
+      right:18px;
+      top:50%;
+      transform:translateY(-50%);
+      color:#777;
+    }
+
+    .header-icons{
+      display:flex;
+      align-items:center;
+      gap:20px;
+      justify-content:center;
+    }
+
+    .header-icons i{
+      font-size:22px;
+      cursor:pointer;
+      transition:.3s;
+    }
+
+    .header-icons i:hover{ color:#ff3c00; }
+
+    .header-user-area{
+      position:relative;
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .login-btn{
+      padding:10px 22px;
+      border:none;
+      background:linear-gradient(135deg, #2563EB, #1D4ED8);
+      color:#fff;
+      border-radius:30px;
+      cursor:pointer;
+      font-weight:600;
+      transition:.3s;
+    }
+
+    .login-btn:hover{
+      transform:translateY(-2px);
+      opacity:.9;
+    }
+
+    .user-avatar-btn{
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      border:1px solid #2A2A2A;
+      background:#222;
+      padding:0;
+      overflow:hidden;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .user-avatar-btn img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .user-menu-dropdown{
+      position:absolute;
+      top:calc(100% + 12px);
+      right:0;
+      width:min(320px, calc(100vw - 32px));
+      border:1px solid #2A2A2A;
+      border-radius:18px;
+      background:#111827;
+      box-shadow:0 16px 32px rgba(0,0,0,0.35);
+      padding:16px;
+      display:none;
+      z-index:1000;
+    }
+
+    .user-menu-dropdown.show{
+      display:block;
+    }
+
+    .user-menu-header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .user-menu-title{
+      color:#cbd5e1;
+      font-size:13px;
+      margin-bottom:4px;
+    }
+
+    .user-menu-header h3{
+      font-size:18px;
+      margin:0;
+    }
+
+    .user-menu-role{
+      border-radius:999px;
+      background:#1D4ED8;
+      color:#fff;
+      padding:4px 10px;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .user-menu-notice{
+      background:#1E293B;
+      border:1px solid #334155;
+      border-radius:12px;
+      padding:12px;
+      color:#e2e8f0;
+      font-size:14px;
+      margin-bottom:14px;
+    }
+
+    .user-menu-actions{ 
+      display:grid;
+      gap:10px;
+    }
+
+    .user-menu-action{
+      width:100%;
+      text-align:left;
+      border:none;
+      border-radius:12px;
+      padding:12px 14px;
+      background:#1F2937;
+      color:#fff;
+      font-weight:600;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .user-menu-action:hover{
+      background:#2563EB;
+    }
+
+    .user-menu-action.admin-only{
+      display:none;
+    }
+
+    .user-menu-action.admin-only.show{
+      display:block;
+    }
+
+    .user-menu-action.logout{
+      background:#7F1D1D;
+    }
+
+    .auth-modal-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.8);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:2000;
+    }
+
+    .auth-modal-overlay.show{
+      display:flex;
+    }
+
+    .auth-modal-card{
+      width:min(520px, 100%);
+      background:#111827;
+      border:1px solid #2A2A2A;
+      border-radius:24px;
+      padding:24px;
+      box-shadow:0 24px 48px rgba(0,0,0,0.45);
+    }
+
+    .auth-modal-header h2{
+      margin-bottom:8px;
+      font-size:26px;
+    }
+
+    .auth-modal-header p{
+      color:#cbd5e1;
+      margin-bottom:18px;
+    }
+
+    .auth-tabs{
+      display:flex;
+      gap:8px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+
+    .auth-tab{
+      border:none;
+      border-radius:999px;
+      background:#1F2937;
+      color:#fff;
+      padding:10px 14px;
+      font-weight:600;
+      cursor:pointer;
+      transition:.3s ease;
+      border:1px solid transparent;
+    }
+
+    .auth-tab:hover{
+      border-color:#2563EB;
+      background:#2A3f5f;
+    }
+
+    .auth-tab.active{
+      background:#2563EB;
+      border-color:#2563EB;
+      box-shadow:0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .auth-form{
+      display:none;
+    }
+
+    .auth-form.active{
+      display:block;
+    }
+
+    .auth-field{
+      display:grid;
+      gap:8px;
+      margin-bottom:14px;
+    }
+
+    .auth-field label{
+      font-size:14px;
+      color:#e2e8f0;
+    }
+
+    .auth-field input{
+      width:100%;
+      border-radius:12px;
+      border:1px solid #334155;
+      background:#0F172A;
+      color:#fff;
+      padding:12px 14px;
+      outline:none;
+      transition:.3s ease;
+    }
+
+    .auth-field input:hover{
+      border-color:#2563EB;
+      background:#111f3a;
+    }
+
+    .auth-field input:focus{
+      border-color:#2563EB;
+      background:#111f3a;
+      box-shadow:0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .auth-field input::placeholder{
+      color:#64748b;
+    }
+
+    .auth-actions{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-top:6px;
+    }
+
+    .auth-submit-btn{
+      border:none;
+      background:linear-gradient(135deg, #2563EB, #1D4ED8);
+      color:#fff;
+      border-radius:999px;
+      padding:12px 20px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.3s ease;
+    }
+
+    .auth-submit-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 8px 16px rgba(37, 99, 235, 0.3);
+    }
+
+    .auth-submit-btn:active{
+      transform:translateY(0);
+    }
+
+    .auth-submit-btn:disabled{
+      opacity:.6;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    .auth-secondary-btn{
+      border:1px solid #334155;
+      background:transparent;
+      color:#fff;
+      border-radius:999px;
+      padding:10px 16px;
+      cursor:pointer;
+      transition:.3s ease;
+    }
+
+    .auth-secondary-btn:hover{
+      background:#1F2937;
+      border-color:#2563EB;
+    }
+
+    .auth-status{
+      min-height:24px;
+      margin-top:12px;
+      font-size:14px;
+      padding:10px 12px;
+      border-radius:8px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      animation:slideIn .3s ease;
+    }
+
+    .auth-status.error{
+      color:#fca5a5;
+      background:rgba(220, 38, 38, 0.1);
+      border:1px solid rgba(220, 38, 38, 0.3);
+    }
+
+    .auth-status.success{
+      color:#86efac;
+      background:rgba(34, 197, 94, 0.1);
+      border:1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    @keyframes slideIn{
+      from{ opacity:0; transform:translateY(-8px); }
+      to{ opacity:1; transform:translateY(0); }
+    }
+
+    /* NAVBAR */
+    .nav-link.active{ color:#2563EB !important; }
+    nav{ background:#121212; }
+    .main-navbar{ display:flex; align-items:center; gap:30px; position:relative; }
+    .main-navbar > li > a{ display:block; padding:16px 0; color:#fff; font-weight:500; }
+
+    @media(min-width:992px) {
+      .main-navbar li.dropdown:hover .dropdown-menu { display: block; margin-top: 0; }
+    }
+
+    .dropdown-menu-dark {
+      background:#1E1E1E !important;
+      border:1px solid #2A2A2A !important;
+      border-radius:10px;
+      box-shadow:0 10px 20px rgba(0,0,0,0.3);
+      padding: 8px 0;
+    }
+    .dropdown-menu-dark .dropdown-item { padding: 10px 20px; color: #fff; transition: .2s ease; }
+    .dropdown-menu-dark .dropdown-item:hover { background: #2563EB !important; color: #fff !important; }
+
+    @media(max-width:991px){
+      .navbar-collapse{ background:#1A1A1A; padding:15px; border-radius:16px; margin-top:12px; }
+      .navbar-nav{ gap:10px; }
+      .main-navbar{ flex-direction: column; align-items: flex-start; gap: 10px; }
+      .main-navbar > li > a { padding: 8px 0; }
+      .dropdown-menu{ border:none !important; background:#222 !important; box-shadow: none; width: 100%; }
+    }
+
+    /* FOOTER */
+    footer{ background:#0D0D0D; border-top:1px solid #222; color:#fff; margin-top:70px; padding-top:60px; }
+    .footer-grid{ display:grid; grid-template-columns:1fr; gap:30px; }
+    @media(min-width:768px){ .footer-grid{ grid-template-columns:repeat(2,1fr); } }
+    @media(min-width:1200px){ .footer-grid{ grid-template-columns:repeat(4,1fr); } }
+    .footer-col{ display:flex; flex-direction:column; }
+    .footer-col h3{ margin-bottom:20px; }
+    .footer-col p, .footer-col a{ color:#ccc; line-height:1.9; font-size:14px; }
+    .socials{ display:flex; gap:15px; margin-top:15px; }
+    .socials i{ width:40px; height:40px; background:#222; display:flex; align-items:center; justify-content:center; border-radius:50%; cursor:pointer; transition:.3s; }
+    .socials i:hover{ background:#2563EB; }
+    .footer-bottom{ text-align:center; border-top:1px solid #222; margin-top:40px; padding:20px 0; color:#999; font-size:14px; }
+
+    html{ scroll-behavior:smooth; }
+
+    /* ===== PRODUCT MANAGEMENT STYLES ===== */
+    .pm-wrapper {
+      padding: 40px 0 60px;
+    }
+
+    .pm-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .pm-header h1 {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .pm-header h1 span {
+      color: #2563EB;
+    }
+
+    .btn-add {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #2563EB, #1D4ED8);
+      border: none;
+      border-radius: 30px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .btn-add:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37,99,235,0.35);
+    }
+
+    /* Search & filter bar */
+    .pm-toolbar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .pm-search {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+    }
+
+    .pm-search input {
+      width: 100%;
+      padding: 12px 44px 12px 16px;
+      border-radius: 12px;
+      background: #1E1E1E;
+      border: 1px solid #2A2A2A;
+      color: #fff;
+      outline: none;
+      font-size: 14px;
+      transition: border-color .3s;
+    }
+
+    .pm-search input:focus { border-color: #2563EB; }
+    .pm-search input::placeholder { color: #666; }
+
+    .pm-search i {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #666;
+    }
+
+    .pm-filter select {
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: #1E1E1E;
+      border: 1px solid #2A2A2A;
+      color: #fff;
+      outline: none;
+      font-size: 14px;
+      cursor: pointer;
+      transition: border-color .3s;
+    }
+
+    .pm-filter select:focus { border-color: #2563EB; }
+    .pm-filter select option { background: #1E1E1E; }
+
+    /* Stats row */
+    .pm-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: #1E1E1E;
+      border: 1px solid #2A2A2A;
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .stat-icon.blue { background: rgba(37,99,235,0.15); color: #2563EB; }
+    .stat-icon.green { background: rgba(34,197,94,0.15); color: #22c55e; }
+    .stat-icon.orange { background: rgba(249,115,22,0.15); color: #f97316; }
+    .stat-icon.red { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+    .stat-info p { font-size: 13px; color: #888; margin-bottom: 2px; }
+    .stat-info h3 { font-size: 22px; font-weight: 700; }
+
+    /* Table */
+    .pm-table-wrap {
+      background: #1A1A1A;
+      border: 1px solid #2A2A2A;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .pm-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .pm-table thead tr {
+      background: #111;
+      border-bottom: 1px solid #2A2A2A;
+    }
+
+    .pm-table th {
+      padding: 16px 18px;
+      text-align: left;
+      font-size: 13px;
+      color: #888;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      white-space: nowrap;
+    }
+
+    .pm-table td {
+      padding: 14px 18px;
+      font-size: 14px;
+      border-bottom: 1px solid #222;
+      vertical-align: middle;
+    }
+
+    .pm-table tbody tr:last-child td { border-bottom: none; }
+
+    .pm-table tbody tr:hover { background: rgba(37,99,235,0.04); }
+
+    .prod-thumb {
+      width: 52px;
+      height: 52px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid #333;
+    }
+
+    .prod-name { font-weight: 600; }
+    .prod-sku { font-size: 12px; color: #666; margin-top: 2px; }
+
+    .category-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #1F2937;
+      color: #93c5fd;
+      border: 1px solid #1e3a5f;
+    }
+
+    .price-cell { color: #2563EB; font-weight: 700; }
+
+    .stock-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .stock-badge.in { background: rgba(34,197,94,0.1); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+    .stock-badge.low { background: rgba(249,115,22,0.1); color: #f97316; border: 1px solid rgba(249,115,22,0.3); }
+    .stock-badge.out { background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+
+    .action-btns { display: flex; gap: 8px; }
+
+    .btn-edit, .btn-delete {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: .2s ease;
+    }
+
+    .btn-edit { background: rgba(37,99,235,0.15); color: #2563EB; }
+    .btn-edit:hover { background: #2563EB; color: #fff; }
+    .btn-delete { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .btn-delete:hover { background: #ef4444; color: #fff; }
+
+    .pm-empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: #555;
+    }
+
+    .pm-empty i { font-size: 48px; margin-bottom: 16px; display: block; }
+
+    /* Pagination */
+    .pm-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 16px 20px;
+      border-top: 1px solid #222;
+    }
+
+    .pm-page-info { font-size: 13px; color: #666; }
+
+    .pm-page-btns { display: flex; gap: 6px; }
+
+    .pg-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      border: 1px solid #2A2A2A;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      transition: .2s;
+    }
+
+    .pg-btn:hover, .pg-btn.active { background: #2563EB; border-color: #2563EB; }
+    .pg-btn:disabled { opacity: .3; cursor: not-allowed; }
+
+    /* ===== MODAL THÊM / SỬA ===== */
+    .pm-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 3000;
+    }
+
+    .pm-modal-overlay.show { display: flex; }
+
+    .pm-modal-card {
+      width: min(640px, 100%);
+      background: #111827;
+      border: 1px solid #2A2A2A;
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.5);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .pm-modal-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pm-modal-title i { color: #2563EB; }
+
+    .pm-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media(max-width:600px){ .pm-form-grid { grid-template-columns: 1fr; } }
+
+    .pm-field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .pm-field.full { grid-column: 1 / -1; }
+
+    .pm-field label {
+      font-size: 13px;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    .pm-field input,
+    .pm-field select,
+    .pm-field textarea {
+      padding: 11px 14px;
+      border-radius: 12px;
+      border: 1px solid #334155;
+      background: #0F172A;
+      color: #fff;
+      outline: none;
+      font-size: 14px;
+      font-family: 'Poppins', sans-serif;
+      transition: border-color .3s;
+    }
+
+    .pm-field input:focus,
+    .pm-field select:focus,
+    .pm-field textarea:focus {
+      border-color: #2563EB;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+
+    .pm-field input::placeholder,
+    .pm-field textarea::placeholder { color: #475569; }
+
+    .pm-field select option { background: #0F172A; }
+
+    .pm-field textarea { resize: vertical; min-height: 90px; }
+
+    /* Image preview */
+    .img-preview-wrap {
+      position: relative;
+      border: 2px dashed #334155;
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      transition: border-color .3s;
+      cursor: pointer;
+    }
+
+    .img-preview-wrap:hover { border-color: #2563EB; }
+
+    .img-preview-wrap img {
+      width: 100%;
+      max-height: 160px;
+      object-fit: cover;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .img-preview-wrap img.has-img { display: block; }
+
+    .img-placeholder {
+      color: #475569;
+      font-size: 13px;
+      padding: 20px 0;
+    }
+
+    .img-placeholder i { font-size: 32px; display: block; margin-bottom: 8px; }
+
+    .pm-field input[type="file"] { display: none; }
+
+    /* Modal footer */
+    .pm-modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn-cancel {
+      padding: 11px 22px;
+      border: 1px solid #334155;
+      background: transparent;
+      color: #fff;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: .3s;
+    }
+
+    .btn-cancel:hover { background: #1F2937; border-color: #2563EB; }
+
+    .btn-save {
+      padding: 11px 28px;
+      border: none;
+      background: linear-gradient(135deg, #2563EB, #1D4ED8);
+      color: #fff;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: .3s;
+    }
+
+    .btn-save:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(37,99,235,0.3); }
+
+    /* Confirm delete modal */
+    .confirm-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 4000;
+    }
+
+    .confirm-overlay.show { display: flex; }
+
+    .confirm-card {
+      width: min(440px, 100%);
+      background: #111827;
+      border: 1px solid #2A2A2A;
+      border-radius: 20px;
+      padding: 28px;
+      text-align: center;
+    }
+
+    .confirm-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(239,68,68,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+      font-size: 28px;
+      color: #ef4444;
+    }
+
+    .confirm-card h3 { font-size: 20px; margin-bottom: 10px; }
+    .confirm-card p { color: #94a3b8; font-size: 14px; margin-bottom: 24px; }
+
+    .confirm-btns { display: flex; gap: 12px; justify-content: center; }
+
+    .btn-confirm-cancel {
+      padding: 11px 24px;
+      border: 1px solid #334155;
+      background: transparent;
+      color: #fff;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-confirm-delete {
+      padding: 11px 24px;
+      border: none;
+      background: #ef4444;
+      color: #fff;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: .3s;
+    }
+
+    .btn-confirm-delete:hover { background: #dc2626; }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 9999;
+    }
+
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      min-width: 260px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      animation: toastIn .3s ease;
+    }
+
+    .toast.success { background: #052e16; border: 1px solid #166534; color: #86efac; }
+    .toast.error   { background: #450a0a; border: 1px solid #991b1b; color: #fca5a5; }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(40px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====== HEADER (GIỮ NGUYÊN) ====== -->
+  <header>
+    <div class="container top-header">
+      <div class="logo">
+        <a href="/SmashShop/index.html">SmashShop</a>
+      </div>
+
+      <div class="search-box">
+        <input type="text" placeholder="Tìm kiếm sản phẩm...">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+
+      <div class="header-user-area">
+        <div class="header-icons">
+          <a href="wishlist.html"><i class="fa-regular fa-heart"></i></a>
+          <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
+        </div>
+
+        <button id="loginBtn" class="login-btn" type="button">Login</button>
+
+        <button id="userAvatarBtn" class="user-avatar-btn" type="button" aria-label="Tài khoản" style="display:none;">
+          <img id="userAvatarImg" src="public/img/user_loginned.png" alt="User logged in">
+        </button>
+
+        <div id="userMenu" class="user-menu-dropdown" aria-hidden="true">
+          <div class="user-menu-header">
+            <div>
+              <p class="user-menu-title">Xin chào</p>
+              <h3 id="userMenuName">Khách</h3>
+            </div>
+            <span id="userMenuRole" class="user-menu-role">Guest</span>
+          </div>
+          <div class="user-menu-actions">
+            <button class="user-menu-action" type="button" data-action="profile">Thông tin cá nhân</button>
+            <button class="user-menu-action" type="button" data-action="history">Lịch sử đặt hàng</button>
+            <button class="user-menu-action admin-only" type="button" data-action="products">Quản lý sản phẩm</button>
+            <button class="user-menu-action admin-only" type="button" data-action="orders">Quản lý đơn hàng</button>
+            <button class="user-menu-action admin-only" type="button" data-action="revenue">Thống kê doanh thu</button>
+            <button class="user-menu-action logout" type="button" data-action="logout">Đăng xuất</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <button class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainMenu">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainMenu">
+          <ul class="navbar-nav gap-lg-4 main-navbar">
+            <li class="nav-item">
+              <a class="nav-link" href="/SmashShop/index.html">Trang chủ</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+                Sản phẩm
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/SmashShop/vot.html">Vợt cầu lông</a></li>
+                <li><a class="dropdown-item" href="/SmashShop/giay.html">Giày cầu lông</a></li>
+                <li><a class="dropdown-item" href="/SmashShop/balo.html">Balo cầu lông</a></li>
+                <li><a class="dropdown-item" href="/SmashShop/tuivot.html">Túi vợt cầu lông</a></li>
+                <li><a class="dropdown-item" href="/SmashShop/phukien.html">Phụ kiện cầu lông</a></li>
+              </ul>
+            </li>
+
+            <li class="nav-item"><a class="nav-link" href="/SmashShop/sale.html">Khuyến mãi</a></li>
+            <li class="nav-item"><a class="nav-link active" href="/SmashShop/product-management.html">Quản lý SP</a></li>
+            <li class="nav-item"><a class="nav-link" href="/SmashShop/about.html">Giới thiệu</a></li>
+            <li class="nav-item"><a class="nav-link" href="/SmashShop/contact.html">Liên hệ</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ====== MAIN: QUẢN LÝ SẢN PHẨM ====== -->
+  <main class="pm-wrapper">
+    <div class="container">
+
+      <!-- Header row -->
+      <div class="pm-header">
+        <h1>Quản lý <span>Sản phẩm</span></h1>
+        <button class="btn-add" id="btnOpenAdd">
+          <i class="fa-solid fa-plus"></i> Thêm sản phẩm
+        </button>
+      </div>
+
+      <!-- Stats -->
+      <div class="pm-stats">
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="fa-solid fa-box-open"></i></div>
+          <div class="stat-info">
+            <p>Tổng sản phẩm</p>
+            <h3 id="statTotal">0</h3>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="stat-info">
+            <p>Còn hàng</p>
+            <h3 id="statInStock">0</h3>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon orange"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div class="stat-info">
+            <p>Sắp hết hàng</p>
+            <h3 id="statLow">0</h3>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon red"><i class="fa-solid fa-ban"></i></div>
+          <div class="stat-info">
+            <p>Hết hàng</p>
+            <h3 id="statOut">0</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="pm-toolbar">
+        <div class="pm-search">
+          <input type="text" id="pmSearch" placeholder="Tìm tên, SKU sản phẩm...">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <div class="pm-filter">
+          <select id="pmCategoryFilter">
+            <option value="">Tất cả danh mục</option>
+            <option value="Vợt cầu lông">Vợt cầu lông</option>
+            <option value="Giày cầu lông">Giày cầu lông</option>
+            <option value="Balo cầu lông">Balo cầu lông</option>
+            <option value="Túi vợt">Túi vợt</option>
+            <option value="Phụ kiện">Phụ kiện</option>
+          </select>
+        </div>
+        <div class="pm-filter">
+          <select id="pmStockFilter">
+            <option value="">Tất cả trạng thái</option>
+            <option value="in">Còn hàng</option>
+            <option value="low">Sắp hết</option>
+            <option value="out">Hết hàng</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="pm-table-wrap">
+        <div style="overflow-x:auto;">
+          <table class="pm-table" id="pmTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Danh mục</th>
+                <th>Giá</th>
+                <th>Tồn kho</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="pmTbody"></tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pm-pagination">
+          <div class="pm-page-info" id="pmPageInfo">Hiển thị 0 / 0 sản phẩm</div>
+          <div class="pm-page-btns" id="pmPageBtns"></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+  <!-- ====== END MAIN ====== -->
+
+  <!-- ====== FOOTER (GIỮ NGUYÊN) ====== -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <h3>SmashShop</h3>
+        <p>Hệ thống bán vợt và phụ kiện cầu lông chính hãng với giá tốt, hỗ trợ khách hàng tận tâm.</p>
+        <div class="socials">
+          <a href="https://www.facebook.com/le.vinh.686378" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/leevinh_05" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://www.tiktok.com/@vinh.l70?is_from_webapp=1&sender_device=pc" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="https://www.youtube.com/watch?v=brqXbeDUBRQ" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h3>Danh mục</h3>
+        <p><a href="/SmashShop/vot.html">Vợt cầu lông</a></p>
+        <p><a href="/SmashShop/giay.html">Giày cầu lông</a></p>
+        <p><a href="/SmashShop/balo.html">Balo cầu lông</a></p>
+        <p><a href="/SmashShop/tuivot.html">Túi vợt cầu lông</a></p>
+        <p><a href="/SmashShop/phukien.html">Phụ kiện cầu lông</a></p>
+      </div>
+
+      <div class="footer-col">
+        <h3>Hỗ trợ</h3>
+        <p><a href="#">Chính sách bảo hành</a></p>
+        <p><a href="#">Điều khoản dịch vụ</a></p>
+        <p><a href="#">Hướng dẫn mua hàng</a></p>
+        <p><a href="#">Liên hệ</a></p>
+      </div>
+
+      <div class="footer-col">
+        <h3>Thông tin liên hệ</h3>
+        <p>Email: support@smashshop.vn</p>
+        <p>Hotline: 0123 456 789</p>
+        <a href="https://maps.app.goo.gl/XQcabwWphX5mqsZs6" target="_blank"><p>Địa chỉ: 183 Đ. Yên Xá, Yên Xá, Thanh Liệt, Hà Nội, Vietnam</p></a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 SmashShop. All Rights Reserved.</div>
+  </footer>
+
+  <!-- ====== AUTH MODAL (GIỮ NGUYÊN) ====== -->
+  <div id="authModal" class="auth-modal-overlay" aria-hidden="true">
+    <div class="auth-modal-card">
+      <div class="auth-tabs">
+        <button id="loginTabBtn" class="auth-tab active" type="button" data-tab="login">Đăng nhập</button>
+        <button id="registerTabBtn" class="auth-tab" type="button" data-tab="register">Đăng ký</button>
+        <button id="forgotTabBtn" class="auth-tab" type="button" data-tab="forgot">Quên mật khẩu</button>
+      </div>
+
+      <form id="loginForm" class="auth-form active">
+        <div class="auth-field">
+          <label for="loginIdentifier">Email, số điện thoại</label>
+          <input id="loginIdentifier" name="identifier" type="text" placeholder="email@example.com hoặc 0123456789" required>
+        </div>
+        <div class="auth-field">
+          <label for="loginPassword">Mật khẩu</label>
+          <input id="loginPassword" name="password" type="password" placeholder="Nhập mật khẩu" required>
+        </div>
+        <div class="auth-actions">
+          <button type="button" class="auth-secondary-btn" data-close-auth>Đóng</button>
+          <button type="submit" class="auth-submit-btn">Đăng nhập</button>
+        </div>
+      </form>
+
+      <form id="registerForm" class="auth-form">
+        <div class="auth-field">
+          <label for="registerName">Họ và tên</label>
+          <input id="registerName" name="name" type="text" placeholder="Nguyễn Văn A" required>
+        </div>
+        <div class="auth-field">
+          <label for="registerEmail">Email</label>
+          <input id="registerEmail" name="email" type="email" placeholder="name@example.com" required>
+        </div>
+        <div class="auth-field">
+          <label for="registerPhone">Số điện thoại</label>
+          <input id="registerPhone" name="phone" type="tel" placeholder="0123456789" required>
+        </div>
+        <div class="auth-field">
+          <label for="registerPassword">Mật khẩu</label>
+          <input id="registerPassword" name="password" type="password" placeholder="Tối thiểu 6 ký tự" required>
+        </div>
+        <div class="auth-field">
+          <label for="registerConfirmPassword">Xác nhận mật khẩu</label>
+          <input id="registerConfirmPassword" name="confirmPassword" type="password" placeholder="Nhập lại mật khẩu" required>
+        </div>
+        <div class="auth-actions">
+          <button type="button" class="auth-secondary-btn" data-close-auth>Đóng</button>
+          <button type="submit" class="auth-submit-btn">Đăng ký</button>
+        </div>
+      </form>
+
+      <form id="forgotForm" class="auth-form">
+        <div class="auth-field">
+          <label for="forgotEmail">Email</label>
+          <input id="forgotEmail" name="email" type="email" placeholder="Nhập email đã đăng ký" required>
+        </div>
+        <p style="font-size: 13px; color: #cbd5e1; margin-bottom: 14px; line-height: 1.5;">
+          Nhập email đã đăng ký, chúng tôi sẽ gửi mật khẩu mới tới email của bạn.
+        </p>
+        <div class="auth-actions">
+          <button type="button" class="auth-secondary-btn" data-close-auth>Đóng</button>
+          <button type="submit" class="auth-submit-btn">Gửi mật khẩu mới</button>
+        </div>
+      </form>
+
+      <div id="authStatus" class="auth-status"></div>
+    </div>
+  </div>
+
+  <!-- ====== MODAL THÊM / SỬA SẢN PHẨM ====== -->
+  <div id="pmModal" class="pm-modal-overlay">
+    <div class="pm-modal-card">
+      <div class="pm-modal-title">
+        <i class="fa-solid fa-box-open"></i>
+        <span id="pmModalTitle">Thêm sản phẩm</span>
+      </div>
+
+      <div class="pm-form-grid">
+
+        <div class="pm-field full">
+          <label>Tên sản phẩm *</label>
+          <input type="text" id="fName" placeholder="VD: Yonex Astrox 100ZZ">
+        </div>
+
+        <div class="pm-field">
+          <label>SKU</label>
+          <input type="text" id="fSku" placeholder="VD: YNX-A100ZZ">
+        </div>
+
+        <div class="pm-field">
+          <label>Danh mục *</label>
+          <select id="fCategory">
+            <option value="">-- Chọn danh mục --</option>
+            <option value="Vợt cầu lông">Vợt cầu lông</option>
+            <option value="Giày cầu lông">Giày cầu lông</option>
+            <option value="Balo cầu lông">Balo cầu lông</option>
+            <option value="Túi vợt">Túi vợt</option>
+            <option value="Phụ kiện">Phụ kiện</option>
+          </select>
+        </div>
+
+        <div class="pm-field">
+          <label>Giá bán (đ) *</label>
+          <input type="number" id="fPrice" placeholder="VD: 5200000" min="0">
+        </div>
+
+        <div class="pm-field">
+          <label>Giá gốc (đ)</label>
+          <input type="number" id="fOriginalPrice" placeholder="VD: 6000000" min="0">
+        </div>
+
+        <div class="pm-field">
+          <label>Số lượng tồn *</label>
+          <input type="number" id="fStock" placeholder="VD: 50" min="0">
+        </div>
+
+        <div class="pm-field full">
+          <label>Ảnh sản phẩm</label>
+          <div class="img-preview-wrap" id="imgPreviewWrap" onclick="document.getElementById('fImage').click()">
+            <img id="imgPreview" src="" alt="Preview">
+            <div class="img-placeholder" id="imgPlaceholder">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              Nhấn để tải ảnh lên hoặc dán URL bên dưới
+            </div>
+          </div>
+          <input type="file" id="fImage" accept="image/*">
+          <input type="text" id="fImageUrl" placeholder="Hoặc dán URL ảnh vào đây..." style="margin-top:8px;">
+        </div>
+
+        <div class="pm-field full">
+          <label>Mô tả sản phẩm</label>
+          <textarea id="fDesc" placeholder="Mô tả ngắn về sản phẩm..."></textarea>
+        </div>
+
+      </div>
+
+      <div class="pm-modal-footer">
+        <button class="btn-cancel" id="btnCancelModal">Hủy</button>
+        <button class="btn-save" id="btnSaveProduct"><i class="fa-solid fa-floppy-disk"></i> Lưu sản phẩm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== CONFIRM DELETE ====== -->
+  <div id="confirmOverlay" class="confirm-overlay">
+    <div class="confirm-card">
+      <div class="confirm-icon"><i class="fa-solid fa-trash-can"></i></div>
+      <h3>Xác nhận xóa</h3>
+      <p id="confirmMsg">Bạn có chắc muốn xóa sản phẩm này không? Hành động này không thể hoàn tác.</p>
+      <div class="confirm-btns">
+        <button class="btn-confirm-cancel" id="btnConfirmCancel">Hủy</button>
+        <button class="btn-confirm-delete" id="btnConfirmDelete"><i class="fa-solid fa-trash-can"></i> Xóa</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // ========= AUTH (GIỮ NGUYÊN) =========
+    const API_BASE = 'http://localhost:3000/api';
+    const AUTH_KEY = 'smashshop_auth';
+
+    const loginBtn = document.getElementById('loginBtn');
+    const userAvatarBtn = document.getElementById('userAvatarBtn');
+    const userMenu = document.getElementById('userMenu');
+    const userMenuName = document.getElementById('userMenuName');
+    const userMenuRole = document.getElementById('userMenuRole');
+    const authModal = document.getElementById('authModal');
+    const authStatus = document.getElementById('authStatus');
+
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const forgotForm = document.getElementById('forgotForm');
+    const loginTabBtn = document.getElementById('loginTabBtn');
+    const registerTabBtn = document.getElementById('registerTabBtn');
+    const forgotTabBtn = document.getElementById('forgotTabBtn');
+
+    let currentAuth = null;
+
+    function getStoredAuth() {
+      try {
+        const raw = localStorage.getItem(AUTH_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (error) {
+        localStorage.removeItem(AUTH_KEY);
+        return null;
+      }
+    }
+
+    function saveAuth(auth) {
+      currentAuth = auth;
+      localStorage.setItem(AUTH_KEY, JSON.stringify(auth));
+      updateAuthUI();
+    }
+
+    function clearAuth() {
+      currentAuth = null;
+      localStorage.removeItem(AUTH_KEY);
+      updateAuthUI();
+    }
+
+    function setAuthStatus(message, type = 'success') {
+      authStatus.textContent = message;
+      authStatus.className = `auth-status ${type}`;
+    }
+
+    function clearAuthStatus() {
+      authStatus.textContent = '';
+      authStatus.className = 'auth-status';
+    }
+
+    function updateAuthUI() {
+      const auth = currentAuth || getStoredAuth();
+      if (auth && auth.user) {
+        loginBtn.style.display = 'none';
+        userAvatarBtn.style.display = 'flex';
+        userMenuName.textContent = auth.user.name || 'Người dùng';
+        userMenuRole.textContent = auth.user.role === 'admin' ? 'Admin' : 'Guest';
+        document.querySelectorAll('.admin-only').forEach((item) => {
+          item.classList.toggle('show', auth.user.role === 'admin');
+        });
+      } else {
+        loginBtn.style.display = 'inline-block';
+        userAvatarBtn.style.display = 'none';
+        userMenu.classList.remove('show');
+        userMenuName.textContent = 'Khách';
+        userMenuRole.textContent = 'Guest';
+        document.querySelectorAll('.admin-only').forEach((item) => item.classList.remove('show'));
+      }
+    }
+
+    function openAuthModal(tab = 'login') {
+      authModal.classList.add('show');
+      authModal.setAttribute('aria-hidden', 'false');
+      clearAuthStatus();
+      loginTabBtn.classList.toggle('active', tab === 'login');
+      registerTabBtn.classList.toggle('active', tab === 'register');
+      forgotTabBtn.classList.toggle('active', tab === 'forgot');
+      loginForm.classList.toggle('active', tab === 'login');
+      registerForm.classList.toggle('active', tab === 'register');
+      forgotForm.classList.toggle('active', tab === 'forgot');
+    }
+
+    function closeAuthModal() {
+      authModal.classList.remove('show');
+      authModal.setAttribute('aria-hidden', 'true');
+      clearAuthStatus();
+      loginForm.reset();
+      registerForm.reset();
+      forgotForm.reset();
+    }
+
+    function toggleUserMenu() {
+      userMenu.classList.toggle('show');
+      userMenu.setAttribute('aria-hidden', String(!userMenu.classList.contains('show')));
+    }
+
+    function closeUserMenu() {
+      userMenu.classList.remove('show');
+      userMenu.setAttribute('aria-hidden', 'true');
+    }
+
+    async function apiRequest(endpoint, method, body) {
+      const response = await fetch(`${API_BASE}${endpoint}`, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: body ? JSON.stringify(body) : undefined,
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.message || 'Có lỗi xảy ra');
+      return data;
+    }
+
+    async function handleLoginSubmit(event) {
+      event.preventDefault();
+      const identifier = document.getElementById('loginIdentifier').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      try {
+        const data = await apiRequest('/login', 'POST', { identifier, password });
+        saveAuth(data);
+        setAuthStatus('Đăng nhập thành công', 'success');
+        closeUserMenu();
+        setTimeout(() => closeAuthModal(), 600);
+      } catch (error) {
+        setAuthStatus(error.message, 'error');
+      }
+    }
+
+    async function handleRegisterSubmit(event) {
+      event.preventDefault();
+      const name = document.getElementById('registerName').value.trim();
+      const email = document.getElementById('registerEmail').value.trim();
+      const phone = document.getElementById('registerPhone').value.trim();
+      const password = document.getElementById('registerPassword').value;
+      const confirmPassword = document.getElementById('registerConfirmPassword').value;
+      if (password !== confirmPassword) { setAuthStatus('Mật khẩu xác nhận không khớp', 'error'); return; }
+      try {
+        await apiRequest('/register', 'POST', { name, email, password, phone });
+        setAuthStatus('✓ Đăng ký thành công! Chuyển sang đăng nhập...', 'success');
+        registerForm.reset();
+        setTimeout(() => openAuthModal('login'), 1500);
+      } catch (error) {
+        setAuthStatus(error.message, 'error');
+      }
+    }
+
+    async function handleForgotSubmit(event) {
+      event.preventDefault();
+      const email = document.getElementById('forgotEmail').value.trim();
+      try {
+        await apiRequest('/forgot-password', 'POST', { email });
+        setAuthStatus('Email đã được gửi! Vui lòng kiểm tra hộp thư.', 'success');
+        setTimeout(() => openAuthModal('login'), 2000);
+      } catch (error) {
+        setAuthStatus(error.message, 'error');
+      }
+    }
+
+    function handleUserAction(action) {
+      closeUserMenu();
+      const auth = currentAuth || getStoredAuth();
+      const isAdmin = auth?.user?.role === 'admin';
+      switch (action) {
+        case 'profile': window.location.href = '/SmashShop/profile.html'; return;
+        case 'products': if (!isAdmin) return; break;
+        case 'orders': if (!isAdmin) return; break;
+        case 'revenue': if (!isAdmin) return; break;
+        case 'logout': clearAuth(); break;
+      }
+    }
+
+    loginBtn.addEventListener('click', () => openAuthModal('login'));
+    userAvatarBtn.addEventListener('click', toggleUserMenu);
+    document.querySelectorAll('[data-close-auth]').forEach(b => b.addEventListener('click', closeAuthModal));
+    loginTabBtn.addEventListener('click', () => openAuthModal('login'));
+    registerTabBtn.addEventListener('click', () => openAuthModal('register'));
+    forgotTabBtn.addEventListener('click', () => openAuthModal('forgot'));
+    loginForm.addEventListener('submit', handleLoginSubmit);
+    registerForm.addEventListener('submit', handleRegisterSubmit);
+    forgotForm.addEventListener('submit', handleForgotSubmit);
+    authModal.addEventListener('click', e => { if (e.target === authModal) closeAuthModal(); });
+    document.addEventListener('click', e => { if (!e.target.closest('.header-user-area')) closeUserMenu(); });
+    document.querySelectorAll('.user-menu-action').forEach(b => b.addEventListener('click', () => handleUserAction(b.dataset.action)));
+    window.addEventListener('keydown', e => { if (e.key === 'Escape') { closeUserMenu(); closeAuthModal(); closePmModal(); closeConfirm(); } });
+    currentAuth = getStoredAuth();
+    updateAuthUI();
+
+    // ========= PRODUCT MANAGEMENT =========
+    const STORAGE_KEY = 'smashshop_products';
+    const PAGE_SIZE = 8;
+
+    let products = [];
+    let filteredProducts = [];
+    let currentPage = 1;
+    let editingId = null;
+    let deletingId = null;
+
+    // Seed dữ liệu mẫu
+    const SEED = [
+      { id: uid(), name: 'Yonex Astrox 100ZZ', sku: 'YNX-A100ZZ', category: 'Vợt cầu lông', price: 5200000, originalPrice: 6000000, stock: 12, image: 'https://picsum.photos/300?random=21', desc: 'Vợt tấn công cao cấp của Yonex.' },
+      { id: uid(), name: 'Lining Aeronaut 9000C', sku: 'LN-AE9000C', category: 'Vợt cầu lông', price: 3800000, originalPrice: 4200000, stock: 5, image: 'https://picsum.photos/300?random=22', desc: '' },
+      { id: uid(), name: 'Giày Victor P9200', sku: 'VT-P9200', category: 'Giày cầu lông', price: 2100000, originalPrice: 2400000, stock: 0, image: 'https://picsum.photos/300?random=23', desc: 'Giày cầu lông Victor dòng P.' },
+      { id: uid(), name: 'Balo Yonex BA92012EX', sku: 'YNX-BA920', category: 'Balo cầu lông', price: 1200000, originalPrice: 1400000, stock: 20, image: 'https://picsum.photos/300?random=24', desc: '' },
+      { id: uid(), name: 'Quấn cán Yonex AC102EX', sku: 'YNX-AC102', category: 'Phụ kiện', price: 80000, originalPrice: 95000, stock: 3, image: 'https://picsum.photos/300?random=25', desc: '' },
+      { id: uid(), name: 'Ống cầu Vina Star 78', sku: 'VS-78', category: 'Phụ kiện', price: 350000, originalPrice: 380000, stock: 30, image: 'https://picsum.photos/300?random=26', desc: 'Cầu thi đấu tiêu chuẩn.' },
+      { id: uid(), name: 'Túi vợt Yonex BAG0226', sku: 'YNX-0226', category: 'Túi vợt', price: 680000, originalPrice: 750000, stock: 8, image: 'https://picsum.photos/300?random=27', desc: '' },
+      { id: uid(), name: 'Giày Yonex SHB-03EX', sku: 'YNX-SHB03', category: 'Giày cầu lông', price: 1850000, originalPrice: 2100000, stock: 0, image: 'https://picsum.photos/300?random=28', desc: '' },
+      { id: uid(), name: 'Vợt Victor DriveX 10', sku: 'VT-DX10', category: 'Vợt cầu lông', price: 4100000, originalPrice: 4600000, stock: 15, image: 'https://picsum.photos/300?random=29', desc: '' },
+      { id: uid(), name: 'Balo Victor BR7015', sku: 'VT-BR7015', category: 'Balo cầu lông', price: 950000, originalPrice: 1100000, stock: 4, image: 'https://picsum.photos/300?random=30', desc: '' },
+    ];
+
+    function uid() {
+      return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    }
+
+    function loadProducts() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        try { products = JSON.parse(raw); } catch { products = [...SEED]; }
+      } else {
+        products = [...SEED];
+        saveProducts();
+      }
+    }
+
+    function saveProducts() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+    }
+
+    function formatPrice(n) {
+      return Number(n).toLocaleString('vi-VN') + 'đ';
+    }
+
+    function stockStatus(stock) {
+      const n = parseInt(stock) || 0;
+      if (n === 0) return { cls: 'out', label: 'Hết hàng' };
+      if (n <= 5) return { cls: 'low', label: 'Sắp hết' };
+      return { cls: 'in', label: 'Còn hàng' };
+    }
+
+    function applyFilters() {
+      const q = document.getElementById('pmSearch').value.trim().toLowerCase();
+      const cat = document.getElementById('pmCategoryFilter').value;
+      const stockF = document.getElementById('pmStockFilter').value;
+
+      filteredProducts = products.filter(p => {
+        const matchQ = !q || p.name.toLowerCase().includes(q) || (p.sku || '').toLowerCase().includes(q);
+        const matchCat = !cat || p.category === cat;
+        const { cls } = stockStatus(p.stock);
+        const matchStock = !stockF || cls === stockF;
+        return matchQ && matchCat && matchStock;
+      });
+
+      currentPage = 1;
+      render();
+    }
+
+    function render() {
+      updateStats();
+      renderTable();
+      renderPagination();
+    }
+
+    function updateStats() {
+      document.getElementById('statTotal').textContent = products.length;
+      document.getElementById('statInStock').textContent = products.filter(p => parseInt(p.stock) > 5).length;
+      document.getElementById('statLow').textContent = products.filter(p => parseInt(p.stock) > 0 && parseInt(p.stock) <= 5).length;
+      document.getElementById('statOut').textContent = products.filter(p => parseInt(p.stock) === 0).length;
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('pmTbody');
+      const total = filteredProducts.length;
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const end = Math.min(start + PAGE_SIZE, total);
+      const pageItems = filteredProducts.slice(start, end);
+
+      document.getElementById('pmPageInfo').textContent =
+        `Hiển thị ${total === 0 ? 0 : start + 1}–${end} / ${total} sản phẩm`;
+
+      if (pageItems.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8"><div class="pm-empty"><i class="fa-solid fa-box-open"></i>Không có sản phẩm nào</div></td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = pageItems.map((p, i) => {
+        const { cls, label } = stockStatus(p.stock);
+        return `
+          <tr>
+            <td style="color:#555">${start + i + 1}</td>
+            <td><img class="prod-thumb" src="${p.image || 'https://picsum.photos/300?random=99'}" alt="${p.name}" onerror="this.src='https://picsum.photos/300?random=99'"></td>
+            <td>
+              <div class="prod-name">${p.name}</div>
+              <div class="prod-sku">${p.sku || '—'}</div>
+            </td>
+            <td><span class="category-badge">${p.category}</span></td>
+            <td class="price-cell">${formatPrice(p.price)}</td>
+            <td>${p.stock}</td>
+            <td><span class="stock-badge ${cls}"><i class="fa-solid fa-circle" style="font-size:7px"></i>${label}</span></td>
+            <td>
+              <div class="action-btns">
+                <button class="btn-edit" title="Sửa" onclick="openEdit('${p.id}')"><i class="fa-solid fa-pen"></i></button>
+                <button class="btn-delete" title="Xóa" onclick="openDelete('${p.id}')"><i class="fa-solid fa-trash-can"></i></button>
+              </div>
+            </td>
+          </tr>`;
+      }).join('');
+    }
+
+    function renderPagination() {
+      const total = filteredProducts.length;
+      const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+      const container = document.getElementById('pmPageBtns');
+
+      let html = `<button class="pg-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}><i class="fa-solid fa-chevron-left"></i></button>`;
+
+      for (let p = 1; p <= totalPages; p++) {
+        if (totalPages <= 7 || p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1) {
+          html += `<button class="pg-btn ${p === currentPage ? 'active' : ''}" onclick="goPage(${p})">${p}</button>`;
+        } else if (Math.abs(p - currentPage) === 2) {
+          html += `<button class="pg-btn" disabled style="opacity:.4">…</button>`;
+        }
+      }
+
+      html += `<button class="pg-btn" onclick="goPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}><i class="fa-solid fa-chevron-right"></i></button>`;
+      container.innerHTML = html;
+    }
+
+    function goPage(p) {
+      const totalPages = Math.ceil(filteredProducts.length / PAGE_SIZE);
+      if (p < 1 || p > totalPages) return;
+      currentPage = p;
+      renderTable();
+      renderPagination();
+    }
+
+    // ---- Modal thêm/sửa ----
+    const pmModal = document.getElementById('pmModal');
+    const imgPreview = document.getElementById('imgPreview');
+    const imgPlaceholder = document.getElementById('imgPlaceholder');
+
+    function openAdd() {
+      editingId = null;
+      document.getElementById('pmModalTitle').textContent = 'Thêm sản phẩm mới';
+      clearForm();
+      pmModal.classList.add('show');
+    }
+
+    function openEdit(id) {
+      const p = products.find(x => x.id === id);
+      if (!p) return;
+      editingId = id;
+      document.getElementById('pmModalTitle').textContent = 'Chỉnh sửa sản phẩm';
+      document.getElementById('fName').value = p.name || '';
+      document.getElementById('fSku').value = p.sku || '';
+      document.getElementById('fCategory').value = p.category || '';
+      document.getElementById('fPrice').value = p.price || '';
+      document.getElementById('fOriginalPrice').value = p.originalPrice || '';
+      document.getElementById('fStock').value = p.stock ?? '';
+      document.getElementById('fDesc').value = p.desc || '';
+      document.getElementById('fImageUrl').value = p.image || '';
+      setImagePreview(p.image || '');
+      pmModal.classList.add('show');
+    }
+
+    function clearForm() {
+      ['fName','fSku','fPrice','fOriginalPrice','fStock','fDesc','fImageUrl'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('fCategory').value = '';
+      document.getElementById('fImage').value = '';
+      setImagePreview('');
+    }
+
+    function setImagePreview(src) {
+      if (src) {
+        imgPreview.src = src;
+        imgPreview.classList.add('has-img');
+        imgPlaceholder.style.display = 'none';
+      } else {
+        imgPreview.src = '';
+        imgPreview.classList.remove('has-img');
+        imgPlaceholder.style.display = '';
+      }
+    }
+
+    function closePmModal() {
+      pmModal.classList.remove('show');
+      editingId = null;
+    }
+
+    document.getElementById('fImageUrl').addEventListener('input', function() {
+      setImagePreview(this.value.trim());
+    });
+
+    document.getElementById('fImage').addEventListener('change', function() {
+      const file = this.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        setImagePreview(e.target.result);
+        document.getElementById('fImageUrl').value = '';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById('btnOpenAdd').addEventListener('click', openAdd);
+    document.getElementById('btnCancelModal').addEventListener('click', closePmModal);
+    pmModal.addEventListener('click', e => { if (e.target === pmModal) closePmModal(); });
+
+    document.getElementById('btnSaveProduct').addEventListener('click', () => {
+      const name = document.getElementById('fName').value.trim();
+      const category = document.getElementById('fCategory').value;
+      const price = document.getElementById('fPrice').value;
+      const stock = document.getElementById('fStock').value;
+
+      if (!name) { showToast('Vui lòng nhập tên sản phẩm!', 'error'); return; }
+      if (!category) { showToast('Vui lòng chọn danh mục!', 'error'); return; }
+      if (!price || isNaN(price) || Number(price) < 0) { showToast('Vui lòng nhập giá hợp lệ!', 'error'); return; }
+      if (stock === '' || isNaN(stock) || Number(stock) < 0) { showToast('Vui lòng nhập số lượng tồn!', 'error'); return; }
+
+      const imgSrc = imgPreview.src && imgPreview.classList.contains('has-img')
+        ? imgPreview.src
+        : (document.getElementById('fImageUrl').value.trim() || '');
+
+      const obj = {
+        name,
+        sku: document.getElementById('fSku').value.trim(),
+        category,
+        price: Number(price),
+        originalPrice: Number(document.getElementById('fOriginalPrice').value) || 0,
+        stock: Number(stock),
+        image: imgSrc,
+        desc: document.getElementById('fDesc').value.trim(),
+      };
+
+      if (editingId) {
+        const idx = products.findIndex(p => p.id === editingId);
+        if (idx !== -1) { products[idx] = { ...products[idx], ...obj }; }
+        showToast('Cập nhật sản phẩm thành công!', 'success');
+      } else {
+        products.unshift({ id: uid(), ...obj });
+        showToast('Thêm sản phẩm thành công!', 'success');
+      }
+
+      saveProducts();
+      closePmModal();
+      applyFilters();
+    });
+
+    // ---- Confirm delete ----
+    const confirmOverlay = document.getElementById('confirmOverlay');
+
+    function openDelete(id) {
+      deletingId = id;
+      const p = products.find(x => x.id === id);
+      document.getElementById('confirmMsg').textContent =
+        `Bạn có chắc muốn xóa "${p?.name || 'sản phẩm này'}"? Hành động này không thể hoàn tác.`;
+      confirmOverlay.classList.add('show');
+    }
+
+    function closeConfirm() {
+      confirmOverlay.classList.remove('show');
+      deletingId = null;
+    }
+
+    document.getElementById('btnConfirmCancel').addEventListener('click', closeConfirm);
+    confirmOverlay.addEventListener('click', e => { if (e.target === confirmOverlay) closeConfirm(); });
+
+    document.getElementById('btnConfirmDelete').addEventListener('click', () => {
+      if (!deletingId) return;
+      products = products.filter(p => p.id !== deletingId);
+      saveProducts();
+      closeConfirm();
+      applyFilters();
+      showToast('Đã xóa sản phẩm!', 'success');
+    });
+
+    // ---- Filters ----
+    document.getElementById('pmSearch').addEventListener('input', applyFilters);
+    document.getElementById('pmCategoryFilter').addEventListener('change', applyFilters);
+    document.getElementById('pmStockFilter').addEventListener('change', applyFilters);
+
+    // ---- Toast ----
+    function showToast(msg, type = 'success') {
+      const tc = document.getElementById('toastContainer');
+      const t = document.createElement('div');
+      t.className = `toast ${type}`;
+      t.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i> ${msg}`;
+      tc.appendChild(t);
+      setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .4s'; setTimeout(() => t.remove(), 400); }, 3000);
+    }
+
+    // ---- Init ----
+    loadProducts();
+    applyFilters();
+  </script>
+</body>
+</html>

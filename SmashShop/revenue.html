@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SmashShop - Thống kê doanh thu</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins',sans-serif;
+    }
+
+    body{
+        background:#121212;
+        color:#FFFFFF;
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    ul{
+      list-style:none;
+    }
+
+    img{
+      width:100%;
+      display:block;
+    }
+
+    button{
+        transition:.3s ease;
+    }
+
+    .container{
+        width:100%;
+        padding:0 16px;
+        margin:auto;
+    }
+
+    @media(min-width:768px){ .container{ max-width:720px; } }
+    @media(min-width:992px){ .container{ max-width:960px; } }
+    @media(min-width:1200px){ .container{ max-width:1280px; } }
+
+    /* HEADER */
+    header{
+      background:#1A1A1A;
+      box-shadow:0 2px 10px rgba(0,0,0,0.4);
+      position:sticky;
+      top:0;
+      z-index:999;
+    }
+
+    .top-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding:18px 0;
+      flex-wrap:wrap;
+      flex-direction:column;
+      align-items:stretch;
+    }
+
+    .logo{
+      font-size:30px;
+      font-weight:700;
+      color:#2563EB;
+      text-align:center;
+    }
+
+    @media(min-width:992px){
+      .top-header{ flex-direction:row; align-items:center; }
+      .logo{ text-align:left; }
+    }
+
+    .search-box{
+      flex:1;
+      max-width:100%;
+      position:relative;
+    }
+
+    .search-box input{
+      width:100%;
+      padding:12px 50px 12px 16px;
+      border-radius:50px;
+      background:#222;
+      border:1px solid #333;
+      color:#fff;
+      outline:none;
+    }
+
+    .search-box input::placeholder{ color:#999; }
+
+    .search-box i{
+      position:absolute;
+      right:18px;
+      top:50%;
+      transform:translateY(-50%);
+      color:#777;
+    }
+
+    .header-icons{
+      display:flex;
+      align-items:center;
+      gap:20px;
+      justify-content:center;
+    }
+
+    .header-icons i{
+      font-size:22px;
+      cursor:pointer;
+      transition:.3s;
+    }
+
+    .header-icons i:hover{ color:#ff3c00; }
+
+    .header-user-area{
+      position:relative;
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .login-btn{
+      padding:10px 22px;
+      border:none;
+      background:linear-gradient(135deg, #2563EB, #1D4ED8);
+      color:#fff;
+      border-radius:30px;
+      cursor:pointer;
+      font-weight:600;
+      transition:.3s;
+    }
+
+    .login-btn:hover{
+      transform:translateY(-2px);
+      opacity:.9;
+    }
+
+    .user-avatar-btn{
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      border:1px solid #2A2A2A;
+      background:#222;
+      padding:0;
+      overflow:hidden;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .user-avatar-btn img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .user-menu-dropdown{
+      position:absolute;
+      top:calc(100% + 12px);
+      right:0;
+      width:min(320px, calc(100vw - 32px));
+      border:1px solid #2A2A2A;
+      border-radius:18px;
+      background:#111827;
+      box-shadow:0 16px 32px rgba(0,0,0,0.35);
+      padding:16px;
+      display:none;
+      z-index:1000;
+    }
+
+    .user-menu-dropdown.show{
+      display:block;
+    }
+
+    .user-menu-header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .user-menu-title{
+      color:#cbd5e1;
+      font-size:13px;
+      margin-bottom:4px;
+    }
+
+    .user-menu-header h3{
+      font-size:18px;
+      margin:0;
+    }
+
+    .user-menu-role{
+      border-radius:999px;
+      background:#1D4ED8;
+      color:#fff;
+      padding:4px 10px;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .user-menu-actions{ 
+      display:grid;
+      gap:10px;
+    }
+
+    .user-menu-action{
+      width:100%;
+      text-align:left;
+      border:none;
+      border-radius:12px;
+      padding:12px 14px;
+      background:#1F2937;
+      color:#fff;
+      font-weight:600;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+
+    .user-menu-action:hover{
+      background:#2563EB;
+    }
+
+    .user-menu-action.admin-only{
+      display:none;
+    }
+
+    .user-menu-action.admin-only.show{
+      display:block;
+    }
+
+    .user-menu-action.logout{
+      background:#7F1D1D;
+    }
+
+    .auth-modal-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.8);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:2000;
+    }
+
+    .auth-modal-overlay.show{
+      display:flex;
+    }
+
+    .auth-modal-card{
+      width:min(520px, 100%);
+      background:#111827;
+      border:1px solid #2A2A2A;
+      border-radius:24px;
+      padding:24px;
+      box-shadow:0 24px 48px rgba(0,0,0,0.45);
+    }
+
+    .auth-modal-header h2{
+      margin-bottom:8px;
+      font-size:26px;
+    }
+
+    .auth-modal-header p{
+      color:#cbd5e1;
+      margin-bottom:18px;
+    }
+
+    .auth-tabs{
+      display:flex;
+      gap:8px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+
+    .auth-tab{
+      border:none;
+      border-radius:999px;
+      background:#1F2937;
+      color:#fff;
+      padding:10px 14px;
+      font-weight:600;
+      cursor:pointer;
+      transition:.3s ease;
+      border:1px solid transparent;
+    }
+
+    .auth-tab:hover{
+      border-color:#2563EB;
+      background:#2A3f5f;
+    }
+
+    .auth-tab.active{
+      background:#2563EB;
+      border-color:#2563EB;
+      box-shadow:0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .auth-form{
+      display:none;
+    }
+
+    .auth-form.active{
+      display:block;
+    }
+
+    .auth-field{
+      display:grid;
+      gap:8px;
+      margin-bottom:14px;
+    }
+
+    .auth-field label{
+      font-size:14px;
+      color:#e2e8f0;
+    }
+
+    .auth-field input{
+      width:100%;
+      border-radius:12px;
+      border:1px solid #334155;
+      background:#0F172A;
+      color:#fff;
+      padding:12px 14px;
+      outline:none;
+      transition:.3s ease;
+    }
+
+    .auth-field input:focus{
+      border-color:#2563EB;
+      background:#111f3a;
+      box-shadow:0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .auth-field input::placeholder{
+      color:#64748b;
+    }
+
+    .auth-actions{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-top:6px;
+    }
+
+    .auth-submit-btn{
+      border:none;
+      background:linear-gradient(135deg, #2563EB, #1D4ED8);
+      color:#fff;
+      border-radius:999px;
+      padding:12px 20px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.3s ease;
+    }
+
+    .auth-submit-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:0 8px 16px rgba(37, 99, 235, 0.3);
+    }
+
+    .auth-secondary-btn{
+      border:1px solid #334155;
+      background:transparent;
+      color:#fff;
+      border-radius:999px;
+      padding:10px 16px;
+      cursor:pointer;
+      transition:.3s ease;
+    }
+
+    .auth-secondary-btn:hover{
+      background:#1F2937;
+      border-color:#2563EB;
+    }
+
+    .auth-status{
+      min-height:24px;
+      margin-top:12px;
+      font-size:14px;
+      padding:10px 12px;
+      border-radius:8px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .auth-status.error{
+      color:#fca5a5;
+      background:rgba(220, 38, 38, 0.1);
+      border:1px solid rgba(220, 38, 38, 0.3);
+    }
+
+    .auth-status.success{
+      color:#86efac;
+      background:rgba(34, 197, 94, 0.1);
+      border:1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    /* NAVBAR */
+    .nav-link.active{ color:#2563EB !important; }
+    nav{ background:#121212; }
+    .main-navbar{
+      display:flex;
+      align-items:center;
+      gap:30px;
+      position:relative;
+    }
+    .main-navbar > li > a{
+      display:block;
+      padding:16px 0;
+      color:#fff;
+      font-weight:500;
+    }
+    @media(min-width:992px) {
+      .main-navbar li.dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0; 
+      }
+    }
+    .dropdown-menu-dark {
+      background:#1E1E1E !important;
+      border:1px solid #2A2A2A !important;
+      border-radius:10px;
+      box-shadow:0 10px 20px rgba(0,0,0,0.3);
+      padding: 8px 0;
+    }
+    .dropdown-menu-dark .dropdown-item {
+      padding: 10px 20px;
+      color: #fff;
+      transition: .2s ease;
+    }
+    .dropdown-menu-dark .dropdown-item:hover {
+      background: #2563EB !important;
+      color: #fff !important;
+    }
+    @media(max-width:991px){
+      .navbar-collapse{ background:#1A1A1A; padding:15px; border-radius:16px; margin-top:12px; }
+      .navbar-nav{ gap:10px; }
+      .main-navbar{ flex-direction: column; align-items: flex-start; gap: 10px; }
+      .main-navbar > li > a { padding: 8px 0; }
+      .dropdown-menu{ border:none !important; background:#222 !important; box-shadow: none; width: 100%; }
+    }
+
+    /* FOOTER */
+    footer{ background:#0D0D0D; border-top:1px solid #222; color:#fff; margin-top:70px; padding-top:60px; }
+    .footer-grid{ display:grid; grid-template-columns:1fr; gap:30px; }
+    @media(min-width:768px){ .footer-grid{ grid-template-columns:repeat(2,1fr); } }
+    @media(min-width:1200px){ .footer-grid{ grid-template-columns:repeat(4,1fr); } }
+    .footer-col{ display:flex; flex-direction:column; }
+    .footer-col h3{ margin-bottom:20px; }
+    .footer-col p, .footer-col a{ color:#ccc; line-height:1.9; font-size:14px; }
+    .socials{ display:flex; gap:15px; margin-top:15px; }
+    .socials i{ width:40px; height:40px; background:#222; display:flex; align-items:center; justify-content:center; border-radius:50%; cursor:pointer; transition:.3s; }
+    .socials i:hover{ background:#2563EB; }
+    .footer-bottom{ text-align:center; border-top:1px solid #222; margin-top:40px; padding:20px 0; color:#999; font-size:14px; }
+
+    /* ============================
+       REVENUE PAGE STYLES
+    ============================== */
+    .revenue-page {
+      padding: 40px 0 60px;
+    }
+
+    .page-title-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+
+    .page-title-bar h1 {
+      font-size: 26px;
+      font-weight: 700;
+    }
+
+    .page-title-bar h1 span {
+      color: #2563EB;
+    }
+
+    /* FILTER BAR */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 9px 20px;
+      border: 1px solid #2A2A2A;
+      border-radius: 999px;
+      background: #1E1E1E;
+      color: #ccc;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: #2563EB;
+      border-color: #2563EB;
+      color: #fff;
+    }
+
+    .date-range {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .date-range input[type="date"] {
+      background: #1E1E1E;
+      border: 1px solid #2A2A2A;
+      border-radius: 10px;
+      color: #fff;
+      padding: 8px 12px;
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .date-range input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      cursor: pointer;
+    }
+
+    .date-range span {
+      color: #666;
+      font-size: 13px;
+    }
+
+    /* KPI CARDS */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    @media(min-width: 992px) {
+      .kpi-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    .kpi-card {
+      background: #1A1A1A;
+      border: 1px solid #2A2A2A;
+      border-radius: 18px;
+      padding: 22px 20px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .3s, border-color .3s;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-4px);
+      border-color: #2563EB;
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      opacity: .08;
+    }
+
+    .kpi-card.blue::before { background: #2563EB; }
+    .kpi-card.green::before { background: #10B981; }
+    .kpi-card.orange::before { background: #F59E0B; }
+    .kpi-card.red::before { background: #EF4444; }
+
+    .kpi-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+
+    .kpi-card.blue .kpi-icon { background: rgba(37,99,235,0.15); color: #60A5FA; }
+    .kpi-card.green .kpi-icon { background: rgba(16,185,129,0.15); color: #34D399; }
+    .kpi-card.orange .kpi-icon { background: rgba(245,158,11,0.15); color: #FBBF24; }
+    .kpi-card.red .kpi-icon { background: rgba(239,68,68,0.15); color: #F87171; }
+
+    .kpi-label {
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 6px;
+    }
+
+    .kpi-value {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    @media(min-width: 768px) { .kpi-value { font-size: 26px; } }
+
+    .kpi-delta {
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .kpi-delta.up { color: #34D399; }
+    .kpi-delta.down { color: #F87171; }
+
+    /* CHARTS GRID */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    @media(min-width: 992px) {
+      .charts-grid { grid-template-columns: 2fr 1fr; }
+    }
+
+    .chart-card {
+      background: #1A1A1A;
+      border: 1px solid #2A2A2A;
+      border-radius: 18px;
+      padding: 24px;
+    }
+
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chart-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .chart-subtitle {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    .chart-badge {
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(37,99,235,0.15);
+      color: #60A5FA;
+    }
+
+    .chart-canvas-wrap {
+      position: relative;
+    }
+
+    /* BOTTOM GRID */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media(min-width: 992px) {
+      .bottom-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* TOP PRODUCTS TABLE */
+    .rev-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .rev-table th {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: #64748b;
+      padding: 0 0 14px;
+      text-align: left;
+    }
+
+    .rev-table th:last-child,
+    .rev-table td:last-child { text-align: right; }
+
+    .rev-table td {
+      padding: 12px 0;
+      border-top: 1px solid #1E2A3A;
+      font-size: 13px;
+      color: #e2e8f0;
+    }
+
+    .prod-rank {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      margin-right: 10px;
+    }
+
+    .rank-1 { background: rgba(251,191,36,0.2); color: #FBBF24; }
+    .rank-2 { background: rgba(156,163,175,0.2); color: #9CA3AF; }
+    .rank-3 { background: rgba(180,130,89,0.2); color: #B48259; }
+    .rank-other { background: #1F2937; color: #64748b; }
+
+    .prod-revenue {
+      font-weight: 700;
+      color: #60A5FA;
+    }
+
+    .progress-bar-wrap {
+      height: 4px;
+      background: #1E2A3A;
+      border-radius: 99px;
+      margin-top: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #2563EB, #60A5FA);
+      transition: width .8s ease;
+    }
+
+    /* RECENT ORDERS */
+    .order-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .order-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px;
+      background: #111827;
+      border-radius: 12px;
+      border: 1px solid #1E2A3A;
+      transition: border-color .2s;
+    }
+
+    .order-item:hover { border-color: #2563EB; }
+
+    .order-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .order-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #1D4ED8, #7C3AED);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .order-name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .order-product {
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    .order-right { text-align: right; }
+
+    .order-amount {
+      font-size: 14px;
+      font-weight: 700;
+      color: #34D399;
+      margin-bottom: 2px;
+    }
+
+    .order-status {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .status-success { background: rgba(16,185,129,0.15); color: #34D399; }
+    .status-pending { background: rgba(245,158,11,0.15); color: #FBBF24; }
+    .status-cancelled { background: rgba(239,68,68,0.15); color: #F87171; }
+
+    html{ scroll-behavior:smooth; }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER (GIỮ NGUYÊN) ===== -->
+  <header>
+    <div class="container top-header">
+      <div class="logo">
+        <a href="/SmashShop/index.html">SmashShop</a>
+      </div>
+
+      <div class="search-box">
+        <input type="text" placeholder="Tìm kiếm sản phẩm...">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+
+      <div class="header-user-area">
+        <div class="header-icons">
+          <a href="wishlist.html"><i class="fa-regular fa-heart"></i></a>
+          <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
+        </div>
+
+        <button id="loginBtn" class="login-btn" type="button">Login</button>
+
+        <button id="userAvatarBtn" class="user-avatar-btn" type="button" aria-label="Tài khoản" style="display:none;">
+          <img id="userAvatarImg" src="public/img/user_loginned.png" alt="User logged in">
+        </button>
+
+        <div id="userMenu" class="user-menu-dropdown" aria-hidden="true">
+          <div class="user-menu-header">
+            <div>
+              <p class="user-menu-title">Xin chào</p>
+              <h3 id="userMenuName">Khách</h3>
+            </div>
+            <span id="userMenuRole" class="user-menu-role">Guest</span>
+          </div>
+          <div class="user-menu-actions">
+            <button class="user-menu-action" type="button" data-action="profile">Thông tin cá nhân</button>
+            <button class="user-menu-action" type="button" data-action="history">Lịch sử đặt hàng</button>
+            <button class="user-menu-action admin-only" type="button" data-action="products">Quản lý sản phẩm</button>
+            <button class="user-menu-action admin-only" type="button" data-action="orders">Quản lý đơn hàng</button>
+            <button class="user-menu-action admin-only" type="button" data-action="revenue">Thống kê doanh thu</button>
+            <button class="user-menu-action logout" type="button" data-action="logout">Đăng xuất</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <button class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainMenu">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainMenu">
+          <ul class="navbar-nav gap-lg-4 main-navbar">
+            <li class="nav-item">
+              <a class="nav-link" href="/SmashShop/index.html">Trang chủ</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">Sản phẩm</a>
+              <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="/SmashShop/vot.html">Vợt cầu lông</a></li>
+                <li><a class="dropdown-item" href="/SmashShop/giay.html">Giày cầu lông</a></li>
+                <li><a class="dropdown-item" href="/SmashShop/balo.html">Balo cầu lông</a></li>
+                <li><a class="dropdown-item" href="/SmashShop/tuivot.html">Túi vợt cầu lông</a></li>
+                <li><a class="dropdown-item" href="/SmashShop/phukien.html">Phụ kiện cầu lông</a></li>
+              </ul>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="/SmashShop/sale.html">Khuyến mãi</a></li>
+            <li class="nav-item"><a class="nav-link" href="/SmashShop/about.html">Giới thiệu</a></li>
+            <li class="nav-item"><a class="nav-link" href="/SmashShop/contact.html">Liên hệ</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ===== MAIN: REVENUE DASHBOARD ===== -->
+  <main class="revenue-page">
+    <div class="container">
+
+      <!-- Page Title & Filters -->
+      <div class="page-title-bar">
+        <div>
+          <h1><i class="fa-solid fa-chart-line" style="color:#2563EB;margin-right:10px;font-size:22px;"></i>Thống kê <span>doanh thu</span></h1>
+          <p style="color:#64748b;font-size:13px;margin-top:4px;">Cập nhật lần cuối: 28/05/2026 — 07:30</p>
+        </div>
+        <div class="filter-bar">
+          <button class="filter-btn" onclick="setFilter('7d',this)">7 ngày</button>
+          <button class="filter-btn active" onclick="setFilter('30d',this)">30 ngày</button>
+          <button class="filter-btn" onclick="setFilter('3m',this)">3 tháng</button>
+          <button class="filter-btn" onclick="setFilter('year',this)">Năm nay</button>
+          <div class="date-range">
+            <input type="date" id="dateFrom" value="2026-04-28">
+            <span>→</span>
+            <input type="date" id="dateTo" value="2026-05-28">
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card blue">
+          <div class="kpi-icon"><i class="fa-solid fa-sack-dollar"></i></div>
+          <div class="kpi-label">Tổng doanh thu</div>
+          <div class="kpi-value" id="kpiRevenue">487.350.000đ</div>
+          <div class="kpi-delta up"><i class="fa-solid fa-arrow-trend-up"></i> +12.4% so với kỳ trước</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+          <div class="kpi-label">Tổng đơn hàng</div>
+          <div class="kpi-value" id="kpiOrders">1.248</div>
+          <div class="kpi-delta up"><i class="fa-solid fa-arrow-trend-up"></i> +8.1% so với kỳ trước</div>
+        </div>
+        <div class="kpi-card orange">
+          <div class="kpi-icon"><i class="fa-solid fa-receipt"></i></div>
+          <div class="kpi-label">Giá trị đơn TB</div>
+          <div class="kpi-value" id="kpiAvgOrder">390.500đ</div>
+          <div class="kpi-delta up"><i class="fa-solid fa-arrow-trend-up"></i> +3.9% so với kỳ trước</div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-icon"><i class="fa-solid fa-ban"></i></div>
+          <div class="kpi-label">Đơn huỷ</div>
+          <div class="kpi-value" id="kpiCancelled">47</div>
+          <div class="kpi-delta down"><i class="fa-solid fa-arrow-trend-down"></i> -5.2% so với kỳ trước</div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="charts-grid">
+        <!-- Line Chart: Revenue over time -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Doanh thu theo thời gian</div>
+              <div class="chart-subtitle">Triệu đồng / tháng</div>
+            </div>
+            <span class="chart-badge">30 ngày gần nhất</span>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="revenueLineChart" height="100"></canvas>
+          </div>
+        </div>
+
+        <!-- Doughnut: Revenue by category -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Doanh thu theo danh mục</div>
+              <div class="chart-subtitle">Phân bổ sản phẩm</div>
+            </div>
+          </div>
+          <div class="chart-canvas-wrap" style="max-width:280px;margin:auto;">
+            <canvas id="categoryDoughnut"></canvas>
+          </div>
+          <div style="margin-top:16px;display:grid;gap:8px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;">
+              <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#2563EB;margin-right:6px;"></span>Vợt cầu lông</span><strong>42%</strong>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;">
+              <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#10B981;margin-right:6px;"></span>Giày cầu lông</span><strong>28%</strong>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;">
+              <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#F59E0B;margin-right:6px;"></span>Balo cầu lông</span><strong>15%</strong>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;">
+              <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#EF4444;margin-right:6px;"></span>Phụ kiện</span><strong>10%</strong>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;">
+              <span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#8B5CF6;margin-right:6px;"></span>Túi vợt</span><strong>5%</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bar Chart: Orders per day -->
+      <div class="chart-card" style="margin-bottom:28px;">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Số đơn hàng theo tháng</div>
+            <div class="chart-subtitle">So sánh tháng hiện tại và tháng trước</div>
+          </div>
+          <span class="chart-badge">2026</span>
+        </div>
+        <div class="chart-canvas-wrap">
+          <canvas id="ordersBarChart" height="70"></canvas>
+        </div>
+      </div>
+
+      <!-- Bottom Grid: Top Products + Recent Orders -->
+      <div class="bottom-grid">
+
+        <!-- Top Products -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Top sản phẩm bán chạy</div>
+              <div class="chart-subtitle">Xếp hạng theo doanh thu</div>
+            </div>
+          </div>
+          <table class="rev-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Sản phẩm</th>
+                <th>Doanh thu</th>
+              </tr>
+            </thead>
+            <tbody id="topProductsBody">
+              <!-- Generated by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Đơn hàng gần đây</div>
+              <div class="chart-subtitle">10 đơn mới nhất</div>
+            </div>
+            <span class="chart-badge" style="cursor:pointer;">Xem tất cả</span>
+          </div>
+          <div class="order-list" id="recentOrdersList">
+            <!-- Generated by JS -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- AUTH MODAL -->
+  <div id="authModal" class="auth-modal-overlay" aria-hidden="true">
+    <div class="auth-modal-card">
+      <div class="auth-tabs">
+        <button id="loginTabBtn" class="auth-tab active" type="button">Đăng nhập</button>
+        <button id="registerTabBtn" class="auth-tab" type="button">Đăng ký</button>
+        <button id="forgotTabBtn" class="auth-tab" type="button">Quên mật khẩu</button>
+      </div>
+
+      <form id="loginForm" class="auth-form active">
+        <div class="auth-field">
+          <label>Email, số điện thoại</label>
+          <input id="loginIdentifier" type="text" placeholder="email@example.com" required>
+        </div>
+        <div class="auth-field">
+          <label>Mật khẩu</label>
+          <input id="loginPassword" type="password" placeholder="Nhập mật khẩu" required>
+        </div>
+        <div class="auth-actions">
+          <button type="button" class="auth-secondary-btn" data-close-auth>Đóng</button>
+          <button type="submit" class="auth-submit-btn">Đăng nhập</button>
+        </div>
+      </form>
+
+      <form id="registerForm" class="auth-form">
+        <div class="auth-field">
+          <label>Họ và tên</label>
+          <input id="registerName" type="text" placeholder="Nguyễn Văn A" required>
+        </div>
+        <div class="auth-field">
+          <label>Email</label>
+          <input id="registerEmail" type="email" placeholder="name@example.com" required>
+        </div>
+        <div class="auth-field">
+          <label>Số điện thoại</label>
+          <input id="registerPhone" type="tel" placeholder="0123456789" required>
+        </div>
+        <div class="auth-field">
+          <label>Mật khẩu</label>
+          <input id="registerPassword" type="password" placeholder="Tối thiểu 6 ký tự" required>
+        </div>
+        <div class="auth-field">
+          <label>Xác nhận mật khẩu</label>
+          <input id="registerConfirmPassword" type="password" placeholder="Nhập lại mật khẩu" required>
+        </div>
+        <div class="auth-actions">
+          <button type="button" class="auth-secondary-btn" data-close-auth>Đóng</button>
+          <button type="submit" class="auth-submit-btn">Đăng ký</button>
+        </div>
+      </form>
+
+      <form id="forgotForm" class="auth-form">
+        <div class="auth-field">
+          <label>Email</label>
+          <input id="forgotEmail" type="email" placeholder="Nhập email đã đăng ký" required>
+        </div>
+        <p style="font-size:13px;color:#cbd5e1;margin-bottom:14px;line-height:1.5;">
+          Nhập email đã đăng ký, chúng tôi sẽ gửi mật khẩu mới tới email của bạn.
+        </p>
+        <div class="auth-actions">
+          <button type="button" class="auth-secondary-btn" data-close-auth>Đóng</button>
+          <button type="submit" class="auth-submit-btn">Gửi mật khẩu mới</button>
+        </div>
+      </form>
+
+      <div id="authStatus" class="auth-status"></div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER (GIỮ NGUYÊN) ===== -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <h3>SmashShop</h3>
+        <p>Hệ thống bán vợt và phụ kiện cầu lông chính hãng với giá tốt, hỗ trợ khách hàng tận tâm.</p>
+        <div class="socials">
+          <a href="https://www.facebook.com/le.vinh.686378" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/leevinh_05" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://www.tiktok.com/@vinh.l70" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="https://www.youtube.com/watch?v=brqXbeDUBRQ" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h3>Danh mục</h3>
+        <p><a href="/SmashShop/vot.html">Vợt cầu lông</a></p>
+        <p><a href="/SmashShop/giay.html">Giày cầu lông</a></p>
+        <p><a href="/SmashShop/balo.html">Balo cầu lông</a></p>
+        <p><a href="/SmashShop/tuivot.html">Túi vợt cầu lông</a></p>
+        <p><a href="/SmashShop/phukien.html">Phụ kiện cầu lông</a></p>
+      </div>
+      <div class="footer-col">
+        <h3>Hỗ trợ</h3>
+        <p><a href="#">Chính sách bảo hành</a></p>
+        <p><a href="#">Điều khoản dịch vụ</a></p>
+        <p><a href="#">Hướng dẫn mua hàng</a></p>
+        <p><a href="#">Liên hệ</a></p>
+      </div>
+      <div class="footer-col">
+        <h3>Thông tin liên hệ</h3>
+        <p>Email: support@smashshop.vn</p>
+        <p>Hotline: 0123 456 789</p>
+        <a href="https://maps.app.goo.gl/XQcabwWphX5mqsZs6" target="_blank"><p>Địa chỉ: 183 Đ. Yên Xá, Yên Xá, Thanh Liệt, Hà Nội, Vietnam</p></a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 SmashShop. All Rights Reserved.</div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    /* ============ AUTH (GIỮ NGUYÊN LOGIC GỐC) ============ */
+    const API_BASE = 'http://localhost:3000/api';
+    const AUTH_KEY = 'smashshop_auth';
+
+    const loginBtn = document.getElementById('loginBtn');
+    const userAvatarBtn = document.getElementById('userAvatarBtn');
+    const userMenu = document.getElementById('userMenu');
+    const userMenuName = document.getElementById('userMenuName');
+    const userMenuRole = document.getElementById('userMenuRole');
+    const authModal = document.getElementById('authModal');
+    const authStatus = document.getElementById('authStatus');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const forgotForm = document.getElementById('forgotForm');
+    const loginTabBtn = document.getElementById('loginTabBtn');
+    const registerTabBtn = document.getElementById('registerTabBtn');
+    const forgotTabBtn = document.getElementById('forgotTabBtn');
+
+    let currentAuth = null;
+
+    function getStoredAuth() {
+      try {
+        const raw = localStorage.getItem(AUTH_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        localStorage.removeItem(AUTH_KEY);
+        return null;
+      }
+    }
+
+    function saveAuth(auth) {
+      currentAuth = auth;
+      localStorage.setItem(AUTH_KEY, JSON.stringify(auth));
+      updateAuthUI();
+    }
+
+    function clearAuth() {
+      currentAuth = null;
+      localStorage.removeItem(AUTH_KEY);
+      updateAuthUI();
+    }
+
+    function setAuthStatus(msg, type='success') {
+      authStatus.textContent = msg;
+      authStatus.className = `auth-status ${type}`;
+    }
+
+    function updateAuthUI() {
+      const auth = currentAuth || getStoredAuth();
+      if (auth && auth.user) {
+        loginBtn.style.display = 'none';
+        userAvatarBtn.style.display = 'flex';
+        userMenuName.textContent = auth.user.name || 'Người dùng';
+        userMenuRole.textContent = auth.user.role === 'admin' ? 'Admin' : 'Guest';
+        document.querySelectorAll('.admin-only').forEach(el => {
+          el.classList.toggle('show', auth.user.role === 'admin');
+        });
+      } else {
+        loginBtn.style.display = 'inline-block';
+        userAvatarBtn.style.display = 'none';
+        userMenu.classList.remove('show');
+        userMenuName.textContent = 'Khách';
+        userMenuRole.textContent = 'Guest';
+        document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('show'));
+      }
+    }
+
+    function openAuthModal(tab='login') {
+      authModal.classList.add('show');
+      loginTabBtn.classList.toggle('active', tab==='login');
+      registerTabBtn.classList.toggle('active', tab==='register');
+      forgotTabBtn.classList.toggle('active', tab==='forgot');
+      loginForm.classList.toggle('active', tab==='login');
+      registerForm.classList.toggle('active', tab==='register');
+      forgotForm.classList.toggle('active', tab==='forgot');
+    }
+
+    function closeAuthModal() {
+      authModal.classList.remove('show');
+      authStatus.textContent = '';
+      authStatus.className = 'auth-status';
+      loginForm.reset();
+      registerForm.reset();
+      forgotForm.reset();
+    }
+
+    function toggleUserMenu() {
+      userMenu.classList.toggle('show');
+    }
+
+    function closeUserMenu() {
+      userMenu.classList.remove('show');
+    }
+
+    loginBtn.addEventListener('click', () => openAuthModal('login'));
+    userAvatarBtn.addEventListener('click', toggleUserMenu);
+    loginTabBtn.addEventListener('click', () => openAuthModal('login'));
+    registerTabBtn.addEventListener('click', () => openAuthModal('register'));
+    forgotTabBtn.addEventListener('click', () => openAuthModal('forgot'));
+
+    document.querySelectorAll('[data-close-auth]').forEach(btn => btn.addEventListener('click', closeAuthModal));
+    authModal.addEventListener('click', e => { if (e.target === authModal) closeAuthModal(); });
+    document.addEventListener('click', e => { if (!e.target.closest('.header-user-area')) closeUserMenu(); });
+    window.addEventListener('keydown', e => { if (e.key==='Escape') { closeUserMenu(); closeAuthModal(); } });
+
+    document.querySelectorAll('.user-menu-action').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const action = btn.dataset.action;
+        closeUserMenu();
+        if (action === 'logout') clearAuth();
+        if (action === 'profile') window.location.href = '/SmashShop/profile.html';
+      });
+    });
+
+    currentAuth = getStoredAuth();
+    updateAuthUI();
+
+    /* ============ FILTER BUTTONS ============ */
+    function setFilter(period, el) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      updateCharts(period);
+    }
+
+    /* ============ CHART.JS DEFAULTS ============ */
+    Chart.defaults.color = '#64748b';
+    Chart.defaults.borderColor = '#1E2A3A';
+    Chart.defaults.font.family = 'Poppins';
+
+    /* ============ DATA ============ */
+    const months = ['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10','T11','T12'];
+
+    const revenueData = {
+      '7d':  [12,18,14,22,19,25,28],
+      '30d': [42,55,48,62,70,58,75,80,65,88,76,92,85,70,95,102,89,78,108,115,97,122,110,105,130,118,125,140,135,150],
+      '3m':  [380,420,487],
+      'year':[280,320,380,350,420,395,450,490,460,510,530,487]
+    };
+
+    const ordersData = {
+      '7d':  [8,12,10,16,14,18,21],
+      '30d': [28,35,30,42,50,38,55,60,45,68,58,72,65,50,75,82,69,58,88,95,77,102,90,85,110,98,105,120,115,130],
+      '3m':  [280,320,380],
+      'year':[180,210,260,240,290,275,310,340,320,360,370,280]
+    };
+
+    const labelMap = {
+      '7d':  ['T2','T3','T4','T5','T6','T7','CN'],
+      '30d': Array.from({length:30}, (_,i) => `${i+1}/5`),
+      '3m':  ['Tháng 3','Tháng 4','Tháng 5'],
+      'year': months
+    };
+
+    /* ============ LINE CHART ============ */
+    const lineCtx = document.getElementById('revenueLineChart').getContext('2d');
+    const lineGrad = lineCtx.createLinearGradient(0, 0, 0, 260);
+    lineGrad.addColorStop(0, 'rgba(37,99,235,0.3)');
+    lineGrad.addColorStop(1, 'rgba(37,99,235,0)');
+
+    const lineChart = new Chart(lineCtx, {
+      type: 'line',
+      data: {
+        labels: labelMap['30d'],
+        datasets: [{
+          label: 'Doanh thu (Tr.đ)',
+          data: revenueData['30d'],
+          borderColor: '#2563EB',
+          backgroundColor: lineGrad,
+          borderWidth: 2.5,
+          pointRadius: 0,
+          pointHoverRadius: 6,
+          pointHoverBackgroundColor: '#2563EB',
+          pointHoverBorderColor: '#fff',
+          pointHoverBorderWidth: 2,
+          tension: 0.45,
+          fill: true,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } },
+          y: { grid: { color: '#1E2A3A' }, ticks: { callback: v => v + 'M' } }
+        },
+        interaction: { mode: 'index', intersect: false }
+      }
+    });
+
+    /* ============ DOUGHNUT CHART ============ */
+    new Chart(document.getElementById('categoryDoughnut'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Vợt cầu lông','Giày cầu lông','Balo cầu lông','Phụ kiện','Túi vợt'],
+        datasets: [{
+          data: [42, 28, 15, 10, 5],
+          backgroundColor: ['#2563EB','#10B981','#F59E0B','#EF4444','#8B5CF6'],
+          borderColor: '#1A1A1A',
+          borderWidth: 3,
+          hoverOffset: 8
+        }]
+      },
+      options: {
+        cutout: '70%',
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` } } }
+      }
+    });
+
+    /* ============ BAR CHART ============ */
+    const barCtx = document.getElementById('ordersBarChart').getContext('2d');
+    const barChart = new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: months,
+        datasets: [
+          {
+            label: 'Tháng này',
+            data: [180, 210, 260, 240, 290, 275, 310, 340, 320, 360, 370, 280],
+            backgroundColor: 'rgba(37,99,235,0.8)',
+            borderRadius: 6,
+            barPercentage: 0.45,
+          },
+          {
+            label: 'Tháng trước',
+            data: [160, 190, 230, 210, 260, 250, 280, 310, 290, 330, 340, 255],
+            backgroundColor: 'rgba(37,99,235,0.2)',
+            borderRadius: 6,
+            barPercentage: 0.45,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: 'top', labels: { boxWidth: 12, padding: 20 } }, tooltip: { mode: 'index' } },
+        scales: {
+          x: { grid: { display: false } },
+          y: { grid: { color: '#1E2A3A' } }
+        }
+      }
+    });
+
+    /* ============ UPDATE CHARTS BY FILTER ============ */
+    function updateCharts(period) {
+      const labels = labelMap[period];
+      const rev = revenueData[period];
+      const ord = ordersData[period];
+
+      lineChart.data.labels = labels;
+      lineChart.data.datasets[0].data = rev;
+      lineChart.update();
+
+      barChart.data.labels = period === 'year' ? months : labels;
+      barChart.data.datasets[0].data = ord;
+      barChart.data.datasets[1].data = ord.map(v => Math.round(v * 0.88));
+      barChart.update();
+    }
+
+    /* ============ TOP PRODUCTS ============ */
+    const topProducts = [
+      { name: 'Yonex Astrox 100ZZ', revenue: 85600000, pct: 100 },
+      { name: 'Lining Aeronaut 9000C', revenue: 62400000, pct: 73 },
+      { name: 'Victor Thruster K9900', revenue: 54800000, pct: 64 },
+      { name: 'Yonex SHB-65Z3', revenue: 38200000, pct: 45 },
+      { name: 'Balo Yonex BA92012EX', revenue: 29500000, pct: 34 },
+      { name: 'Ống cầu Vina Star', revenue: 18700000, pct: 22 },
+    ];
+
+    const tbody = document.getElementById('topProductsBody');
+    topProducts.forEach((p, i) => {
+      const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
+      tbody.innerHTML += `
+        <tr>
+          <td><span class="prod-rank ${rankClass}">${i+1}</span></td>
+          <td>
+            <div>${p.name}</div>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-fill" style="width:${p.pct}%"></div>
+            </div>
+          </td>
+          <td class="prod-revenue">${(p.revenue/1000000).toFixed(1)}M đ</td>
+        </tr>`;
+    });
+
+    /* ============ RECENT ORDERS ============ */
+    const recentOrders = [
+      { name: 'Nguyễn Văn A', product: 'Yonex Astrox 100ZZ', amount: '5.200.000đ', status: 'success', statusLabel: 'Thành công' },
+      { name: 'Trần Thị B', product: 'Giày Victor P9200', amount: '2.100.000đ', status: 'success', statusLabel: 'Thành công' },
+      { name: 'Lê Minh K', product: 'Balo Yonex BA92012', amount: '1.200.000đ', status: 'pending', statusLabel: 'Đang xử lý' },
+      { name: 'Phạm Hồng Q', product: 'Lining Aeronaut 9000C', amount: '3.800.000đ', status: 'success', statusLabel: 'Thành công' },
+      { name: 'Hoàng Thị D', product: 'Ống cầu Vina Star x5', amount: '1.750.000đ', status: 'cancelled', statusLabel: 'Đã huỷ' },
+      { name: 'Vũ Thanh T', product: 'Victor Thruster K9900', amount: '4.600.000đ', status: 'pending', statusLabel: 'Đang xử lý' },
+      { name: 'Đỗ Quang H', product: 'Quấn cán Yonex x3', amount: '240.000đ', status: 'success', statusLabel: 'Thành công' },
+    ];
+
+    const orderList = document.getElementById('recentOrdersList');
+    recentOrders.forEach(o => {
+      const initials = o.name.split(' ').map(w => w[0]).slice(-2).join('');
+      orderList.innerHTML += `
+        <div class="order-item">
+          <div class="order-left">
+            <div class="order-avatar">${initials}</div>
+            <div>
+              <div class="order-name">${o.name}</div>
+              <div class="order-product">${o.product}</div>
+            </div>
+          </div>
+          <div class="order-right">
+            <div class="order-amount">${o.amount}</div>
+            <span class="order-status status-${o.status}">${o.statusLabel}</span>
+          </div>
+        </div>`;
+    });
+  </script>
+</body>
+</html>
