@@ -444,16 +444,6 @@
       to{ opacity:1; transform:translateY(0); }
     }
 
-    /* NAVBAR */
-    .nav-link.active{ color:#2563EB !important; }
-    nav{ background:#121212; }
-    .main-navbar{ display:flex; align-items:center; gap:30px; position:relative; }
-    .main-navbar > li > a{ display:block; padding:16px 0; color:#fff; font-weight:500; }
-
-    @media(min-width:992px) {
-      .main-navbar li.dropdown:hover .dropdown-menu { display: block; margin-top: 0; }
-    }
-
     .dropdown-menu-dark {
       background:#1E1E1E !important;
       border:1px solid #2A2A2A !important;
@@ -465,10 +455,6 @@
     .dropdown-menu-dark .dropdown-item:hover { background: #2563EB !important; color: #fff !important; }
 
     @media(max-width:991px){
-      .navbar-collapse{ background:#1A1A1A; padding:15px; border-radius:16px; margin-top:12px; }
-      .navbar-nav{ gap:10px; }
-      .main-navbar{ flex-direction: column; align-items: flex-start; gap: 10px; }
-      .main-navbar > li > a { padding: 8px 0; }
       .dropdown-menu{ border:none !important; background:#222 !important; box-shadow: none; width: 100%; }
     }
 
@@ -1052,48 +1038,6 @@
         </div>
       </div>
     </div>
-
-    <nav class="navbar navbar-expand-lg navbar-dark">
-      <div class="container">
-        <button class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#mainMenu">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="mainMenu">
-          <ul class="navbar-nav gap-lg-4 main-navbar">
-            <li class="nav-item">
-              <a class="nav-link" href="/SmashShop/index.html">Trang chủ</a>
-            </li>
-
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle"
-                href="#"
-                id="navbarDropdown"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false">
-                Sản phẩm
-              </a>
-              <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="/SmashShop/vot.html">Vợt cầu lông</a></li>
-                <li><a class="dropdown-item" href="/SmashShop/giay.html">Giày cầu lông</a></li>
-                <li><a class="dropdown-item" href="/SmashShop/balo.html">Balo cầu lông</a></li>
-                <li><a class="dropdown-item" href="/SmashShop/tuivot.html">Túi vợt cầu lông</a></li>
-                <li><a class="dropdown-item" href="/SmashShop/phukien.html">Phụ kiện cầu lông</a></li>
-              </ul>
-            </li>
-
-            <li class="nav-item"><a class="nav-link" href="/SmashShop/sale.html">Khuyến mãi</a></li>
-            <li class="nav-item"><a class="nav-link active" href="/SmashShop/product-management.html">Quản lý SP</a></li>
-            <li class="nav-item"><a class="nav-link" href="/SmashShop/about.html">Giới thiệu</a></li>
-            <li class="nav-item"><a class="nav-link" href="/SmashShop/contact.html">Liên hệ</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
   </header>
 
   <!-- ====== MAIN: QUẢN LÝ SẢN PHẨM ====== -->

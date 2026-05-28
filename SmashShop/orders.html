@@ -77,15 +77,13 @@
     .auth-status.error{color:#fca5a5;background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.3);}
     .auth-status.success{color:#86efac;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);}
     @keyframes slideIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
-    .nav-link.active{color:#2563EB !important;}
-    nav{background:#121212;}
-    .main-navbar{display:flex;align-items:center;gap:30px;position:relative;}
-    .main-navbar>li>a{display:block;padding:16px 0;color:#fff;font-weight:500;}
-    @media(min-width:992px){.main-navbar li.dropdown:hover .dropdown-menu{display:block;margin-top:0;}}
+    
     .dropdown-menu-dark{background:#1E1E1E !important;border:1px solid #2A2A2A !important;border-radius:10px;box-shadow:0 10px 20px rgba(0,0,0,0.3);padding:8px 0;}
     .dropdown-menu-dark .dropdown-item{padding:10px 20px;color:#fff;transition:.2s ease;}
     .dropdown-menu-dark .dropdown-item:hover{background:#2563EB !important;color:#fff !important;}
-    @media(max-width:991px){.navbar-collapse{background:#1A1A1A;padding:15px;border-radius:16px;margin-top:12px;}.navbar-nav{gap:10px;}.main-navbar{flex-direction:column;align-items:flex-start;gap:10px;}.main-navbar>li>a{padding:8px 0;}.dropdown-menu{border:none !important;background:#222 !important;box-shadow:none;width:100%;}}
+    @media(max-width:991px)
+    {.dropdown-menu{border:none !important;background:#222 !important;box-shadow:none;width:100%;}
+    }
     
     /* FOOTER */
     footer{background:#0D0D0D;border-top:1px solid #222;color:#fff;margin-top:70px;padding-top:60px;}
@@ -818,33 +816,6 @@
         </div>
       </div>
     </div>
-
-    <nav class="navbar navbar-expand-lg navbar-dark">
-      <div class="container">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="mainMenu">
-          <ul class="navbar-nav gap-lg-4 main-navbar">
-            <li class="nav-item"><a class="nav-link" href="/SmashShop/index.html">Trang chủ</a></li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Sản phẩm</a>
-              <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="/SmashShop/vot.html">Vợt cầu lông</a></li>
-                <li><a class="dropdown-item" href="/SmashShop/giay.html">Giày cầu lông</a></li>
-                <li><a class="dropdown-item" href="/SmashShop/balo.html">Balo cầu lông</a></li>
-                <li><a class="dropdown-item" href="/SmashShop/tuivot.html">Túi vợt cầu lông</a></li>
-                <li><a class="dropdown-item" href="/SmashShop/phukien.html">Phụ kiện cầu lông</a></li>
-              </ul>
-            </li>
-            <li class="nav-item"><a class="nav-link" href="/SmashShop/sale.html">Khuyến mãi</a></li>
-            <li class="nav-item"><a class="nav-link active" href="/SmashShop/orders.html">Quản lý đơn hàng</a></li>
-            <li class="nav-item"><a class="nav-link" href="/SmashShop/about.html">Giới thiệu</a></li>
-            <li class="nav-item"><a class="nav-link" href="/SmashShop/contact.html">Liên hệ</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
   </header>
 
   <!-- ===== MAIN ===== -->
