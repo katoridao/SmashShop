@@ -1206,8 +1206,18 @@
     document.addEventListener('click', e => { if (!e.target.closest('.header-user-area')) closeUserMenu(); });
     document.querySelectorAll('.user-menu-action').forEach(b => b.addEventListener('click', () => {
       closeUserMenu();
-      if (b.dataset.action === 'logout') clearAuth();
-      else if (b.dataset.action === 'profile') window.location.href = '/SmashShop/profile.html';
+      const auth = currentAuth || getStoredAuth();
+      const isAdmin = auth?.user?.role === 'admin';
+      const action = b.dataset.action;
+      if (action === 'logout') {
+        clearAuth();
+        window.location.href = '/SmashShop/index.html';
+      }
+      else if (action === 'profile') window.location.href = '/SmashShop/profile.html';
+      else if (action === 'history') window.location.href = '/SmashShop/orderhistory.html';
+      else if (action === 'products' && isAdmin) window.location.href = '/SmashShop/productmanagement.html';
+      else if (action === 'orders' && isAdmin) window.location.href = '/SmashShop/orders.html';
+      else if (action === 'revenue' && isAdmin) window.location.href = '/SmashShop/revenue.html';
     }));
     window.addEventListener('keydown', e => { if (e.key === 'Escape') { closeUserMenu(); closeAuthModal(); closeModal(); } });
     currentAuth = getStoredAuth(); updateAuthUI();

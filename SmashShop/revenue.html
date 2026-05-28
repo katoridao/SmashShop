@@ -1293,8 +1293,17 @@
       btn.addEventListener('click', () => {
         const action = btn.dataset.action;
         closeUserMenu();
-        if (action === 'logout') clearAuth();
-        if (action === 'profile') window.location.href = '/SmashShop/profile.html';
+        const auth = currentAuth || getStoredAuth();
+        const isAdmin = auth?.user?.role === 'admin';
+        if (action === 'logout') {
+          clearAuth();
+          window.location.href = '/SmashShop/index.html';
+        }
+        else if (action === 'profile') window.location.href = '/SmashShop/profile.html';
+        else if (action === 'history') window.location.href = '/SmashShop/orderhistory.html';
+        else if (action === 'products' && isAdmin) window.location.href = '/SmashShop/productmanagement.html';
+        else if (action === 'orders' && isAdmin) window.location.href = '/SmashShop/orders.html';
+        else if (action === 'revenue' && isAdmin) window.location.href = '/SmashShop/revenue.html';
       });
     });
 

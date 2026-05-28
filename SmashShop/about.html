@@ -1129,28 +1129,22 @@
       switch (action) {
         case 'profile':
           window.location.href = '/SmashShop/profile.html';
-          return;
+          break;
         case 'history':
+          window.location.href = '/SmashShop/orderhistory.html';
           break;
         case 'products':
-          if (!isAdmin) {
-            return;
-          }
+          if (isAdmin) window.location.href = '/SmashShop/productmanagement.html';
           break;
         case 'orders':
-          if (!isAdmin) {
-            return;
-          }
+          if (isAdmin) window.location.href = '/SmashShop/orders.html';
           break;
         case 'revenue':
-          if (!isAdmin) {
-            return;
-          }
+          if (isAdmin) window.location.href = '/SmashShop/revenue.html';
           break;
         case 'logout':
           clearAuth();
-          break;
-        default:
+          window.location.href = '/SmashShop/index.html';
           break;
       }
     }
