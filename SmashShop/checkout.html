@@ -1730,6 +1730,12 @@
     function saveAuth(auth) {
       currentAuth = auth;
       localStorage.setItem(AUTH_KEY, JSON.stringify(auth));
+      const redirectUrl = sessionStorage.getItem('auth_redirect');
+      if (redirectUrl) {
+        sessionStorage.removeItem('auth_redirect');
+        window.location.href = redirectUrl;
+      }
+
       updateAuthUI();
     }
 
@@ -2043,6 +2049,28 @@
 
     // Init total
     updateTotal();
-  </script>
+  
+    // Cross-tab synchronization
+    window.addEventListener('storage', (e) => {
+      if (e.key === AUTH_KEY) {
+        currentAuth = getStoredAuth();
+        if (typeof updateAuthUI === 'function') updateAuthUI();
+        if (typeof loadProfile === 'function') loadProfile();
+      }
+    });
+
+    // Check query parameter to open auth modal (redirected from Category B)
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('openAuth')) {
+        const tab = urlParams.get('openAuth') || 'login';
+        if (typeof openAuthModal === 'function') {
+          openAuthModal(tab);
+          const newUrl = window.location.pathname;
+          window.history.replaceState({}, document.title, newUrl);
+        }
+      }
+    });
+</script>
 </body>
 </html>

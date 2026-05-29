@@ -291,6 +291,16 @@
         modal.classList.remove('show');
     }
 
+    
+    // Đăng xuất và thoát
+    const exitBtn = document.querySelector('.btn-outline-danger');
+    if (exitBtn) {
+      exitBtn.addEventListener('click', () => {
+        localStorage.removeItem('smashshop_auth');
+        window.location.href = '/SmashShop/index.html';
+      });
+    }
+
     // Đóng khi click ngoài Modal
     modal.addEventListener('click', (e) => {
         if(e.target === modal) closeOrderModal();
