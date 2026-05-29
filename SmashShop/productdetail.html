@@ -1407,6 +1407,89 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="public/auth_sync.js"></script>
   <script>
+    const API_BASE = "http://localhost:3000/api";
+
+    // Hàm lấy tham số ID từ URL (Ví dụ: productdetail.html?id=65ef1234...)
+    function getProductIdFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("id");
+    }
+
+    async function loadProductDetail() {
+      const productId = getProductIdFromUrl();
+      if (!productId) {
+        showToast("Không tìm thấy ID sản phẩm hợp lệ trong đường dẫn!", "error");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/products/${productId}`);
+        const data = await res.json();
+
+        if (!data.success || !data.product) {
+          showToast("Sản phẩm không tồn tại hoặc đã bị xóa!", "error");
+          return;
+        }
+
+        const prod = data.product;
+
+        // 1. Cập nhật Tiêu đề trang & Thẻ Meta Breadcrumb
+        document.title = `${prod.name} - SmashShop`;
+        document.getElementById("detailBreadcrumbCurrent").innerText = prod.name;
+
+        // 2. Cập nhật Hình ảnh đại diện (Gallery)
+        const mainImg = document.getElementById("detailMainImg");
+        mainImg.src = prod.thumbnail;
+        mainImg.alt = prod.name;
+
+        // 3. Cập nhật Thông tin Huy hiệu & Tên thương hiệu
+        document.getElementById("detailBrandBadge").innerText = prod.brand;
+        document.getElementById("detailCategoryTag").innerText = prod.category;
+        document.getElementById("detailTitle").innerText = prod.name;
+
+        // 4. Khối xử lý Giá tiền và Giảm giá động
+        const priceMainEl = document.getElementById("detailPriceMain");
+        const priceOrigEl = document.getElementById("detailPriceOriginal");
+        
+        priceMainEl.innerText = `${Number(prod.price).toLocaleString("vi-VN")} đ`;
+        
+        if (prod.discount && prod.discount > 0) {
+          const originalPrice = prod.price + prod.discount;
+          priceOrigEl.innerText = `${Number(originalPrice).toLocaleString("vi-VN")} đ`;
+          priceOrigEl.style.display = "inline-block";
+        } else {
+          priceOrigEl.style.display = "none";
+        }
+
+        // 5. Cập nhật Trạng thái kho hàng
+        const stockStatusEl = document.getElementById("detailStockText");
+        const stockCountEl = document.getElementById("detailStockCount");
+        
+        if (prod.stock > 0) {
+          stockStatusEl.innerText = "Còn hàng";
+          stockStatusEl.style.color = "#22c55e";
+          stockCountEl.innerText = `(${prod.stock} sản phẩm có sẵn)`;
+        } else {
+          stockStatusEl.innerText = "Hết hàng";
+          stockStatusEl.style.color = "#ef4444";
+          stockCountEl.innerText = "(Vui lòng liên hệ đặt trước)";
+        }
+
+        // 6. Cập nhật Bảng Thuộc tính kĩ thuật chi tiết mẫu
+        document.getElementById("detailAttrBrand").innerText = prod.brand;
+        document.getElementById("detailAttrCategory").innerText = prod.category;
+
+        // 7. Cập nhật Khối Mô tả chi tiết (Tab mô tả)
+        document.getElementById("tab-desc").innerHTML = `<p style="line-height:1.7; color:#ccc;">${prod.description.replace(/\n/g, "<br>") || "Chưa có mô tả chi tiết cho sản phẩm này."}</p>`;
+
+      } catch (err) {
+        showToast("Lỗi tải chi tiết sản phẩm từ máy chủ", "error");
+      }
+    }
+
+    // Chạy kích hoạt khi cây cấu trúc DOM sẵn sàng
+    document.addEventListener("DOMContentLoaded", loadProductDetail);
+
     // ===== PRODUCT DATA (from model) =====
     const product = {
       _id: "ObjectId",

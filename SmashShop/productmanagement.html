@@ -806,6 +806,42 @@
       animation: toastIn .3s ease;
     }
 
+    .gallery-preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+.gallery-item {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.gallery-item .btn-remove-img {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: rgba(239, 68, 68, 0.85);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
     .toast.success { background: #052e16; border: 1px solid #166534; color: #86efac; }
     .toast.error   { background: #450a0a; border: 1px solid #991b1b; color: #fca5a5; }
 
@@ -950,15 +986,14 @@
       </div>
 
       <div class="pm-form-grid">
-
         <div class="pm-field full">
           <label>Tên sản phẩm *</label>
           <input type="text" id="fName" placeholder="VD: Yonex Astrox 100ZZ">
         </div>
 
         <div class="pm-field">
-          <label>SKU</label>
-          <input type="text" id="fSku" placeholder="VD: YNX-A100ZZ">
+          <label>Thương hiệu *</label>
+          <input type="text" id="fBrand" placeholder="VD: Yonex">
         </div>
 
         <div class="pm-field">
@@ -974,13 +1009,18 @@
         </div>
 
         <div class="pm-field">
+          <label>Phong cách</label>
+          <input type="text" id="fStyle" placeholder="VD: Vợt tấn công">
+        </div>
+
+        <div class="pm-field">
           <label>Giá bán (đ) *</label>
           <input type="number" id="fPrice" placeholder="VD: 5200000" min="0">
         </div>
 
         <div class="pm-field">
-          <label>Giá gốc (đ)</label>
-          <input type="number" id="fOriginalPrice" placeholder="VD: 6000000" min="0">
+          <label>Giảm giá (đ)</label>
+          <input type="number" id="fDiscount" placeholder="VD: 0" min="0" value="0">
         </div>
 
         <div class="pm-field">
@@ -989,23 +1029,33 @@
         </div>
 
         <div class="pm-field full">
-          <label>Ảnh sản phẩm</label>
+          <label>Ảnh sản phẩm (Thumbnail) *</label>
           <div class="img-preview-wrap" id="imgPreviewWrap" onclick="document.getElementById('fImage').click()">
             <img id="imgPreview" src="" alt="Preview">
             <div class="img-placeholder" id="imgPlaceholder">
               <i class="fa-solid fa-cloud-arrow-up"></i>
-              Nhấn để tải ảnh lên hoặc dán URL bên dưới
+              Nhấn để chọn ảnh từ thiết bị
             </div>
           </div>
           <input type="file" id="fImage" accept="image/*">
-          <input type="text" id="fImageUrl" placeholder="Hoặc dán URL ảnh vào đây..." style="margin-top:8px;">
+        </div>
+
+        <div class="pm-field full">
+          <label>Các ảnh phụ (Gallery Slider - Tối đa 8 ảnh)</label>
+          <div class="gallery-upload-wrap">
+            <input type="file" id="fImages" accept="image/*" multiple style="display: none;">
+            <button type="button" class="btn btn-sm btn-outline-info mb-2" onclick="document.getElementById('fImages').click()">
+              <i class="fa-solid fa-images"></i> Chọn các ảnh phụ
+            </button>
+            <div id="galleryPreview" class="gallery-preview-container">
+              </div>
+          </div>
         </div>
 
         <div class="pm-field full">
           <label>Mô tả sản phẩm</label>
           <textarea id="fDesc" placeholder="Mô tả ngắn về sản phẩm..."></textarea>
         </div>
-
       </div>
 
       <div class="pm-modal-footer">
@@ -1096,10 +1146,6 @@
     function updateAuthUI() {
       const auth = currentAuth || getStoredAuth();
       if (auth && auth.user) {
-        loginBtn.style.display = 'none';
-        userAvatarBtn.style.display = 'flex';
-        userMenuName.textContent = auth.user.name || 'Người dùng';
-        userMenuRole.textContent = auth.user.role === 'admin' ? 'Admin' : 'Guest';
         document.querySelectorAll('.admin-only').forEach((item) => {
           item.classList.toggle('show', auth.user.role === 'admin');
         });
@@ -1137,11 +1183,6 @@
     function toggleUserMenu() {
       userMenu.classList.toggle('show');
       userMenu.setAttribute('aria-hidden', String(!userMenu.classList.contains('show')));
-    }
-
-    function closeUserMenu() {
-      userMenu.classList.remove('show');
-      userMenu.setAttribute('aria-hidden', 'true');
     }
 
     async function apiRequest(endpoint, method, body) {
@@ -1229,24 +1270,15 @@
       }
     }
 
-    loginBtn.addEventListener('click', () => openAuthModal('login'));
-    userAvatarBtn.addEventListener('click', toggleUserMenu);
     document.querySelectorAll('[data-close-auth]').forEach(b => b.addEventListener('click', closeAuthModal));
-    loginTabBtn.addEventListener('click', () => openAuthModal('login'));
-    registerTabBtn.addEventListener('click', () => openAuthModal('register'));
-    forgotTabBtn.addEventListener('click', () => openAuthModal('forgot'));
-    loginForm.addEventListener('submit', handleLoginSubmit);
-    registerForm.addEventListener('submit', handleRegisterSubmit);
-    forgotForm.addEventListener('submit', handleForgotSubmit);
-    authModal.addEventListener('click', e => { if (e.target === authModal) closeAuthModal(); });
-    document.addEventListener('click', e => { if (!e.target.closest('.header-user-area')) closeUserMenu(); });
     document.querySelectorAll('.user-menu-action').forEach(b => b.addEventListener('click', () => handleUserAction(b.dataset.action)));
     window.addEventListener('keydown', e => { if (e.key === 'Escape') { closeUserMenu(); closeAuthModal(); closePmModal(); closeConfirm(); } });
     currentAuth = getStoredAuth();
     updateAuthUI();
 
     // ========= PRODUCT MANAGEMENT =========
-    const STORAGE_KEY = 'smashshop_products';
+    // Vì URL backend lưu ảnh dạng "/uploads/...", ta cần thêm gốc domain localhost:3000 để hiển thị được ảnh
+    const SERVER_URL = 'http://localhost:3000';
     const PAGE_SIZE = 8;
 
     let products = [];
@@ -1254,37 +1286,86 @@
     let currentPage = 1;
     let editingId = null;
     let deletingId = null;
+    let selectedGalleryFiles = [];
 
-    // Seed dữ liệu mẫu
-    const SEED = [
-      { id: uid(), name: 'Yonex Astrox 100ZZ', sku: 'YNX-A100ZZ', category: 'Vợt cầu lông', price: 5200000, originalPrice: 6000000, stock: 12, image: 'https://picsum.photos/300?random=21', desc: 'Vợt tấn công cao cấp của Yonex.' },
-      { id: uid(), name: 'Lining Aeronaut 9000C', sku: 'LN-AE9000C', category: 'Vợt cầu lông', price: 3800000, originalPrice: 4200000, stock: 5, image: 'https://picsum.photos/300?random=22', desc: '' },
-      { id: uid(), name: 'Giày Victor P9200', sku: 'VT-P9200', category: 'Giày cầu lông', price: 2100000, originalPrice: 2400000, stock: 0, image: 'https://picsum.photos/300?random=23', desc: 'Giày cầu lông Victor dòng P.' },
-      { id: uid(), name: 'Balo Yonex BA92012EX', sku: 'YNX-BA920', category: 'Balo cầu lông', price: 1200000, originalPrice: 1400000, stock: 20, image: 'https://picsum.photos/300?random=24', desc: '' },
-      { id: uid(), name: 'Quấn cán Yonex AC102EX', sku: 'YNX-AC102', category: 'Phụ kiện', price: 80000, originalPrice: 95000, stock: 3, image: 'https://picsum.photos/300?random=25', desc: '' },
-      { id: uid(), name: 'Ống cầu Vina Star 78', sku: 'VS-78', category: 'Phụ kiện', price: 350000, originalPrice: 380000, stock: 30, image: 'https://picsum.photos/300?random=26', desc: 'Cầu thi đấu tiêu chuẩn.' },
-      { id: uid(), name: 'Túi vợt Yonex BAG0226', sku: 'YNX-0226', category: 'Túi vợt', price: 680000, originalPrice: 750000, stock: 8, image: 'https://picsum.photos/300?random=27', desc: '' },
-      { id: uid(), name: 'Giày Yonex SHB-03EX', sku: 'YNX-SHB03', category: 'Giày cầu lông', price: 1850000, originalPrice: 2100000, stock: 0, image: 'https://picsum.photos/300?random=28', desc: '' },
-      { id: uid(), name: 'Vợt Victor DriveX 10', sku: 'VT-DX10', category: 'Vợt cầu lông', price: 4100000, originalPrice: 4600000, stock: 15, image: 'https://picsum.photos/300?random=29', desc: '' },
-      { id: uid(), name: 'Balo Victor BR7015', sku: 'VT-BR7015', category: 'Balo cầu lông', price: 950000, originalPrice: 1100000, stock: 4, image: 'https://picsum.photos/300?random=30', desc: '' },
-    ];
-
-    function uid() {
-      return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-    }
-
-    function loadProducts() {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        try { products = JSON.parse(raw); } catch { products = [...SEED]; }
-      } else {
-        products = [...SEED];
-        saveProducts();
+    // Lắng nghe sự kiện chọn nhiều file ảnh phụ
+    document.getElementById('fImages').addEventListener('change', function() {
+      const files = Array.from(this.files);
+      
+      // Khống chế tối đa ví dụ 8 ảnh
+      if (selectedGalleryFiles.length + files.length > 8) {
+        showToast("Chỉ được chọn tối đa 8 ảnh phụ!", "error");
+        return;
       }
+
+      files.forEach(file => {
+        selectedGalleryFiles.push(file);
+        
+        // Tạo preview bằng FileReader
+        const reader = new FileReader();
+        reader.onload = e => {
+          renderGalleryUI();
+        };
+        reader.readAsDataURL(file);
+      });
+      
+      // Reset input file để có thể chọn lại cùng 1 ảnh nếu muốn
+      this.value = '';
+    });
+
+    // Hàm render danh sách ảnh phụ ra màn hình
+    function renderGalleryUI() {
+      const container = document.getElementById('galleryPreview');
+      container.innerHTML = '';
+
+      selectedGalleryFiles.forEach((fileOrUrl, index) => {
+        let src = '';
+        if (fileOrUrl instanceof File) {
+          // Nếu là File object mới chọn từ máy tính
+          src = URL.createObjectURL(fileOrUrl);
+        } else {
+          // Nếu là chuỗi URL từ database khi ấn "Sửa"
+          src = getFullImageUrl(fileOrUrl);
+        }
+
+        const item = document.createElement('div');
+        item.className = 'gallery-item';
+        item.innerHTML = `
+          <img src="${src}" alt="Gallery">
+          <button type="button" class="btn-remove-img" onclick="removeGalleryImg(${index})">×</button>
+        `;
+        container.appendChild(item);
+      });
     }
 
-    function saveProducts() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+    // Hàm xóa 1 ảnh phụ khỏi danh sách chờ
+    window.removeGalleryImg = function(index) {
+      selectedGalleryFiles.splice(index, 1);
+      renderGalleryUI();
+    };
+
+    // Helper: Tạo đường dẫn ảnh đầy đủ
+    function getFullImageUrl(path) {
+      if (!path) return 'https://picsum.photos/300?random=99';
+      if (path.startsWith('http')) return path;
+      return `${SERVER_URL}${path}`;
+    }
+
+    // 1. Fetch dữ liệu từ API thay vì localStorage
+    async function loadProducts() {
+      try {
+        const response = await fetch(`${API_BASE}/products`);
+        const data = await response.json();
+        if (data.success) {
+          products = data.products;
+          applyFilters();
+        } else {
+          showToast(data.message || "Không thể tải dữ liệu", "error");
+        }
+      } catch (error) {
+        showToast("Lỗi kết nối đến máy chủ", "error");
+        console.error(error);
+      }
     }
 
     function formatPrice(n) {
@@ -1304,7 +1385,7 @@
       const stockF = document.getElementById('pmStockFilter').value;
 
       filteredProducts = products.filter(p => {
-        const matchQ = !q || p.name.toLowerCase().includes(q) || (p.sku || '').toLowerCase().includes(q);
+        const matchQ = !q || p.name.toLowerCase().includes(q) || (p.brand || '').toLowerCase().includes(q);
         const matchCat = !cat || p.category === cat;
         const { cls } = stockStatus(p.stock);
         const matchStock = !stockF || cls === stockF;
@@ -1345,13 +1426,14 @@
 
       tbody.innerHTML = pageItems.map((p, i) => {
         const { cls, label } = stockStatus(p.stock);
+        // Thay p.id dựa vào virtual id của mongoose
         return `
           <tr>
             <td style="color:#555">${start + i + 1}</td>
-            <td><img class="prod-thumb" src="${p.image || 'https://picsum.photos/300?random=99'}" alt="${p.name}" onerror="this.src='https://picsum.photos/300?random=99'"></td>
+            <td><img class="prod-thumb" src="${getFullImageUrl(p.thumbnail)}" alt="${p.name}"></td>
             <td>
               <div class="prod-name">${p.name}</div>
-              <div class="prod-sku">${p.sku || '—'}</div>
+              <div class="prod-sku">${p.brand || '—'}</div>
             </td>
             <td><span class="category-badge">${p.category}</span></td>
             <td class="price-cell">${formatPrice(p.price)}</td>
@@ -1402,7 +1484,9 @@
     function openAdd() {
       editingId = null;
       document.getElementById('pmModalTitle').textContent = 'Thêm sản phẩm mới';
+      selectedGalleryFiles = []; // Reset mảng ảnh phụ
       clearForm();
+      renderGalleryUI();
       pmModal.classList.add('show');
     }
 
@@ -1411,22 +1495,30 @@
       if (!p) return;
       editingId = id;
       document.getElementById('pmModalTitle').textContent = 'Chỉnh sửa sản phẩm';
+      
       document.getElementById('fName').value = p.name || '';
-      document.getElementById('fSku').value = p.sku || '';
+      document.getElementById('fBrand').value = p.brand || '';
       document.getElementById('fCategory').value = p.category || '';
+      document.getElementById('fStyle').value = p.style || '';
       document.getElementById('fPrice').value = p.price || '';
-      document.getElementById('fOriginalPrice').value = p.originalPrice || '';
+      document.getElementById('fDiscount').value = p.discount || 0;
       document.getElementById('fStock').value = p.stock ?? '';
-      document.getElementById('fDesc').value = p.desc || '';
-      document.getElementById('fImageUrl').value = p.image || '';
-      setImagePreview(p.image || '');
+      document.getElementById('fDesc').value = p.description || '';
+      
+      setImagePreview(getFullImageUrl(p.thumbnail));
+      
+      // Nạp mảng ảnh phụ hiện tại từ database vào mảng quản lý
+      selectedGalleryFiles = p.images ? [...p.images] : [];
+      renderGalleryUI();
+
       pmModal.classList.add('show');
     }
 
     function clearForm() {
-      ['fName','fSku','fPrice','fOriginalPrice','fStock','fDesc','fImageUrl'].forEach(id => {
+      ['fName','fBrand','fStyle','fPrice','fDiscount','fStock','fDesc'].forEach(id => {
         document.getElementById(id).value = '';
       });
+      document.getElementById('fDiscount').value = 0;
       document.getElementById('fCategory').value = '';
       document.getElementById('fImage').value = '';
       setImagePreview('');
@@ -1449,65 +1541,98 @@
       editingId = null;
     }
 
-    document.getElementById('fImageUrl').addEventListener('input', function() {
-      setImagePreview(this.value.trim());
-    });
-
     document.getElementById('fImage').addEventListener('change', function() {
       const file = this.files[0];
       if (!file) return;
       const reader = new FileReader();
       reader.onload = e => {
         setImagePreview(e.target.result);
-        document.getElementById('fImageUrl').value = '';
       };
       reader.readAsDataURL(file);
     });
 
+    
+    
     document.getElementById('btnOpenAdd').addEventListener('click', openAdd);
     document.getElementById('btnCancelModal').addEventListener('click', closePmModal);
+    
     pmModal.addEventListener('click', e => { if (e.target === pmModal) closePmModal(); });
 
-    document.getElementById('btnSaveProduct').addEventListener('click', () => {
+    // 2. Gửi request dạng FormData vì dùng upload.fields([...]) bên backend
+    document.getElementById('btnSaveProduct').addEventListener('click', async () => {
       const name = document.getElementById('fName').value.trim();
+      const brand = document.getElementById('fBrand').value.trim();
       const category = document.getElementById('fCategory').value;
       const price = document.getElementById('fPrice').value;
       const stock = document.getElementById('fStock').value;
+      const imageFile = document.getElementById('fImage').files[0];
+      
+      // Lọc ra các ảnh phụ thực sự là File (mới chọn)
+      const newGalleryFiles = selectedGalleryFiles.filter(item => item instanceof File);
 
+      // Validation
       if (!name) { showToast('Vui lòng nhập tên sản phẩm!', 'error'); return; }
+      if (!brand) { showToast('Vui lòng nhập thương hiệu!', 'error'); return; }
       if (!category) { showToast('Vui lòng chọn danh mục!', 'error'); return; }
       if (!price || isNaN(price) || Number(price) < 0) { showToast('Vui lòng nhập giá hợp lệ!', 'error'); return; }
       if (stock === '' || isNaN(stock) || Number(stock) < 0) { showToast('Vui lòng nhập số lượng tồn!', 'error'); return; }
-
-      const imgSrc = imgPreview.src && imgPreview.classList.contains('has-img')
-        ? imgPreview.src
-        : (document.getElementById('fImageUrl').value.trim() || '');
-
-      const obj = {
-        name,
-        sku: document.getElementById('fSku').value.trim(),
-        category,
-        price: Number(price),
-        originalPrice: Number(document.getElementById('fOriginalPrice').value) || 0,
-        stock: Number(stock),
-        image: imgSrc,
-        desc: document.getElementById('fDesc').value.trim(),
-      };
-
-      if (editingId) {
-        const idx = products.findIndex(p => p.id === editingId);
-        if (idx !== -1) { products[idx] = { ...products[idx], ...obj }; }
-        showToast('Cập nhật sản phẩm thành công!', 'success');
-      } else {
-        products.unshift({ id: uid(), ...obj });
-        showToast('Thêm sản phẩm thành công!', 'success');
+      
+      // Bắt buộc ảnh với sản phẩm mới (API yêu cầu req.files['thumbnail'])
+      if (!editingId && !imageFile) {
+        showToast('Ảnh đại diện sản phẩm là bắt buộc!', 'error'); return; 
       }
 
-      saveProducts();
-      closePmModal();
-      applyFilters();
-    });
+      // ==========================================
+      // LƯU Ý: PHẢI KHỞI TẠO FORMDATA TRƯỚC KHI APPEND
+      // ==========================================
+      const formData = new FormData();
+      
+      // Đính kèm các trường Text
+      formData.append('name', name);
+      formData.append('brand', brand);
+      formData.append('category', category);
+      formData.append('style', document.getElementById('fStyle').value.trim());
+      formData.append('price', Number(price));
+      formData.append('discount', Number(document.getElementById('fDiscount').value) || 0);
+      formData.append('stock', Number(stock));
+      formData.append('description', document.getElementById('fDesc').value.trim());
 
+      // Đính kèm File Ảnh chính (Thumbnail)
+      if (imageFile) {
+        formData.append('thumbnail', imageFile);
+      }
+
+      // Đính kèm các File Ảnh phụ (Images)
+      newGalleryFiles.forEach(file => {
+        formData.append('images', file);
+      });
+
+      try {
+        const url = editingId ? `${API_BASE}/products/${editingId}` : `${API_BASE}/products`;
+        const method = editingId ? 'PUT' : 'POST';
+        
+        const response = await fetch(url, {
+          method: method,
+          body: formData 
+          // Không thêm Content-Type: application/json. Trình duyệt tự set header cho FormData (multipart/form-data)
+        });
+
+        const data = await response.json();
+
+        if (data.success || response.ok) {
+          showToast(editingId ? 'Cập nhật sản phẩm thành công!' : 'Thêm sản phẩm thành công!', 'success');
+          closePmModal();
+          // Gọi lại API để load dữ liệu mới nhất
+          loadProducts(); 
+        } else {
+          showToast(data.message || "Có lỗi xảy ra", "error");
+        }
+      } catch (error) {
+        showToast("Lỗi kết nối máy chủ", "error");
+        console.error(error);
+      }
+    });
+    
     // ---- Confirm delete ----
     const confirmOverlay = document.getElementById('confirmOverlay');
 
@@ -1527,13 +1652,27 @@
     document.getElementById('btnConfirmCancel').addEventListener('click', closeConfirm);
     confirmOverlay.addEventListener('click', e => { if (e.target === confirmOverlay) closeConfirm(); });
 
-    document.getElementById('btnConfirmDelete').addEventListener('click', () => {
+    // 3. Xóa sản phẩm qua API
+    document.getElementById('btnConfirmDelete').addEventListener('click', async () => {
       if (!deletingId) return;
-      products = products.filter(p => p.id !== deletingId);
-      saveProducts();
-      closeConfirm();
-      applyFilters();
-      showToast('Đã xóa sản phẩm!', 'success');
+
+      try {
+        const response = await fetch(`${API_BASE}/products/${deletingId}`, {
+          method: 'DELETE'
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          showToast('Đã xóa sản phẩm thành công!', 'success');
+          closeConfirm();
+          loadProducts();
+        } else {
+          showToast(data.message || "Không thể xóa sản phẩm", "error");
+        }
+      } catch (error) {
+        showToast("Lỗi kết nối máy chủ", "error");
+        console.error(error);
+      }
     });
 
     // ---- Filters ----
@@ -1551,7 +1690,7 @@
       setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .4s'; setTimeout(() => t.remove(), 400); }, 3000);
     }
 
-    // ---- Init ----
+    // ---- Khởi tạo ----
     loadProducts();
     applyFilters();
   
