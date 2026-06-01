@@ -15,6 +15,7 @@ const Cart = require("./models/Cart");
 const Order = require("./models/Order");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const cors = require("cors");
 
 var app = express();
 
@@ -85,6 +86,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(cors());
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);

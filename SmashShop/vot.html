@@ -71,7 +71,7 @@
     .section-title { margin: 50px 0 25px; font-size: 30px; font-weight: 700; }
  
     /* LƯỚI SẢN PHẨM */
-    .products { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    .products { display: grid; grid-template-columns: 1fr; gap: 20px; min-height: 200px; }
     @media(min-width:576px) { .products { grid-template-columns: repeat(2, 1fr); } }
     @media(min-width:992px) { .products { grid-template-columns: repeat(3, 1fr); } }
     @media(min-width:1200px) { .products { grid-template-columns: repeat(4, 1fr); } }
@@ -146,7 +146,7 @@
         <i class="fa-solid fa-magnifying-glass"></i>
       </div>
  
-<div class="header-icons">
+      <div class="header-icons">
         <a href="wishlist.html"><i class="fa-regular fa-heart"></i></a>
         <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
         <button class="login-btn">Login</button>
@@ -186,102 +186,8 @@
   <main class="container">
     <h2 class="section-title">Vợt Cầu Lông Chính Hãng</h2>
     
-    <div class="products">
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=101" alt="Vợt 1"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Yonex Astrox 100ZZ</h3></a>
-          <div class="price">5.200.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
- 
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=102" alt="Vợt 2"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Lining Aeronaut 9000C</h3></a>
-          <div class="price">3.800.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
- 
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=103" alt="Vợt 3"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Yonex Nanoflare 1000Z</h3></a>
-          <div class="price">5.100.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
- 
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=104" alt="Vợt 4"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Victor Thruster Ryuga D</h3></a>
-          <div class="price">4.000.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
- 
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=105" alt="Vợt 5"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Yonex Arcsaber 11 Pro</h3></a>
-          <div class="price">4.900.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
- 
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=106" alt="Vợt 6"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Lining Tectonic 9</h3></a>
-          <div class="price">3.950.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
- 
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=107" alt="Vợt 7"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Mizuno Fortius 11 Quick</h3></a>
-          <div class="price">4.200.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
- 
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=108" alt="Vợt 8"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Vợt Cầu Lông VS Venom 1200</h3></a>
-          <div class="price">1.100.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
+    <div class="products" id="products-container">
+      <div class="text-center w-100 col-span-full py-5 text-muted">Đang tải danh sách sản phẩm...</div>
     </div>
  
     <h2 class="section-title">Sản phẩm liên quan</h2>
@@ -352,6 +258,7 @@
   <script src="public/auth_sync.js"></script>
  
   <script>
+    // Điều hướng nhanh khi nhấn nút trái tim góc Header
     const headerHeartIcon = document.querySelector('.header-icons .fa-heart');
     if (headerHeartIcon) {
       headerHeartIcon.addEventListener('click', function() {
@@ -359,31 +266,113 @@
       });
     }
  
-    // XỬ LÝ NÚT YÊU THÍCH (THẢ TIM)
-    const favBadges = document.querySelectorAll('.fav-badge');
-    favBadges.forEach(badge => {
-      badge.addEventListener('click', function(e) {
+    // Đường dẫn gốc gọi API (Bạn có thể đổi thành '/products' tùy thuộc vào cách bạn setup App Express app.use('/api', router))
+    const API_ENDPOINT = 'http://localhost:3000/api/products'; 
+
+    const productsContainer = document.getElementById('products-container');
+
+    // Hàm gọi và hiển thị danh sách sản phẩm từ cơ sở dữ liệu
+    async function fetchAndRenderProducts() {
+      try {
+        const response = await fetch(API_ENDPOINT);
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.message || 'Không thể lấy dữ liệu sản phẩm.');
+        }
+
+        // Lọc danh mục chính xác: "Vợt cầu lông" (Không phân biệt hoa thường để tránh lỗi gõ database)
+        const racketProducts = data.products.filter(product => 
+          product.category && product.category.trim().toLowerCase() === 'vợt cầu lông'
+        );
+
+        // Kiểm tra xem có sản phẩm nào không
+        if (racketProducts.length === 0) {
+          productsContainer.innerHTML = '<div class="text-center w-100 col-span-full py-5 text-warning">Hiện chưa có sản phẩm nào thuộc danh mục này.</div>';
+          return;
+        }
+
+        function getFullImageUrl(path) {
+          if (!path) return 'https://picsum.photos/300?random=99';
+          if (path.startsWith('http')) return path;
+          return `${"http://localhost:3000/"}${path}`;
+        }
+
+        // Render cấu trúc HTML động sang chuỗi dữ liệu
+        const htmlContent = racketProducts.map(product => {
+          // Tính giá sau giảm giá (Nếu cần dùng) hoặc định dạng tiền tệ VNĐ chuẩn
+          const formattedPrice = Number(product.price).toLocaleString('vi-VN') + 'đ';
+          
+          return `
+            <div class="product-card" data-id="${product.id}">
+              <div class="product-img-wrapper">
+                <button class="fav-badge" title="Thêm vào yêu thích">
+                  <i class="fa-regular fa-heart"></i>
+                </button>
+                <a href="/SmashShop/productdetail.html?id=${product.id}">
+                  <img src="${getFullImageUrl(product.thumbnail)}" alt="${product.name}" onerror="this.src='http://localhost:3000'">
+                </a>
+              </div>
+              <div class="product-info">
+                <a href="/SmashShop/productdetail.html?id=${product.id}">
+                  <h3>${product.name}</h3>
+                </a>
+                <div class="price">${formattedPrice}</div>
+                <button class="add-cart-btn">
+                  <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        productsContainer.innerHTML = htmlContent;
+
+      } catch (error) {
+        console.error('Lỗi khi fetch sản phẩm:', error);
+        productsContainer.innerHTML = `<div class="text-center w-100 col-span-full py-5 text-danger">Có lỗi xảy ra: ${error.message}. Vui lòng thử lại sau!</div>`;
+      }
+    }
+
+    // SỬ DỤNG EVENT DELEGATION: Lắng nghe sự kiện click từ phần tử cha để áp dụng cho toàn bộ phần tử con thêm động
+    productsContainer.addEventListener('click', function(e) {
+      
+      // 1. XỬ LÝ NÚT YÊU THÍCH (THẢ TIM)
+      const favBadge = e.target.closest('.fav-badge');
+      if (favBadge) {
         e.preventDefault();
-        const icon = this.querySelector('i');
-        this.classList.toggle('active');
-        if (this.classList.contains('active')) {
+        const icon = favBadge.querySelector('i');
+        const card = favBadge.closest('.product-card');
+        const productId = card ? card.getAttribute('data-id') : null;
+
+        favBadge.classList.toggle('active');
+        if (favBadge.classList.contains('active')) {
           icon.classList.remove('fa-regular');
           icon.classList.add('fa-solid');
+          console.log(`Đã thêm sản phẩm ID: ${productId} vào danh sách yêu thích.`);
         } else {
           icon.classList.remove('fa-solid');
           icon.classList.add('fa-regular');
+          console.log(`Đã xóa sản phẩm ID: ${productId} khỏi danh sách yêu thích.`);
         }
-      });
-    });
- 
-    // XỬ LÝ NÚT THÊM VÀO GIỎ HÀNG
-    const addCartBtns = document.querySelectorAll('.add-cart-btn');
-    addCartBtns.forEach(btn => {
-      btn.addEventListener('click', function(e) {
+        return; // Dừng lại sau khi xử lý xong sự kiện này
+      }
+
+      // 2. XỬ LÝ NÚT THÊM VÀO GIỎ HÀNG
+      const addCartBtn = e.target.closest('.add-cart-btn');
+      if (addCartBtn) {
         e.preventDefault();
+        const card = addCartBtn.closest('.product-card');
+        const productId = card ? card.getAttribute('data-id') : null;
+
         alert("Đã thêm sản phẩm vào giỏ hàng!");
-      });
+        console.log(`Sản phẩm được thêm vào giỏ hàng có ID là: ${productId}`);
+        return;
+      }
     });
+
+    // Gọi hàm khởi chạy ngay khi trang tải xong dữ liệu DOM
+    document.addEventListener('DOMContentLoaded', fetchAndRenderProducts);
   </script>
 </body>
 </html>
