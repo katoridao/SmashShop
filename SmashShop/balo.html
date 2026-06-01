@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* CÁC STYLE CỐT LÕI ĐỒNG BỘ 100% VỚI CÁC MÀN TRƯỚC */
+    /* STYLE ĐỒNG BỘ 100% VỚI HỆ THỐNG */
     *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
     body{ background:#121212; color:#FFFFFF; }
     a{ text-decoration:none; color:inherit; }
@@ -24,7 +24,7 @@
     @media(min-width:992px){ .container{ max-width:960px; } }
     @media(min-width:1200px){ .container{ max-width:1280px; } }
 
-    /* HEADER NGUYÊN BẢN */
+    /* HEADER */
     header{ background:#1A1A1A; box-shadow:0 2px 10px rgba(0,0,0,0.4); position:sticky; top:0; z-index:999; }
     .top-header{ display:flex; align-items:center; justify-content:space-between; gap:20px; padding:18px 0; flex-wrap:wrap; flex-direction:column; align-items:stretch; }
     .logo{ font-size:30px; font-weight:700; color:#2563EB; text-align:center; }
@@ -67,118 +67,44 @@
       .dropdown-menu{ border:none !important; background:#222 !important; box-shadow: none; width: 100%; }
     }
 
-    /* TIÊU ĐỀ SECTION */
+    /* SECTION TITLE */
     .section-title { margin: 50px 0 25px; font-size: 30px; font-weight: 700; }
 
-    /* LƯỚI SẢN PHẨM */
-    .products { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    /* PRODUCT GRID */
+    .products { display: grid; grid-template-columns: 1fr; gap: 20px; min-height: 200px; }
     @media(min-width:576px) { .products { grid-template-columns: repeat(2, 1fr); } }
     @media(min-width:992px) { .products { grid-template-columns: repeat(3, 1fr); } }
     @media(min-width:1200px) { .products { grid-template-columns: repeat(4, 1fr); } }
 
-    /* --- CSS CHUẨN MỚI CHO PRODUCT CARD (ĐÃ TÍCH HỢP NÚT YÊU THÍCH) --- */
-    .product-card { 
-      background: #1E1E1E; 
-      border: 1px solid #2A2A2A; 
-      border-radius: 18px; 
-      overflow: hidden; 
-      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; 
-      position: relative; 
-      display: flex;
-      flex-direction: column;
+    .product-card {
+      background:#1E1E1E; border:1px solid #2A2A2A; border-radius:18px; overflow:hidden;
+      transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+      position: relative; display: flex; flex-direction: column;
     }
-    .product-card:hover { 
-      transform: translateY(-5px); 
-      box-shadow: 0 15px 30px rgba(0,0,0,0.35); 
-      border-color: #2563EB; 
-    }
-    .product-img-wrapper { 
-      position: relative; 
-      overflow: hidden; 
-    }
-    .product-img-wrapper img { 
-      height: 250px; 
-      object-fit: cover; 
-      width: 100%; 
-      transition: transform 0.4s ease; 
-    }
-    .product-card:hover .product-img-wrapper img { 
-      transform: scale(1.05); 
-    }
+    .product-card:hover { transform:translateY(-5px); box-shadow:0 15px 30px rgba(0,0,0,0.35); border-color:#2563EB; }
+    .product-img-wrapper { position: relative; overflow: hidden; }
+    .product-img-wrapper img { height:250px; object-fit:cover; width:100%; transition:transform .4s ease; }
+    .product-card:hover .product-img-wrapper img { transform:scale(1.05); }
     .fav-badge {
-      position: absolute; 
-      top: 15px; 
-      right: 15px; 
-      width: 40px; 
-      height: 40px;
-      background: rgba(30,30,30,0.8); 
-      backdrop-filter: blur(5px); 
-      border-radius: 50%;
-      display: flex; 
-      align-items: center; 
-      justify-content: center;
-      color: #fff;
-      font-size: 18px; 
-      cursor: pointer; 
-      z-index: 10;
-      transition: 0.3s; 
-      border: 1px solid #333;
+      position: absolute; top: 15px; right: 15px;
+      width: 40px; height: 40px;
+      background: rgba(30,30,30,0.8); backdrop-filter: blur(5px); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 18px; cursor: pointer; z-index: 10;
+      transition: 0.3s; border: 1px solid #333;
     }
-    .fav-badge:hover { 
-      background: #ff3c00; 
-      color: #fff; 
-      border-color: #ff3c00; 
-      transform: scale(1.1); 
-    }
-    .fav-badge.active {
-      background: #ff3c00;
-      color: #fff;
-      border-color: #ff3c00;
-    }
-    .product-info { 
-      padding: 15px; 
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-    }
-    .product-info h3 { 
-      margin-bottom: 10px; 
-      font-size: 18px; 
-      white-space: nowrap; 
-      overflow: hidden; 
-      text-overflow: ellipsis; 
-      transition: color 0.2s;
-    }
-    .product-info h3:hover {
-      color: #2563EB;
-    }
-    .price { 
-      color: #2563EB; 
-      font-size: 20px; 
-      font-weight: 700; 
-      margin-bottom: 12px; 
-    }
-    .add-cart-btn { 
-      width: 100%; 
-      padding: 10px; 
-      border: none; 
-      background: #2563EB; 
-      color: #fff; 
-      border-radius: 10px; 
-      cursor: pointer; 
-      font-weight: 600; 
-      transition: 0.3s;
-      margin-top: auto;
-    }
-    .add-cart-btn i {
-      margin-right: 5px;
-    }
-    .add-cart-btn:hover { 
-      background: #1D4ED8; 
-    }
-    /* --- KẾT THÚC CSS PRODUCT CARD --- */
+    .fav-badge:hover { background: #ff3c00; color: #fff; border-color: #ff3c00; transform: scale(1.1); }
+    .fav-badge.active { background: #ff3c00; color: #fff; border-color: #ff3c00; }
+    
+    .product-info { padding:15px; display: flex; flex-direction: column; flex-grow: 1; }
+    .product-info h3 { margin-bottom:10px; font-size:18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color 0.2s; }
+    .product-info h3:hover { color: #2563EB; }
+    .price { color:#2563EB; font-size:20px; font-weight:700; margin-bottom:12px; }
+    .add-cart-btn { width:100%; padding:10px; border:none; background:#2563EB; color:#fff; border-radius:10px; cursor:pointer; font-weight: 600; margin-top: auto; }
+    .add-cart-btn i { margin-right: 5px; }
+    .add-cart-btn:hover { background:#1D4ED8; }
 
-    /* DANH MỤC LIÊN QUAN */
+    /* RELATED CATEGORIES */
     .categories { display: flex; overflow-x: auto; gap: 16px; padding-bottom: 10px; scroll-snap-type: x mandatory; }
     .category-card { background:#1E1E1E; border:1px solid #2A2A2A; border-radius:20px; overflow:hidden; cursor:pointer; transition:.3s; text-align:center; padding-bottom:15px; min-width:220px; flex-shrink:0; scroll-snap-align:start; }
     @media(min-width:992px) {
@@ -261,104 +187,8 @@
   <main class="container">
     <h2 class="section-title">Balo Cầu Lông Chính Hãng</h2>
     
-    <div class="products">
-      
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=301" alt="Balo 1"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Balo Yonex Pro Backpack</h3></a>
-          <div class="price">1.450.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=302" alt="Balo 2"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Balo Lining Badminton Black</h3></a>
-          <div class="price">980.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=303" alt="Balo 3"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Balo Victor BR9611 Cực Chất</h3></a>
-          <div class="price">1.250.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=304" alt="Balo 4"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Balo Yonex Đa Năng 239BT</h3></a>
-          <div class="price">850.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=305" alt="Balo 5"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Balo Kawasaki KBB-8231</h3></a>
-          <div class="price">620.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=306" alt="Balo 6"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Balo Lining Commuter Backpack</h3></a>
-          <div class="price">1.100.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=307" alt="Balo 7"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Balo Victor Crown Collection</h3></a>
-          <div class="price">1.390.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge" title="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=308" alt="Balo 8"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Balo Cầu Lông VNB Chuẩn Form</h3></a>
-          <div class="price">450.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
-
+    <div class="products" id="products-container">
+      <div class="text-center w-100 col-span-full py-5 text-muted">Đang tải danh sách balo cầu lông...</div>
     </div>
 
     <h2 class="section-title">Sản phẩm liên quan</h2>
@@ -429,41 +259,112 @@
   <script src="public/auth_sync.js"></script>
 
   <script>
-    // Link icon trái tim trên thanh header
-    const headerHeartIcon = document.querySelector('.header-icons .fa-heart');
-    if (headerHeartIcon) {
-      headerHeartIcon.addEventListener('click', function() {
-        window.location.href = 'wishlist.html';
-      });
+    // Định nghĩa cổng kết nối với Server NodeJS Backend
+    const SERVER_URL = 'http://localhost:3000';
+    const API_ENDPOINT = `${SERVER_URL}/api/products`; 
+
+    const productsContainer = document.getElementById('products-container');
+
+    // Helper: Giải quyết triệt để lỗi ảnh 404 từ Live Server tĩnh
+    function getFullImageUrl(path) {
+      if (!path) return 'https://picsum.photos/300?random=88';
+      if (path.startsWith('http')) return path;
+      return `${SERVER_URL}${path}`;
     }
 
-    // XỬ LÝ NÚT YÊU THÍCH (THẢ TIM)
-    const favBadges = document.querySelectorAll('.fav-badge');
-    favBadges.forEach(badge => {
-      badge.addEventListener('click', function(e) {
-        e.preventDefault(); 
-        const icon = this.querySelector('i');
-        
-        this.classList.toggle('active');
-        
-        if (this.classList.contains('active')) {
-          icon.classList.remove('fa-regular');
-          icon.classList.add('fa-solid');
-        } else {
-          icon.classList.remove('fa-solid');
-          icon.classList.add('fa-regular');
+    // Tiến hành gọi API lấy dữ liệu và hiển thị danh sách Balo
+    async function fetchAndRenderProducts() {
+      try {
+        const response = await fetch(API_ENDPOINT);
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.message || 'Không thể lấy dữ liệu sản phẩm.');
         }
-      });
+
+        // Lọc chuẩn xác theo danh mục: "Balo cầu lông"
+        const backpackProducts = data.products.filter(product => 
+          product.category && product.category.trim().toLowerCase() === 'balo cầu lông'
+        );
+
+        if (backpackProducts.length === 0) {
+          productsContainer.innerHTML = '<div class="text-center w-100 col-span-full py-5 text-warning">Hiện chưa có sản phẩm nào thuộc danh mục Balo cầu lông.</div>';
+          return;
+        }
+
+        // Xây dựng giao diện chuỗi HTML động từ API
+        const htmlContent = backpackProducts.map(product => {
+          const formattedPrice = Number(product.price).toLocaleString('vi-VN') + 'đ';
+          const finalImgUrl = getFullImageUrl(product.thumbnail);
+          
+          return `
+            <div class="product-card" data-id="${product._id || product.id}">
+              <div class="product-img-wrapper">
+                <button class="fav-badge" title="Thêm vào yêu thích">
+                  <i class="fa-regular fa-heart"></i>
+                </button>
+                <a href="/SmashShop/productdetail.html?id=${product._id || product.id}">
+                  <img src="${finalImgUrl}" alt="${product.name}" onerror="this.src='https://picsum.photos/300?random=22'">
+                </a>
+              </div>
+              <div class="product-info">
+                <a href="/SmashShop/productdetail.html?id=${product._id || product.id}">
+                  <h3>${product.name}</h3>
+                </a>
+                <div class="price">${formattedPrice}</div>
+                <button class="add-cart-btn">
+                  <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        productsContainer.innerHTML = htmlContent;
+
+      } catch (error) {
+        console.error('Lỗi khi fetch sản phẩm:', error);
+        productsContainer.innerHTML = `<div class="text-center w-100 col-span-full py-5 text-danger">Không thể kết nối máy chủ API: ${error.message}</div>`;
+      }
+    }
+
+    // SỬ DỤNG EVENT DELEGATION: Đồng bộ bắt sự kiện Click cho mọi thành phần động thêm vào sau
+    productsContainer.addEventListener('click', function(e) {
+      
+      // Hành động: Thả tim yêu thích sản phẩm
+      const favBadge = e.target.closest('.fav-badge');
+      if (favBadge) {
+        e.preventDefault();
+        const icon = favBadge.querySelector('i');
+        const card = favBadge.closest('.product-card');
+        const productId = card ? card.getAttribute('data-id') : null;
+
+        favBadge.classList.toggle('active');
+        if (favBadge.classList.contains('active')) {
+          icon.className = 'fa-solid fa-heart';
+          console.log(`Đã thích Balo ID: ${productId}`);
+        } else {
+          icon.className = 'fa-regular fa-heart';
+          console.log(`Đã bỏ thích Balo ID: ${productId}`);
+        }
+        return;
+      }
+
+      // Hành động: Click nút thêm vào giỏ hàng
+      const addCartBtn = e.target.closest('.add-cart-btn');
+      if (addCartBtn) {
+        e.preventDefault();
+        const card = addCartBtn.closest('.product-card');
+        const productId = card ? card.getAttribute('data-id') : null;
+
+        alert("Đã thêm balo cầu lông vào giỏ hàng thành công!");
+        console.log(`Thêm giỏ hàng cho sản phẩm có mã ID: ${productId}`);
+        return;
+      }
     });
 
-    // XỬ LÝ NÚT THÊM VÀO GIỎ HÀNG
-    const addCartBtns = document.querySelectorAll('.add-cart-btn');
-    addCartBtns.forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        alert("Đã thêm sản phẩm vào giỏ hàng!");
-      });
-    });
+    // Gọi hàm render ngay khi cây thư mục DOM sẵn sàng
+    document.addEventListener('DOMContentLoaded', fetchAndRenderProducts);
   </script>
 </body>
 </html>
