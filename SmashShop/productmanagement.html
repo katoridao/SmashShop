@@ -1053,6 +1053,11 @@
         </div>
 
         <div class="pm-field full">
+          <label>Link Video (YouTube Embed)</label>
+          <input type="text" id="fVideo" placeholder="VD: https://www.youtube.com/embed/dQw4w9WgXcQ">
+        </div>
+
+        <div class="pm-field full">
           <label>Mô tả sản phẩm</label>
           <textarea id="fDesc" placeholder="Mô tả ngắn về sản phẩm..."></textarea>
         </div>
@@ -1504,6 +1509,7 @@
       document.getElementById('fDiscount').value = p.discount || 0;
       document.getElementById('fStock').value = p.stock ?? '';
       document.getElementById('fDesc').value = p.description || '';
+      document.getElementById('fVideo').value = p.video || '';
       
       setImagePreview(getFullImageUrl(p.thumbnail));
       
@@ -1515,7 +1521,7 @@
     }
 
     function clearForm() {
-      ['fName','fBrand','fStyle','fPrice','fDiscount','fStock','fDesc'].forEach(id => {
+      ['fName','fBrand','fStyle','fPrice','fDiscount','fStock','fDesc','fVideo'].forEach(id => {
         document.getElementById(id).value = '';
       });
       document.getElementById('fDiscount').value = 0;
@@ -1596,6 +1602,7 @@
       formData.append('discount', Number(document.getElementById('fDiscount').value) || 0);
       formData.append('stock', Number(stock));
       formData.append('description', document.getElementById('fDesc').value.trim());
+      formData.append('video', document.getElementById('fVideo').value.trim());
 
       // Đính kèm File Ảnh chính (Thumbnail)
       if (imageFile) {

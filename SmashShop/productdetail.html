@@ -806,6 +806,81 @@
       line-height: 1.7;
     }
 
+    /* COMMENT FORM */
+    .comment-form-container {
+      background: #1A1A1A;
+      border: 1px solid #2A2A2A;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .rating-input {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .star-rating {
+      display: flex;
+      gap: 4px;
+    }
+
+    .star-rating i {
+      font-size: 20px;
+      color: #444;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    
+    .star-rating i.active, .star-rating i.hover {
+      color: #F59E0B;
+    }
+
+    .rating-text {
+      font-size: 14px;
+      color: #F59E0B;
+      font-weight: 500;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group textarea {
+      width: 100%;
+      background: #222;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 16px;
+      color: #fff;
+      font-size: 14px;
+      resize: vertical;
+      min-height: 100px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .form-group textarea:focus {
+      border-color: #2563EB;
+    }
+
+    .btn-submit-comment {
+      padding: 12px 24px;
+      background: #2563EB;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn-submit-comment:hover {
+      background: #1D4ED8;
+    }
+
     /* RELATED PRODUCTS */
     .related-section {
       padding: 0 0 70px;
@@ -1147,7 +1222,8 @@
   <section class="container product-tabs-section">
     <div class="tabs-header">
       <button class="tab-btn active" data-tab="description">Mô tả sản phẩm</button>
-      <!-- <button class="tab-btn" data-tab="specs">Thông số kỹ thuật</button> -->
+      <button class="tab-btn" data-tab="specs">Thông số kỹ thuật</button>
+      <button class="tab-btn" data-tab="video" id="tabBtnVideo" style="display:none;">Video</button>
       <button class="tab-btn" data-tab="reviews">Đánh giá (128)</button>
     </div>
 
@@ -1162,6 +1238,13 @@
     <div class="tab-content" id="tab-specs">
       <div class="description-content" id="specsContent" style="padding: 0; overflow: hidden;">
         <p style="padding:20px; color:#666;">Chưa có thông số kỹ thuật cho sản phẩm này.</p>
+      </div>
+    </div>
+
+    <!-- Video Tab -->
+    <div class="tab-content" id="tab-video">
+      <div class="description-content" id="videoContent" style="padding: 0; overflow: hidden; text-align: center; border-radius: 20px;">
+        <p style="padding:20px; color:#666;">Chưa có video cho sản phẩm này.</p>
       </div>
     </div>
 
@@ -1208,6 +1291,29 @@
         </div>
       </div>
 
+      <!-- COMMENT FORM -->
+      <div class="comment-form-container">
+        <h4 style="margin-bottom: 15px;">Viết đánh giá của bạn</h4>
+        <form id="commentForm">
+          <div class="rating-input">
+            <span class="rating-label">Chất lượng sản phẩm:</span>
+            <div class="star-rating" id="starRating">
+              <i class="fa-solid fa-star active" data-rating="1"></i>
+              <i class="fa-solid fa-star active" data-rating="2"></i>
+              <i class="fa-solid fa-star active" data-rating="3"></i>
+              <i class="fa-solid fa-star active" data-rating="4"></i>
+              <i class="fa-solid fa-star active" data-rating="5"></i>
+            </div>
+            <span class="rating-text" id="ratingText">Tuyệt vời</span>
+          </div>
+          <div class="form-group">
+            <textarea id="commentText" placeholder="Hãy chia sẻ cảm nhận của bạn về sản phẩm này nhé..." required></textarea>
+          </div>
+          <button type="submit" class="btn-submit-comment">Gửi đánh giá</button>
+        </form>
+      </div>
+
+      <div id="reviewsList">
       <div class="review-card">
         <div class="review-header">
           <div class="reviewer-avatar">NV</div>
@@ -1254,6 +1360,7 @@
           <span class="review-date">20/01/2026</span>
         </div>
         <p class="review-text">Hàng chính hãng, tem nhãn đầy đủ, smash bay rất lực. Mình dùng kèm dây BG80 căng 28 lbs rất ổn. SmashShop tư vấn nhiệt tình, sẽ ủng hộ dài dài.</p>
+      </div>
       </div>
     </div>
   </section>
@@ -1588,6 +1695,21 @@
       // 9. Load sản phẩm liên quan
       loadRelatedProducts(prod._id || prod.id, prod.category);
 
+      // 10. Tab Video
+      const videoContent = document.getElementById('videoContent');
+      const tabBtnVideo = document.getElementById('tabBtnVideo');
+      if (prod.video && prod.video.trim() !== '') {
+        if (tabBtnVideo) tabBtnVideo.style.display = 'inline-block';
+        if (videoContent) {
+          videoContent.innerHTML = `
+            <iframe width="100%" height="450" src="${prod.video}" 
+            title="Video sản phẩm" frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen style="display: block; border-radius: 20px;"></iframe>
+          `;
+        }
+      }
+
     } catch (err) {
       console.error("Lỗi Fetch Dữ Liệu:", err);
       showToast("Lỗi kết nối đến máy chủ", "error");
@@ -1685,6 +1807,91 @@
         }
       });
     });
+
+    // 6. Xử lý Form Bình luận
+    const starRating = document.getElementById('starRating');
+    const stars = starRating ? starRating.querySelectorAll('i') : [];
+    const ratingText = document.getElementById('ratingText');
+    const commentForm = document.getElementById('commentForm');
+    const reviewsList = document.getElementById('reviewsList');
+    let currentRating = 5;
+
+    const ratingLabels = {
+      1: 'Tệ',
+      2: 'Không hài lòng',
+      3: 'Bình thường',
+      4: 'Hài lòng',
+      5: 'Tuyệt vời'
+    };
+
+    function updateStars(rating) {
+      stars.forEach(star => {
+        const val = parseInt(star.getAttribute('data-rating'));
+        if (val <= rating) {
+          star.classList.replace('fa-regular', 'fa-solid');
+          star.classList.add('active');
+        } else {
+          star.classList.replace('fa-solid', 'fa-regular');
+          star.classList.remove('active');
+        }
+      });
+      if (ratingText) ratingText.textContent = ratingLabels[rating] || '';
+    }
+
+    stars.forEach(star => {
+      star.addEventListener('mouseover', function() {
+        const val = parseInt(this.getAttribute('data-rating'));
+        updateStars(val);
+      });
+      star.addEventListener('mouseout', function() {
+        updateStars(currentRating);
+      });
+      star.addEventListener('click', function() {
+        currentRating = parseInt(this.getAttribute('data-rating'));
+        updateStars(currentRating);
+      });
+    });
+
+    if (commentForm) {
+      commentForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const commentText = document.getElementById('commentText').value;
+        if (!commentText.trim()) return;
+
+        const date = new Date();
+        const formattedDate = date.toLocaleDateString('vi-VN');
+        
+        let starsHtml = '';
+        for (let i = 1; i <= 5; i++) {
+          starsHtml += i <= currentRating ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star"></i>';
+        }
+
+        const newReview = document.createElement('div');
+        newReview.className = 'review-card';
+        newReview.innerHTML = `
+          <div class="review-header">
+            <div class="reviewer-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">KH</div>
+            <div class="reviewer-info">
+              <h5>Khách hàng</h5>
+              <div class="review-stars">
+                ${starsHtml}
+              </div>
+            </div>
+            <span class="review-date">${formattedDate}</span>
+          </div>
+          <p class="review-text">${commentText.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
+        `;
+
+        if (reviewsList) {
+          reviewsList.prepend(newReview);
+        }
+
+        document.getElementById('commentText').value = '';
+        currentRating = 5;
+        updateStars(currentRating);
+        showToast('Đánh giá của bạn đã được gửi!', 'success');
+      });
+    }
   });
 </script>
 </body>

@@ -318,6 +318,7 @@ router.post("/products", productUploadConfig, async (req, res) => {
       description,
       stock,
       specs,
+      video,
     } = req.body;
 
     // Validate bắt buộc phải có ảnh thumbnail chính
@@ -359,8 +360,9 @@ router.post("/products", productUploadConfig, async (req, res) => {
       description,
       stock: Number(stock || 0),
       thumbnail: thumbnailUrl,
-      images: imageUrls, // Đã map vào model đúng cấu trúc
+      images: imageUrls,
       specs: parsedSpecs,
+      video: video || "",
     });
 
     await newProduct.save();
@@ -387,6 +389,7 @@ router.put("/products/:id", productUploadConfig, async (req, res) => {
       description,
       stock,
       specs,
+      video,
     } = req.body;
     const product = await Product.findById(req.params.id);
 
@@ -402,6 +405,7 @@ router.put("/products/:id", productUploadConfig, async (req, res) => {
     if (category !== undefined) product.category = category;
     if (style !== undefined) product.style = style;
     if (description !== undefined) product.description = description;
+    if (video !== undefined) product.video = video;
 
     // Tránh lỗi ép số khi truyền chuỗi rỗng từ Form Data
     if (price !== undefined && price !== "") product.price = Number(price);
@@ -454,6 +458,38 @@ router.delete("/products/:id", async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
+});
+
+// 6. CHATBOT FAQ AI
+router.post("/chat", (req, res) => {
+  const { message } = req.body;
+  if (!message) {
+    return res.status(400).json({ success: false, message: "Thiếu nội dung chat" });
+  }
+
+  const userMsg = message.toLowerCase();
+  let reply = "Xin lỗi, tôi chưa hiểu ý bạn lắm. Bạn có thể nói rõ hơn được không? (Thử hỏi về: vận chuyển, bảo hành, vợt, giày...)";
+
+  if (userMsg.includes("vận chuyển") || userMsg.includes("giao hàng") || userMsg.includes("ship")) {
+    reply = "SmashShop miễn phí giao hàng toàn quốc cho đơn hàng từ 1.000.000đ. Đơn hàng dưới mức này phí ship đồng giá 30k nhé ạ! Thời gian giao từ 1-3 ngày tùy khu vực.";
+  } else if (userMsg.includes("bảo hành") || userMsg.includes("đổi trả")) {
+    reply = "Vợt và giày cầu lông được bảo hành chính hãng 90 ngày với lỗi nhà sản xuất (nứt, gãy do phôi). Các sản phẩm khác được đổi trả trong 7 ngày nếu chưa sử dụng.";
+  } else if (userMsg.includes("vợt")) {
+    reply = "Hiện tại SmashShop đang có rất nhiều dòng vợt hot của Yonex, Lining, Victor. Nếu bạn mới chơi, nên chọn các dòng vợt cân bằng, thân dẻo dễ thuần. Bạn có thể ghé danh mục Vợt để xem chi tiết nhé!";
+  } else if (userMsg.includes("giày") || userMsg.includes("size")) {
+    reply = "Với giày cầu lông, bạn nên chọn lớn hơn 0.5 - 1 size so với giày thể thao bình thường để mũi chân không bị cấn khi di chuyển cường độ cao. Shop có đủ size từ 37 đến 45 đó ạ.";
+  } else if (userMsg.includes("địa chỉ") || userMsg.includes("cửa hàng") || userMsg.includes("ở đâu")) {
+    reply = "Cửa hàng SmashShop hiện đang có chi nhánh chính tại TP. Hồ Chí Minh. Bạn có thể đặt hàng online qua website, shop giao tận nơi nhanh chóng nhé!";
+  } else if (userMsg.includes("chào") || userMsg.includes("hi") || userMsg.includes("hello")) {
+    reply = "Chào bạn! Mình là trợ lý ảo của SmashShop. Mình có thể giúp gì cho bạn hôm nay?";
+  } else if (userMsg.includes("cảm ơn") || userMsg.includes("thanks")) {
+    reply = "Dạ không có gì ạ! Chúc bạn một ngày tốt lành và có trải nghiệm mua sắm vui vẻ tại SmashShop! ❤️";
+  }
+
+  // Simulate network delay to make it feel like AI is thinking
+  setTimeout(() => {
+    res.json({ success: true, reply });
+  }, 1000);
 });
 
 module.exports = router;

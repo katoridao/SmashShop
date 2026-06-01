@@ -49,6 +49,14 @@ const productSchema = new mongoose.Schema(
       min: [0, "Số lượng kho không được âm"],
       default: 0,
     },
+    specs: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {}
+    },
+    video: {
+      type: String,
+      default: "",
+    }
   },
   {
     timestamps: true,
