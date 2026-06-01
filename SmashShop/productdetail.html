@@ -1052,32 +1052,21 @@
       <div class="gallery-col">
         <div class="main-image-wrapper">
           <span class="badge-hot">HOT</span>
-          <img id="mainImg" src="https://picsum.photos/600/600?random=101" alt="Yonex Astrox 100ZZ">
+          <img id="mainImg" src="" alt="Ảnh sản phẩm" style="opacity:0; transition:opacity .3s;">
         </div>
         <div class="thumbnail-list" id="thumbList">
-          <div class="thumb-item active" data-src="https://picsum.photos/600/600?random=101">
-            <img src="https://picsum.photos/600/600?random=101" alt="Ảnh 1">
-          </div>
-          <div class="thumb-item" data-src="https://picsum.photos/600/600?random=102">
-            <img src="https://picsum.photos/600/600?random=102" alt="Ảnh 2">
-          </div>
-          <div class="thumb-item" data-src="https://picsum.photos/600/600?random=103">
-            <img src="https://picsum.photos/600/600?random=103" alt="Ảnh 3">
-          </div>
-          <div class="thumb-item" data-src="https://picsum.photos/600/600?random=104">
-            <img src="https://picsum.photos/600/600?random=104" alt="Ảnh 4">
-          </div>
+          <!-- Thumbnails được render động từ server -->
         </div>
       </div>
 
       <!-- RIGHT: INFO -->
       <div class="info-col">
         <div class="product-meta">
-          <span class="brand-badge"><i class="fa-solid fa-tag" style="font-size:10px; margin-right:4px;"></i> Yonex</span>
-          <span class="category-tag">Vợt cầu lông</span>
+          <span class="brand-badge"><i class="fa-solid fa-tag" style="font-size:10px; margin-right:4px;"></i> <span id="brandText">...</span></span>
+          <span class="category-tag" id="categoryText">...</span>
         </div>
 
-        <h1 class="product-title">Yonex Astrox 100ZZ</h1>
+        <h1 class="product-title" id="productTitle">Đang tải...</h1>
 
         <div class="rating-row">
           <div class="stars">
@@ -1094,39 +1083,20 @@
 
         <div class="price-block">
           <div>
-            <span class="price-main">5.200.000đ</span>
-            <span class="price-original">6.500.000đ</span>
+            <span class="price-main">---</span>
+            <span class="price-original" style="display:none;"></span>
           </div>
-          <span class="price-save">Tiết kiệm 1.300.000đ (20%)</span>
+          <span class="price-save" style="display:none;"></span>
         </div>
 
         <div class="stock-row">
           <div class="stock-dot"></div>
-          <span class="stock-text">Còn hàng</span>
-          <span class="stock-count">(10 sản phẩm có sẵn)</span>
+          <span class="stock-text">---</span>
+          <span class="stock-count"></span>
         </div>
 
         <div class="attributes">
-          <div class="attr-row">
-            <div class="attr-label">Thương hiệu</div>
-            <div class="attr-value">Yonex</div>
-          </div>
-          <div class="attr-row">
-            <div class="attr-label">Danh mục</div>
-            <div class="attr-value">Vợt cầu lông</div>
-          </div>
-          <div class="attr-row">
-            <div class="attr-label">Phong cách</div>
-            <div class="attr-value">Vợt tấn công</div>
-          </div>
-          <div class="attr-row">
-            <div class="attr-label">Mã sản phẩm</div>
-            <div class="attr-value" style="color:#666; font-size:12px; font-family:monospace;">ObjectId("6845a2f10c3d5e7f1b2a9c8d")</div>
-          </div>
-          <div class="attr-row">
-            <div class="attr-label">Ngày nhập</div>
-            <div class="attr-value">01/01/2026</div>
-          </div>
+          <!-- Được render động từ server -->
         </div>
 
         <div class="quantity-row">
@@ -1177,42 +1147,21 @@
   <section class="container product-tabs-section">
     <div class="tabs-header">
       <button class="tab-btn active" data-tab="description">Mô tả sản phẩm</button>
-      <button class="tab-btn" data-tab="specs">Thông số kỹ thuật</button>
-      <button class="tab-btn" data-tab="reviews">Đánh giá (128)</button>
+      <!-- <button class="tab-btn" data-tab="specs">Thông số kỹ thuật</button>
+      <button class="tab-btn" data-tab="reviews">Đánh giá (128)</button> -->
     </div>
 
     <!-- Description Tab -->
     <div class="tab-content active" id="tab-description">
-      <div class="description-content">
-        <h4>Giới thiệu Yonex Astrox 100ZZ</h4>
-        <p>Yonex Astrox 100ZZ là cây vợt đỉnh cao trong dòng Astrox của Yonex, được thiết kế dành riêng cho những người chơi ưa thích lối đánh tấn công mạnh mẽ. Đây là cây vợt mà huyền thoại cầu lông người Nhật Kento Momota sử dụng để giành vô số danh hiệu quốc tế.</p>
-
-        <h4>Công nghệ nổi bật</h4>
-        <p>Vợt áp dụng công nghệ <strong>Rotational Generator System</strong> — hệ thống truyền tải lực quay giúp cây vợt tích lũy năng lượng từ gốc vợt rồi giải phóng mạnh mẽ tại điểm tiếp xúc cầu, tạo ra cú đập lực thấp nhưng cực kỳ uy lực.</p>
-        <p>Khung vợt được làm từ <strong>Toray M30X Carbon Nanotube</strong> mang lại sự cứng cáp vượt trội, giảm tổn thất năng lượng, giúp từng cú swing đều trở nên sắc bén và dứt khoát.</p>
-
-        <h4>Đặc điểm kỹ thuật</h4>
-        <p>Thân vợt nặng đầu (head-heavy) cùng độ cứng trung bình giúp người chơi dễ dàng tạo ra những cú smash xuyên phá. Đây là lựa chọn lý tưởng cho các tay vợt đơn chuyên nghiệp hoặc bán chuyên muốn nâng tầm lối chơi tấn công.</p>
+      <div class="description-content" id="descContent">
+        <p style="color:#666;">Đang tải mô tả sản phẩm...</p>
       </div>
     </div>
 
     <!-- Specs Tab -->
     <div class="tab-content" id="tab-specs">
-      <div class="description-content" style="padding: 0; overflow: hidden;">
-        <table class="spec-table">
-          <tr><td>Thương hiệu</td><td>Yonex</td></tr>
-          <tr><td>Model</td><td>Astrox 100ZZ</td></tr>
-          <tr><td>Phong cách</td><td>Tấn công (Offensive)</td></tr>
-          <tr><td>Chất liệu khung</td><td>HM Graphite + Tungsten</td></tr>
-          <tr><td>Chất liệu cán</td><td>HM Graphite + Tungsten</td></tr>
-          <tr><td>Độ cứng thân</td><td>Extra Stiff</td></tr>
-          <tr><td>Trọng lượng</td><td>4U (80–84g)</td></tr>
-          <tr><td>Cỡ tay cầm</td><td>G5</td></tr>
-          <tr><td>Chiều dài</td><td>675mm</td></tr>
-          <tr><td>Lực căng tối đa</td><td>35 lbs</td></tr>
-          <tr><td>Điểm cân bằng</td><td>Nặng đầu (Head-heavy)</td></tr>
-          <tr><td>Xuất xứ</td><td>Nhật Bản</td></tr>
-        </table>
+      <div class="description-content" id="specsContent" style="padding: 0; overflow: hidden;">
+        <p style="padding:20px; color:#666;">Chưa có thông số kỹ thuật cho sản phẩm này.</p>
       </div>
     </div>
 
@@ -1312,54 +1261,8 @@
   <!-- ===== RELATED PRODUCTS ===== -->
   <section class="container related-section">
     <h2 class="section-title">Sản phẩm liên quan</h2>
-    <div class="related-grid">
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=31" alt="SP1"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Yonex Astrox 99 Pro</h3></a>
-          <div class="price">4.800.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=32" alt="SP2"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Yonex Nanoflare 800</h3></a>
-          <div class="price">4.200.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=33" alt="SP3"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Lining Aeronaut 9000C</h3></a>
-          <div class="price">3.800.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <button class="fav-badge"><i class="fa-regular fa-heart"></i></button>
-          <a href="/SmashShop/productdetail.html"><img src="https://picsum.photos/300?random=34" alt="SP4"></a>
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Victor Thruster K 9900</h3></a>
-          <div class="price">5.500.000đ</div>
-          <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
+    <div class="related-grid" id="relatedGrid">
+      <!-- Được render động từ server -->
     </div>
   </section>
 
@@ -1407,198 +1310,377 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="public/auth_sync.js"></script>
   <script>
-    const API_BASE = "http://localhost:3000/api";
+  const API_BASE = "http://localhost:3000/api";
+  let currentProductStock = 0;
 
-    // Hàm lấy tham số ID từ URL (Ví dụ: productdetail.html?id=65ef1234...)
-    function getProductIdFromUrl() {
-      const params = new URLSearchParams(window.location.search);
-      return params.get("id");
-    }
+  function getFullImageUrl(path) {
+    if (!path) return 'https://picsum.photos/300?random=99';
+    if (path.startsWith('http')) return path;
+    return `http://localhost:3000${path}`;
+  }
 
-    async function loadProductDetail() {
-      const productId = getProductIdFromUrl();
-      if (!productId) {
-        showToast("Không tìm thấy ID sản phẩm hợp lệ trong đường dẫn!", "error");
+  function getProductIdFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("id");
+  }
+
+  function showToast(message, type = 'success') {
+    const wrap = document.getElementById('toastWrap');
+    if (!wrap) return;
+    const toast = document.createElement('div');
+    toast.className = `toast-msg ${type}`;
+    let iconClass = 'fa-circle-check';
+    if (type === 'error') iconClass = 'fa-circle-xmark';
+    else if (type === 'info') iconClass = 'fa-circle-exclamation';
+    toast.innerHTML = `<i class="fa-solid ${iconClass}"></i> ${message}`;
+    wrap.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(40px)';
+      toast.style.transition = 'all 0.4s ease';
+      setTimeout(() => toast.remove(), 400);
+    }, 3000);
+  }
+
+  // ==========================================
+  // LOAD RELATED PRODUCTS
+  // ==========================================
+  async function loadRelatedProducts(currentId, category) {
+    const grid = document.getElementById('relatedGrid');
+    if (!grid) return;
+    try {
+      const res = await fetch(`${API_BASE}/products`);
+      const data = await res.json();
+      if (!data.success || !data.products) return;
+
+      // Lọc cùng danh mục, loại trừ sản phẩm hiện tại, lấy tối đa 4
+      const related = data.products
+        .filter(p => {
+          const pid = p._id || p.id;
+          return pid !== currentId && (!category || p.category === category);
+        })
+        .slice(0, 4);
+
+      // Nếu không đủ 4 theo category, bổ sung từ toàn bộ
+      if (related.length < 4) {
+        const extra = data.products
+          .filter(p => {
+            const pid = p._id || p.id;
+            return pid !== currentId && !related.find(r => (r._id || r.id) === pid);
+          })
+          .slice(0, 4 - related.length);
+        related.push(...extra);
+      }
+
+      if (related.length === 0) {
+        grid.innerHTML = '<p style="color:#666; grid-column:1/-1;">Chưa có sản phẩm liên quan.</p>';
         return;
       }
 
-      try {
-        const res = await fetch(`${API_BASE}/products/${productId}`);
-        const data = await res.json();
+      grid.innerHTML = related.map(p => {
+        const pid = p._id || p.id;
+        const imgUrl = getFullImageUrl(p.thumbnail);
+        const priceFormatted = Number(p.price).toLocaleString('vi-VN') + 'đ';
+        const nameSafe = p.name ? p.name.replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';
+        return `
+          <div class="product-card">
+            <div class="product-img-wrapper">
+              <button class="fav-badge"><i class="fa-regular fa-heart"></i></button>
+              <a href="/SmashShop/productdetail.html?id=${pid}">
+                <img src="${imgUrl}" alt="${nameSafe}" loading="lazy">
+              </a>
+            </div>
+            <div class="product-info">
+              <a href="/SmashShop/productdetail.html?id=${pid}"><h3>${nameSafe}</h3></a>
+              <div class="price">${priceFormatted}</div>
+              <button class="add-cart-btn"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
+            </div>
+          </div>`;
+      }).join('');
 
-        if (!data.success || !data.product) {
-          showToast("Sản phẩm không tồn tại hoặc đã bị xóa!", "error");
-          return;
-        }
+      // Gắn lại sự kiện fav cho các card mới render
+      grid.querySelectorAll('.fav-badge').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          this.classList.toggle('active');
+          const icon = this.querySelector('i');
+          if (icon) {
+            if (this.classList.contains('active')) {
+              icon.classList.replace('fa-regular', 'fa-solid');
+              showToast('Đã lưu vào mục yêu thích!', 'success');
+            } else {
+              icon.classList.replace('fa-solid', 'fa-regular');
+              showToast('Đã xoá khỏi mục yêu thích!', 'info');
+            }
+          }
+        });
+      });
 
-        const prod = data.product;
+    } catch (err) {
+      console.error('Lỗi load related products:', err);
+    }
+  }
 
-        // 1. Cập nhật Tiêu đề trang & Thẻ Meta Breadcrumb
-        document.title = `${prod.name} - SmashShop`;
-        document.getElementById("detailBreadcrumbCurrent").innerText = prod.name;
-
-        // 2. Cập nhật Hình ảnh đại diện (Gallery)
-        const mainImg = document.getElementById("detailMainImg");
-        mainImg.src = prod.thumbnail;
-        mainImg.alt = prod.name;
-
-        // 3. Cập nhật Thông tin Huy hiệu & Tên thương hiệu
-        document.getElementById("detailBrandBadge").innerText = prod.brand;
-        document.getElementById("detailCategoryTag").innerText = prod.category;
-        document.getElementById("detailTitle").innerText = prod.name;
-
-        // 4. Khối xử lý Giá tiền và Giảm giá động
-        const priceMainEl = document.getElementById("detailPriceMain");
-        const priceOrigEl = document.getElementById("detailPriceOriginal");
-        
-        priceMainEl.innerText = `${Number(prod.price).toLocaleString("vi-VN")} đ`;
-        
-        if (prod.discount && prod.discount > 0) {
-          const originalPrice = prod.price + prod.discount;
-          priceOrigEl.innerText = `${Number(originalPrice).toLocaleString("vi-VN")} đ`;
-          priceOrigEl.style.display = "inline-block";
-        } else {
-          priceOrigEl.style.display = "none";
-        }
-
-        // 5. Cập nhật Trạng thái kho hàng
-        const stockStatusEl = document.getElementById("detailStockText");
-        const stockCountEl = document.getElementById("detailStockCount");
-        
-        if (prod.stock > 0) {
-          stockStatusEl.innerText = "Còn hàng";
-          stockStatusEl.style.color = "#22c55e";
-          stockCountEl.innerText = `(${prod.stock} sản phẩm có sẵn)`;
-        } else {
-          stockStatusEl.innerText = "Hết hàng";
-          stockStatusEl.style.color = "#ef4444";
-          stockCountEl.innerText = "(Vui lòng liên hệ đặt trước)";
-        }
-
-        // 6. Cập nhật Bảng Thuộc tính kĩ thuật chi tiết mẫu
-        document.getElementById("detailAttrBrand").innerText = prod.brand;
-        document.getElementById("detailAttrCategory").innerText = prod.category;
-
-        // 7. Cập nhật Khối Mô tả chi tiết (Tab mô tả)
-        document.getElementById("tab-desc").innerHTML = `<p style="line-height:1.7; color:#ccc;">${prod.description.replace(/\n/g, "<br>") || "Chưa có mô tả chi tiết cho sản phẩm này."}</p>`;
-
-      } catch (err) {
-        showToast("Lỗi tải chi tiết sản phẩm từ máy chủ", "error");
-      }
+  // ==========================================
+  // LOAD PRODUCT DETAIL
+  // ==========================================
+  async function loadProductDetail() {
+    const productId = getProductIdFromUrl();
+    if (!productId) {
+      showToast("Không tìm thấy ID sản phẩm hợp lệ trong đường dẫn!", "error");
+      return;
     }
 
-    // Chạy kích hoạt khi cây cấu trúc DOM sẵn sàng
-    document.addEventListener("DOMContentLoaded", loadProductDetail);
+    try {
+      const res = await fetch(`${API_BASE}/products/${productId}`);
+      const data = await res.json();
 
-    // ===== PRODUCT DATA (from model) =====
-    const product = {
-      _id: "ObjectId",
-      name: "Yonex Astrox 100ZZ",
-      price: 5200000,
-      brand: "Yonex",
-      category: "Vợt cầu lông",
-      description: "Vợt tấn công",
-      stock: 10,
-      images: ["img1.jpg", "img2.jpg"],
-      createdAt: "Date"
-    };
-
-    // ===== THUMBNAIL SWITCHER =====
-    const thumbItems = document.querySelectorAll('.thumb-item');
-    const mainImg = document.getElementById('mainImg');
-
-    thumbItems.forEach(item => {
-      item.addEventListener('click', function() {
-        thumbItems.forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-        mainImg.src = this.dataset.src;
-      });
-    });
-
-    // ===== QUANTITY CONTROL =====
-    const qtyInput = document.getElementById('qtyInput');
-    const maxStock = product.stock;
-
-    document.getElementById('qtyMinus').addEventListener('click', () => {
-      if (parseInt(qtyInput.value) > 1) qtyInput.value = parseInt(qtyInput.value) - 1;
-    });
-
-    document.getElementById('qtyPlus').addEventListener('click', () => {
-      if (parseInt(qtyInput.value) < maxStock) qtyInput.value = parseInt(qtyInput.value) + 1;
-      else showToast('Chỉ còn ' + maxStock + ' sản phẩm trong kho!', 'info');
-    });
-
-    qtyInput.addEventListener('change', () => {
-      let v = parseInt(qtyInput.value);
-      if (isNaN(v) || v < 1) qtyInput.value = 1;
-      if (v > maxStock) { qtyInput.value = maxStock; showToast('Chỉ còn ' + maxStock + ' sản phẩm!', 'info'); }
-    });
-
-    // ===== ADD TO CART =====
-    document.getElementById('btnCart').addEventListener('click', () => {
-      showToast(`Đã thêm ${qtyInput.value} x ${product.name} vào giỏ hàng!`, 'success');
-    });
-
-    // ===== BUY NOW =====
-    document.getElementById('btnBuy').addEventListener('click', () => {
-      showToast('Đang chuyển đến trang thanh toán...', 'info');
-    });
-
-    // ===== WISHLIST =====
-    const btnWishlist = document.getElementById('btnWishlist');
-    btnWishlist.addEventListener('click', function() {
-      this.classList.toggle('active');
-      const icon = this.querySelector('i');
-      if (this.classList.contains('active')) {
-        icon.classList.replace('fa-regular', 'fa-solid');
-        showToast(`Đã thêm ${product.name} vào yêu thích!`, 'success');
-      } else {
-        icon.classList.replace('fa-solid', 'fa-regular');
-        showToast('Đã xoá khỏi danh sách yêu thích.', 'info');
+      if (!data.success || !data.product) {
+        showToast("Sản phẩm không tồn tại hoặc đã bị xóa!", "error");
+        return;
       }
-    });
 
-    // ===== TABS =====
+      const prod = data.product;
+      currentProductStock = prod.stock || 0;
+
+      // 1. Title trang & Breadcrumb
+      document.title = `${prod.name} - SmashShop`;
+      const breadcrumbCurrent = document.querySelector('.breadcrumb-nav .current');
+      if (breadcrumbCurrent) breadcrumbCurrent.textContent = prod.name;
+
+      // 2. Gallery: ảnh chính + thumbnails
+      const mainImg = document.getElementById('mainImg');
+      if (mainImg) {
+        mainImg.src = getFullImageUrl(prod.thumbnail);
+        mainImg.alt = prod.name;
+        mainImg.style.opacity = '1';
+        mainImg.onerror = function() { this.src = 'https://picsum.photos/600?random=99'; };
+      }
+
+      const thumbList = document.getElementById('thumbList');
+      if (thumbList) {
+        const allImages = [prod.thumbnail, ...(prod.images || [])].filter(Boolean);
+        thumbList.innerHTML = allImages.map((imgUrl, index) => {
+          const full = getFullImageUrl(imgUrl);
+          return `<div class="thumb-item ${index === 0 ? 'active' : ''}" data-src="${full}">
+            <img src="${full}" alt="Thumbnail ${index + 1}" loading="lazy">
+          </div>`;
+        }).join('');
+
+        thumbList.querySelectorAll('.thumb-item').forEach(thumb => {
+          thumb.addEventListener('click', function() {
+            thumbList.querySelectorAll('.thumb-item').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            if (mainImg) {
+              mainImg.style.opacity = '0';
+              setTimeout(() => {
+                mainImg.src = this.dataset.src;
+                mainImg.style.opacity = '1';
+              }, 150);
+            }
+          });
+        });
+      }
+
+      // 3. Meta: brand, category, title
+      const brandText = document.getElementById('brandText');
+      if (brandText) brandText.textContent = prod.brand || 'Đang cập nhật';
+
+      const categoryText = document.getElementById('categoryText');
+      if (categoryText) categoryText.textContent = prod.category || 'Đang cập nhật';
+
+      const productTitle = document.getElementById('productTitle');
+      if (productTitle) productTitle.textContent = prod.name;
+
+      // 4. Giá & Giảm giá
+      const priceMain = document.querySelector('.price-main');
+      const priceOriginal = document.querySelector('.price-original');
+      const priceSave = document.querySelector('.price-save');
+
+      if (priceMain) priceMain.textContent = `${Number(prod.price).toLocaleString('vi-VN')}đ`;
+
+      if (prod.discount && prod.discount > 0) {
+        const originalVal = prod.price + prod.discount;
+        if (priceOriginal) {
+          priceOriginal.style.display = 'inline-block';
+          priceOriginal.textContent = `${originalVal.toLocaleString('vi-VN')}đ`;
+        }
+        if (priceSave) {
+          priceSave.style.display = 'inline-block';
+          const percent = Math.round((prod.discount / originalVal) * 100);
+          priceSave.textContent = `Tiết kiệm ${Number(prod.discount).toLocaleString('vi-VN')}đ (${percent}%)`;
+        }
+      } else {
+        if (priceOriginal) priceOriginal.style.display = 'none';
+        if (priceSave) priceSave.style.display = 'none';
+      }
+
+      // 5. Tồn kho
+      const stockCount = document.querySelector('.stock-count');
+      const stockText = document.querySelector('.stock-text');
+      const stockDot = document.querySelector('.stock-dot');
+
+      if (stockCount) stockCount.textContent = `(${prod.stock} sản phẩm có sẵn)`;
+      if (prod.stock > 0) {
+        if (stockText) { stockText.textContent = 'Còn hàng'; stockText.style.color = '#22c55e'; }
+        if (stockDot) { stockDot.style.background = '#22c55e'; stockDot.style.boxShadow = '0 0 8px rgba(34,197,94,0.6)'; }
+      } else {
+        if (stockText) { stockText.textContent = 'Hết hàng'; stockText.style.color = '#ef4444'; }
+        if (stockDot) { stockDot.style.background = '#ef4444'; stockDot.style.boxShadow = '0 0 8px rgba(239,68,68,0.6)'; }
+      }
+
+      // 6. Bảng thuộc tính
+      const attrContainer = document.querySelector('.attributes');
+      if (attrContainer) {
+        attrContainer.innerHTML = `
+          <div class="attr-row">
+            <div class="attr-label">Thương hiệu</div>
+            <div class="attr-value">${prod.brand || '---'}</div>
+          </div>
+          <div class="attr-row">
+            <div class="attr-label">Danh mục</div>
+            <div class="attr-value">${prod.category || '---'}</div>
+          </div>
+          <div class="attr-row">
+            <div class="attr-label">Phong cách</div>
+            <div class="attr-value">${prod.style || '---'}</div>
+          </div>
+          <div class="attr-row">
+            <div class="attr-label">Mã sản phẩm</div>
+            <div class="attr-value" style="color:#666; font-size:12px; font-family:monospace;">${prod._id || prod.id}</div>
+          </div>
+          <div class="attr-row">
+            <div class="attr-label">Ngày nhập</div>
+            <div class="attr-value">${new Date(prod.createdAt).toLocaleDateString('vi-VN')}</div>
+          </div>`;
+      }
+
+      // 7. Tab Mô tả
+      const descContent = document.getElementById('descContent');
+      if (descContent) {
+        descContent.innerHTML = `<p style="line-height:1.8; color:#ccc;">
+          ${prod.description ? prod.description.replace(/\n/g, '<br>') : 'Chưa có mô tả chi tiết cho sản phẩm này.'}
+        </p>`;
+      }
+
+      // 8. Tab Thông số kỹ thuật
+      const specsContent = document.getElementById('specsContent');
+      if (specsContent) {
+        if (prod.specs && typeof prod.specs === 'object' && Object.keys(prod.specs).length > 0) {
+          let specHtml = '<table class="spec-table">';
+          for (const [key, value] of Object.entries(prod.specs)) {
+            const keySafe = String(key).replace(/</g, '&lt;');
+            const valSafe = String(value).replace(/</g, '&lt;');
+            specHtml += `<tr><td>${keySafe}</td><td>${valSafe}</td></tr>`;
+          }
+          specHtml += '</table>';
+          specsContent.innerHTML = specHtml;
+        } else {
+          specsContent.innerHTML = '<p style="padding:20px; color:#666;">Chưa có thông số kỹ thuật cho sản phẩm này.</p>';
+        }
+      }
+
+      // 9. Load sản phẩm liên quan
+      loadRelatedProducts(prod._id || prod.id, prod.category);
+
+    } catch (err) {
+      console.error("Lỗi Fetch Dữ Liệu:", err);
+      showToast("Lỗi kết nối đến máy chủ", "error");
+    }
+  }
+
+  // ==========================================
+  // GÁN SỰ KIỆN KHI DOM SẴN SÀNG
+  // ==========================================
+  document.addEventListener("DOMContentLoaded", () => {
+    // 1. Kích hoạt render dữ liệu
+    loadProductDetail();
+
+    // 2. Điều khiển số lượng
+    const qtyInput = document.getElementById('qtyInput');
+    const btnMinus = document.getElementById('qtyMinus');
+    const btnPlus = document.getElementById('qtyPlus');
+
+    if (btnMinus && btnPlus && qtyInput) {
+      btnMinus.addEventListener('click', () => {
+        let val = parseInt(qtyInput.value) || 1;
+        if (val > 1) qtyInput.value = val - 1;
+      });
+
+      btnPlus.addEventListener('click', () => {
+        let val = parseInt(qtyInput.value) || 1;
+        if (val < currentProductStock) {
+          qtyInput.value = val + 1;
+        } else {
+          showToast(`Chỉ còn ${currentProductStock} sản phẩm trong kho!`, 'error');
+        }
+      });
+
+      qtyInput.addEventListener('change', () => {
+        let val = parseInt(qtyInput.value) || 1;
+        if (val < 1) val = 1;
+        if (val > currentProductStock) {
+          val = currentProductStock;
+          showToast(`Chỉ còn ${currentProductStock} sản phẩm trong kho!`, 'error');
+        }
+        qtyInput.value = val;
+      });
+    }
+
+    // 3. Nút Thêm vào giỏ & Mua ngay
+    const btnCart = document.getElementById('btnCart');
+    if (btnCart) {
+      btnCart.addEventListener('click', () => {
+        if (currentProductStock <= 0) {
+          showToast('Sản phẩm hiện đang hết hàng!', 'error');
+          return;
+        }
+        showToast('Đã thêm sản phẩm vào giỏ hàng!', 'success');
+      });
+    }
+
+    const btnBuy = document.querySelector('.btn-buy');
+    if (btnBuy) {
+      btnBuy.addEventListener('click', () => {
+        if (currentProductStock <= 0) {
+          showToast('Sản phẩm hiện đang hết hàng!', 'error');
+          return;
+        }
+        showToast('Đang chuyển tới trang thanh toán...', 'info');
+      });
+    }
+
+    // 4. Chuyển Tabs
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
-
     tabBtns.forEach(btn => {
       btn.addEventListener('click', function() {
         tabBtns.forEach(b => b.classList.remove('active'));
         tabContents.forEach(c => c.classList.remove('active'));
         this.classList.add('active');
-        document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+        const targetEl = document.getElementById('tab-' + this.dataset.tab);
+        if (targetEl) targetEl.classList.add('active');
       });
     });
 
-    // ===== FAV BADGES (related) =====
-    document.querySelectorAll('.fav-badge').forEach(badge => {
-      badge.addEventListener('click', function(e) {
+    // 5. Nút Yêu thích (Wishlist)
+    document.querySelectorAll('.fav-badge, .btn-wishlist').forEach(btn => {
+      btn.addEventListener('click', function(e) {
         e.preventDefault();
         this.classList.toggle('active');
         const icon = this.querySelector('i');
-        if (this.classList.contains('active')) {
-          icon.classList.replace('fa-regular', 'fa-solid');
-        } else {
-          icon.classList.replace('fa-solid', 'fa-regular');
+        if (icon) {
+          if (this.classList.contains('active')) {
+            icon.classList.replace('fa-regular', 'fa-solid');
+            showToast('Đã lưu vào mục yêu thích!', 'success');
+          } else {
+            icon.classList.replace('fa-solid', 'fa-regular');
+            showToast('Đã xoá khỏi mục yêu thích!', 'info');
+          }
         }
       });
     });
-
-    // ===== ADD CART (related) =====
-    document.querySelectorAll('.add-cart-btn').forEach(btn => {
-      btn.addEventListener('click', () => showToast('Đã thêm sản phẩm vào giỏ hàng!', 'success'));
-    });
-
-    // ===== TOAST UTILITY =====
-    function showToast(message, type = 'success') {
-      const wrap = document.getElementById('toastWrap');
-      const toast = document.createElement('div');
-      toast.className = `toast-msg ${type}`;
-      toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-info'}"></i> ${message}`;
-      wrap.appendChild(toast);
-      setTimeout(() => toast.remove(), 3000);
-    }
-  </script>
+  });
+</script>
 </body>
 </html>
