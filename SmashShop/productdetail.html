@@ -1147,8 +1147,8 @@
   <section class="container product-tabs-section">
     <div class="tabs-header">
       <button class="tab-btn active" data-tab="description">Mô tả sản phẩm</button>
-      <!-- <button class="tab-btn" data-tab="specs">Thông số kỹ thuật</button>
-      <button class="tab-btn" data-tab="reviews">Đánh giá (128)</button> -->
+      <!-- <button class="tab-btn" data-tab="specs">Thông số kỹ thuật</button> -->
+      <button class="tab-btn" data-tab="reviews">Đánh giá (128)</button>
     </div>
 
     <!-- Description Tab -->
@@ -1497,20 +1497,25 @@
       const priceOriginal = document.querySelector('.price-original');
       const priceSave = document.querySelector('.price-save');
 
-      if (priceMain) priceMain.textContent = `${Number(prod.price).toLocaleString('vi-VN')}đ`;
-
+      // discount là % giảm giá (vd: 20 = giảm 20%)
+      // finalPrice = price - (price * discount / 100)
       if (prod.discount && prod.discount > 0) {
-        const originalVal = prod.price + prod.discount;
+        const finalPrice  = prod.price - (prod.price * prod.discount / 100);
+        const savedAmount = prod.price * prod.discount / 100;
+
+        if (priceMain) priceMain.textContent = `${Math.round(finalPrice).toLocaleString('vi-VN')}đ`;
+
         if (priceOriginal) {
           priceOriginal.style.display = 'inline-block';
-          priceOriginal.textContent = `${originalVal.toLocaleString('vi-VN')}đ`;
+          priceOriginal.textContent = `${Number(prod.price).toLocaleString('vi-VN')}đ`;
         }
         if (priceSave) {
           priceSave.style.display = 'inline-block';
-          const percent = Math.round((prod.discount / originalVal) * 100);
-          priceSave.textContent = `Tiết kiệm ${Number(prod.discount).toLocaleString('vi-VN')}đ (${percent}%)`;
+          priceSave.textContent = `Tiết kiệm ${Math.round(savedAmount).toLocaleString('vi-VN')}đ (-${Math.round(prod.discount)}%)`;
         }
       } else {
+        // Không có giảm giá: hiển thị giá gốc, ẩn các phần tử sale
+        if (priceMain) priceMain.textContent = `${Number(prod.price).toLocaleString('vi-VN')}đ`;
         if (priceOriginal) priceOriginal.style.display = 'none';
         if (priceSave) priceSave.style.display = 'none';
       }
