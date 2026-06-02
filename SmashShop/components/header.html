@@ -6,8 +6,9 @@
     </div>
 
     <div class="search-box">
-      <input type="text" placeholder="Tìm kiếm sản phẩm...">
+      <input type="text" id="searchInput" placeholder="Tìm kiếm sản phẩm..." autocomplete="off">
       <i class="fa-solid fa-magnifying-glass"></i>
+      <div id="searchResults" class="search-results-dropdown"></div>
     </div>
 
     <div class="header-user-area">
@@ -606,6 +607,89 @@
     .main-navbar > li > a { padding: 8px 0; }
     .dropdown-menu{ border:none !important; background:#222 !important; box-shadow: none; width: 100%; }
   }
+
+  /* DROPDOWN TÌM KIẾM SẢN PHẨM */
+.search-results-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
+  background: #111827;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  box-shadow: 0 16px 32px rgba(0,0,0,0.5);
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 1000;
+  display: none; /* Mặc định ẩn */
+}
+
+.search-results-dropdown.show {
+  display: block;
+}
+
+.search-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #1f2937;
+  text-decoration: none;
+  color: #fff;
+  transition: background 0.2s;
+}
+
+.search-item:last-child {
+  border-bottom: none;
+}
+
+.search-item:hover {
+  background: #1f2937;
+}
+
+.search-item-img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.search-item-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-item-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #e2e8f0;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.search-item-price {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ef4444; /* Màu đỏ nổi bật cho giá */
+  margin-top: 4px;
+}
+
+.search-empty {
+  padding: 16px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.search-loading {
+  padding: 16px;
+  text-align: center;
+  color: #2563EB;
+  font-size: 14px;
+}
 </style>
 
 <!-- scripts -->
@@ -911,6 +995,87 @@
       window.history.replaceState({}, document.title, newUrl);
     }
   }
+
+  // ==========================================
+  // TÍNH NĂNG TÌM KIẾM SẢN PHẨM TRỰC TIẾP
+  // ==========================================
+  const searchInput = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+  let searchTimeout = null;
+
+  // Hàm format tiền tệ VNĐ
+  function formatCurrency(number) {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number);
+  }
+
+  // Lắng nghe sự kiện người dùng gõ phím
+  searchInput.addEventListener('input', (e) => {
+    const query = e.target.value.trim();
+
+    // Xóa timeout cũ nếu người dùng gõ liên tục (Kỹ thuật Debounce)
+    clearTimeout(searchTimeout);
+
+    if (query.length < 2) {
+      searchResults.classList.remove('show');
+      return;
+    }
+
+    // Hiển thị trạng thái đang tải
+    searchResults.innerHTML = '<div class="search-loading"><i class="fa-solid fa-spinner fa-spin"></i> Đang tìm kiếm...</div>';
+    searchResults.classList.add('show');
+
+    // Chờ 300ms sau khi người dùng ngừng gõ mới gọi API để tránh spam server
+    searchTimeout = setTimeout(async () => {
+      try {
+        // Đảm bảo URL này khớp với API bạn đã thiết lập
+        const response = await fetch(`${API_BASE}/products/search?q=${encodeURIComponent(query)}`);
+        const data = await response.json();
+
+        if (!data.success) throw new Error("Lỗi API");
+
+        renderSearchResults(data.products);
+      } catch (error) {
+        console.error("Lỗi tìm kiếm:", error);
+        searchResults.innerHTML = '<div class="search-empty">Có lỗi xảy ra khi tìm kiếm</div>';
+      }
+    }, 300);
+  });
+
+  // Hàm render giao diện kết quả
+  function renderSearchResults(products) {
+    if (products.length === 0) {
+      searchResults.innerHTML = '<div class="search-empty">Không tìm thấy sản phẩm nào</div>';
+      return;
+    }
+
+    // Render danh sách sản phẩm. 
+    // Lưu ý đổi link '/SmashShop/product-detail.html' cho khớp với cấu trúc thực tế của bạn
+    const html = products.map(product => `
+      <a href="/SmashShop/productdetail.html?id=${product.id || product._id}" class="search-item">
+        <img src="http://localhost:3000${product.thumbnail}" alt="${product.name}" class="search-item-img" onerror="this.src='public/img/default-product.png'">
+        <div class="search-item-info">
+          <span class="search-item-name">${product.name}</span>
+          <span class="search-item-price">${formatCurrency(product.price)}</span>
+        </div>
+      </a>
+    `).join('');
+
+    searchResults.innerHTML = html;
+  }
+
+  // Ẩn dropdown khi click ra ngoài
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.search-box')) {
+      searchResults.classList.remove('show');
+    }
+  });
+
+  // Hiển thị lại khi click vào ô input nếu đã có chữ
+  searchInput.addEventListener('click', () => {
+    if (searchInput.value.trim().length >= 2) {
+      searchResults.classList.add('show');
+    }
+  });
 
   })();
 </script>
