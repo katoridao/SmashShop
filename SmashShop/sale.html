@@ -115,94 +115,7 @@
       font-size:15px;
     }
 
-    .products{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:20px;
-    }
 
-    @media(min-width:768px){
-      .products{ grid-template-columns:repeat(2,1fr); }
-    }
-
-    @media(min-width:1200px){
-      .products{ grid-template-columns:repeat(3,1fr); }
-    }
-
-    .product-card{
-      background:#1E1E1E;
-      border:1px solid #2A2A2A;
-      border-radius:18px;
-      overflow:hidden;
-      transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
-    }
-
-    .product-card:hover{
-      transform:translateY(-5px);
-      box-shadow:0 15px 30px rgba(0,0,0,0.35);
-      border-color:#2563EB;
-    }
-
-    .product-card img{
-      height:250px;
-      object-fit:cover;
-      width:100%;
-      transition: transform .4s ease;
-    }
-
-    .product-card:hover img{
-      transform:scale(1.05);
-    }
-
-    .product-info{
-      padding:15px;
-      position:relative;
-    }
-
-    .product-info h3{
-      margin-bottom:10px;
-      font-size:18px;
-    }
-
-    .old-price{
-      text-decoration:line-through;
-      color:#888;
-      font-size:14px;
-    }
-
-    .price{
-      color:#2563EB;
-      font-size:22px;
-      font-weight:700;
-      margin-bottom:12px;
-    }
-
-    .discount{
-      position:absolute;
-      top:15px;
-      right:15px;
-      background:#ff3c00;
-      color:#fff;
-      padding:4px 10px;
-      border-radius:8px;
-      font-size:12px;
-      font-weight:600;
-    }
-
-    .product-info button{
-      width:100%;
-      padding:10px;
-      border:none;
-      background:#2563EB;
-      color:#fff;
-      border-radius:10px;
-      cursor:pointer;
-      font-weight:600;
-    }
-
-    .product-info button:hover{
-      background:#1D4ED8;
-    }
 
     /* FOOTER */
 
@@ -289,8 +202,7 @@
     </div>
 
     <h2 class="section-title">Sản phẩm khuyến mại</h2>
-    <div class="products" id="saleProducts">
-      </div>
+    <div class="products" id="saleProducts"></div>
   </main>
 
   <footer>
@@ -334,6 +246,42 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Load Product Card Component -->
+  <script>
+    async function loadProductCardComponent() {
+      try {
+        const response = await fetch('/SmashShop/components/productCard.html');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        
+        let html = await response.text();
+        
+        // Extract and inject <style> tags
+        const styleRegex = /<style[^>]*>([\s\S]*?)<\/style>/g;
+        let styleMatch;
+        while ((styleMatch = styleRegex.exec(html)) !== null) {
+          const styleEl = document.createElement('style');
+          styleEl.textContent = styleMatch[1];
+          document.head.appendChild(styleEl);
+        }
+        
+        // Extract and execute <script> tags
+        const scriptRegex = /<script[^>]*>([\s\S]*?)<\/script>/g;
+        let scriptMatch;
+        while ((scriptMatch = scriptRegex.exec(html)) !== null) {
+          const script = document.createElement('script');
+          script.textContent = scriptMatch[1];
+          document.body.appendChild(script);
+        }
+        
+        console.log('✅ Product Card component loaded');
+      } catch (error) {
+        console.error('❌ Lỗi tải Product Card component:', error);
+      }
+    }
+    
+    loadProductCardComponent();
+  </script>
 
   <script>
     async function loadHeaderComponent() {
@@ -399,23 +347,15 @@
   </script>
 
   <script>
-    function getFullImageUrl(thumbnail) {
-      if (!thumbnail) return 'https://picsum.photos/300?random=1';
-      return thumbnail.startsWith('http') ? thumbnail : 'http://localhost:3000' + thumbnail;
-    }
-
     async function loadSaleProducts() {
-      const container = document.getElementById('saleProducts');
       try {
         const response = await fetch('http://localhost:3000/api/products');
         if (!response.ok) throw new Error('Kết nối API thất bại (Network response was not ok)');
         
         const data = await response.json();
-        
-        // Dòng này giúp bạn kiểm tra cấu trúc chính xác của API trong tab Console (F12)
-        console.log("Dữ liệu thực tế nhận từ API:", data); 
+        console.log("Dữ liệu thực tế nhận từ API:", data);
 
-        // Tự động phân tích và tìm kiếm mảng (Array) chứa danh sách sản phẩm hợp lệ
+        // Auto-detect array structure in API response
         let products = [];
         if (Array.isArray(data)) {
           products = data;
@@ -426,58 +366,31 @@
         } else if (data && Array.isArray(data.result)) {
           products = data.result;
         } else {
-          // Quét sâu vào bên trong Object để tự động lấy ra thuộc tính đầu tiên có kiểu mảng
           const foundArray = Object.values(data || {}).find(val => Array.isArray(val));
           if (foundArray) {
             products = foundArray;
           }
         }
 
-        // Nếu sau khi quét toàn bộ vẫn không tìm thấy mảng hợp lệ, ném ra lỗi để xử lý
         if (!Array.isArray(products)) {
           throw new TypeError('Dữ liệu API trả về không chứa danh sách (Array) sản phẩm hợp lệ.');
         }
 
-        // Lọc ra các sản phẩm đang có mức giảm giá > 0
-        let saleProducts = products.filter(p => parseFloat(p.discount || 0) > 0);
+        // Filter products with discount > 0
+        const filterFn = (p) => parseFloat(p.discount || 0) > 0;
 
-        if (saleProducts.length === 0) {
-          container.innerHTML = '<p style="color:#aaa; grid-column:1/-1; text-align:center;">Chưa có sản phẩm khuyến mại nào.</p>';
-          return;
-        }
-
-        container.innerHTML = saleProducts.map(p => {
-          const pid = p._id || p.id;
-          const imgUrl = getFullImageUrl(p.thumbnail);
-          const nameSafe = (p.name || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-          // Tính giá sau giảm: finalPrice = price - (price * discount / 100)
-          const finalPrice = p.price - (p.price * p.discount / 100);
-          const finalPriceFmt  = Math.round(finalPrice).toLocaleString('vi-VN') + 'đ';
-          const originPriceFmt = Number(p.price).toLocaleString('vi-VN') + 'đ';
-          const discountPct    = Math.round(p.discount);
-
-          return `
-            <div class="product-card">
-              <a href="/SmashShop/productdetail.html?id=${pid}">
-                <img src="${imgUrl}" alt="${nameSafe}" loading="lazy"
-                     onerror="this.src='https://picsum.photos/300?random=99'">
-                <div class="product-info">
-                  <h3>${nameSafe}</h3>
-                  <div class="old-price">${originPriceFmt}</div>
-                  <div class="price">${finalPriceFmt}</div>
-                  <div class="discount">-${discountPct}%</div>
-                  <button onclick="event.preventDefault(); alert('Đã thêm sản phẩm vào giỏ hàng!')">
-                    Mua ngay
-                  </button>
-                </div>
-              </a>
-            </div>`;
-        }).join('');
+        // Use the product card component to render
+        window.productCardComponent.renderProducts('saleProducts', products, {
+          showDiscount: true,
+          filterFn: filterFn
+        });
 
       } catch (err) {
         console.error('Lỗi tải sản phẩm khuyến mại:', err);
-        container.innerHTML = `<p style="color:#ef4444; grid-column:1/-1; text-align:center;">Lỗi cấu trúc dữ liệu: ${err.message}</p>`;
+        const container = document.getElementById('saleProducts');
+        if (container) {
+          container.innerHTML = `<p style="color:#ef4444; grid-column:1/-1; text-align:center;">Lỗi cấu trúc dữ liệu: ${err.message}</p>`;
+        }
       }
     }
 

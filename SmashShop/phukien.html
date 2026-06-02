@@ -98,9 +98,7 @@
   <main class="container">
     <h2 class="section-title">Phụ Kiện Cầu Lông Chính Hãng</h2>
     
-    <div class="products" id="products-container">
-      <div class="text-center w-100 col-span-full py-5 text-muted">Đang tải danh sách phụ kiện...</div>
-    </div>
+    <div class="products" id="phukienProducts"></div>
 
     <h2 class="section-title">Sản phẩm liên quan</h2>
     <div class="categories">
@@ -232,113 +230,82 @@
     loadHeaderComponent();
 
   </script>
+
   <script>
-    // Cấu hình đường dẫn kết nối API Server Node.js Backend
-    const SERVER_URL = 'http://localhost:3000';
-    const API_ENDPOINT = `${SERVER_URL}/api/products`; 
-
-    const productsContainer = document.getElementById('products-container');
-
-    // Chuyển đổi đường dẫn ảnh cục bộ sang URL tuyệt đối
-    function getFullImageUrl(path) {
-      if (!path) return 'https://picsum.photos/300?random=105';
-      if (path.startsWith('http')) return path;
-      return `${SERVER_URL}${path}`;
-    }
-
-    // Thực hiện Fetch dữ liệu và hiển thị danh sách phụ kiện cầu lông
-    async function fetchAndRenderProducts() {
-      try {
-        const response = await fetch(API_ENDPOINT);
-        const data = await response.json();
-
-        if (!data.success) {
-          throw new Error(data.message || 'Không thể tải danh sách sản phẩm từ hệ thống.');
-        }
-
-        // Lọc chính xác các sản phẩm thuộc danh mục: "Phụ kiện"
-        const accessoryProducts = data.products.filter(product => 
-          product.category && product.category.trim().toLowerCase() === 'phụ kiện'
-        );
-
-        if (accessoryProducts.length === 0) {
-          productsContainer.innerHTML = '<div class="text-center w-100 col-span-full py-5 text-warning">Hiện tại chưa có mặt hàng nào thuộc danh mục Phụ kiện cầu lông.</div>';
-          return;
-        }
-
-        // Tạo chuỗi cấu trúc thẻ Card sản phẩm động bằng Javascript Template Literal
-        const htmlContent = accessoryProducts.map(product => {
-          const formattedPrice = Number(product.price).toLocaleString('vi-VN') + 'đ';
-          const finalImgUrl = getFullImageUrl(product.thumbnail);
-          
-          return `
-            <div class="product-card" data-id="${product._id || product.id}">
-              <div class="product-img-wrapper">
-                <button class="fav-badge" title="Thêm vào danh sách yêu thích">
-                  <i class="fa-regular fa-heart"></i>
-                </button>
-                <a href="/SmashShop/productdetail.html?id=${product._id || product.id}">
-                  <img src="${finalImgUrl}" alt="${product.name}" onerror="this.src='https://picsum.photos/300?random=50'">
-                </a>
-              </div>
-              <div class="product-info">
-                <a href="/SmashShop/productdetail.html?id=${product._id || product.id}">
-                  <h3>${product.name}</h3>
-                </a>
-                <div class="price">${formattedPrice}</div>
-                <button class="add-cart-btn">
-                  <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ
-                </button>
-              </div>
-            </div>
-          `;
-        }).join('');
-
-        productsContainer.innerHTML = htmlContent;
-
-      } catch (error) {
-        console.error('Lỗi khi fetch API sản phẩm phụ kiện:', error);
-        productsContainer.innerHTML = `<div class="text-center w-100 col-span-full py-5 text-danger">Đã xảy ra lỗi kết nối với máy chủ API: ${error.message}</div>`;
-      }
-    }
-
-    // SỬ DỤNG EVENT DELEGATION: Lắng nghe hành vi click trên các phần tử sinh ra động
-    productsContainer.addEventListener('click', function(e) {
+  async function loadProductCardComponent() {
+    try {
+      const response = await fetch('/SmashShop/components/productCard.html');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
       
-      // Xử lý sự kiện: Thả tim (Yêu thích phụ kiện)
-      const favBadge = e.target.closest('.fav-badge');
-      if (favBadge) {
-        e.preventDefault();
-        const icon = favBadge.querySelector('i');
-        const card = favBadge.closest('.product-card');
-        const productId = card ? card.getAttribute('data-id') : null;
-
-        favBadge.classList.toggle('active');
-        if (favBadge.classList.contains('active')) {
-          icon.className = 'fa-solid fa-heart';
-          console.log(`Đã lưu thích phụ kiện ID: ${productId}`);
-        } else {
-          icon.className = 'fa-regular fa-heart';
-          console.log(`Đã bỏ lưu thích phụ kiện ID: ${productId}`);
-        }
-        return;
+      let html = await response.text();
+      
+      // Extract and inject <style> tags
+      const styleRegex = /<style[^>]*>([\s\S]*?)<\/style>/g;
+      let styleMatch;
+      while ((styleMatch = styleRegex.exec(html)) !== null) {
+        const styleEl = document.createElement('style');
+        styleEl.textContent = styleMatch[1];
+        document.head.appendChild(styleEl);
       }
+      
+      // Extract and execute <script> tags
+      const scriptRegex = /<script[^>]*>([\s\S]*?)<\/script>/g;
+      let scriptMatch;
+      while ((scriptMatch = scriptRegex.exec(html)) !== null) {
+        const script = document.createElement('script');
+        script.textContent = scriptMatch[1];
+        document.body.appendChild(script);
+      }
+      
+      console.log('✅ Product Card component loaded');
+    } catch (error) {
+      console.error('❌ Lỗi tải Product Card component:', error);
+    }
+  }
+  
+  async function loadPhuKienProducts() {
+    try {
+      const response = await fetch('http://localhost:3000/api/products');
+      const data = await response.json();
+      
+      const products = Array.isArray(data) ? data : (data.data || data.products || data.result || []);
+      const racketProducts = products.filter(product => {
+        const category = product.category || product.type || '';
+        return category.toString().trim().toLowerCase() === 'phụ kiện';
+      });
+      
+      // Render only racket products with favorite badge support
+      window.productCardComponent.onToggleFavorite = function(productId, productName) {
+        alert(`Đã thêm "${productName}" vào yêu thích!`);
+      };
 
-      // Xử lý sự kiện: Thêm vào giỏ hàng (Add to Cart)
-      const addCartBtn = e.target.closest('.add-cart-btn');
-      if (addCartBtn) {
-        e.preventDefault();
-        const card = addCartBtn.closest('.product-card');
-        const productId = card ? card.getAttribute('data-id') : null;
+      window.productCardComponent.renderProducts('phukienProducts', racketProducts, {
+        showFavorite: true
+      });
+    } catch (err) {
+      console.error('Lỗi:', err);
+    }
+  }
+  
+  document.addEventListener('DOMContentLoaded', async function() {
+    try {
+      await loadProductCardComponent();
+      await loadPhuKienProducts();
+    } catch (e) {
+      console.error('Lỗi khi load component hoặc sản phẩm:', e);
+    }
+  });
+</script>
 
-        alert("Đã thêm phụ kiện cầu lông vào giỏ hàng thành công!");
-        console.log(`Thêm vào giỏ hàng thành công sản phẩm ID: ${productId}`);
-        return;
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const headerHeartIcon = document.querySelector('.header-icons .fa-heart');
+      if (headerHeartIcon) {
+        headerHeartIcon.addEventListener('click', function() {
+          window.location.href = 'wishlist.html';
+        });
       }
     });
-
-    // Kích hoạt tiến trình tải dữ liệu ngay khi cấu trúc DOM sẵn sàng
-    document.addEventListener('DOMContentLoaded', fetchAndRenderProducts);
   </script>
 </body>
 </html>

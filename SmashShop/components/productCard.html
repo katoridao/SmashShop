@@ -1,0 +1,250 @@
+<!-- Product Card Component -->
+<style>
+  .products {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  @media(min-width:768px) {
+    .products { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media(min-width:1200px) {
+    .products { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .product-card {
+    background: #1E1E1E;
+    border: 1px solid #2A2A2A;
+    border-radius: 18px;
+    overflow: hidden;
+    transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+  }
+
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.35);
+    border-color: #2563EB;
+  }
+
+  .product-card img {
+    height: 250px;
+    object-fit: cover;
+    width: 100%;
+    transition: transform .4s ease;
+  }
+
+  .product-card:hover img {
+    transform: scale(1.05);
+  }
+  .product-img-wrapper {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fav-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    background: rgba(30,30,30,0.8);
+    backdrop-filter: blur(5px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 10;
+    transition: 0.3s;
+    border: 1px solid #333;
+  }
+
+  .fav-badge:hover {
+    background: #ff3c00;
+    color: #fff;
+    border-color: #ff3c00;
+    transform: scale(1.1);
+  }
+
+  .fav-badge.active {
+    background: #ff3c00;
+    color: #fff;
+    border-color: #ff3c00;
+  }
+  .product-info {
+    padding: 15px;
+    position: relative;
+  }
+
+  .product-info h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+
+  .old-price {
+    text-decoration: line-through;
+    color: #888;
+    font-size: 14px;
+  }
+
+  .price {
+    color: #2563EB;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .discount {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #ff3c00;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .discount.hidden {
+    display: none;
+  }
+
+  .product-info button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: #2563EB;
+    color: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .product-info button:hover {
+    background: #1D4ED8;
+  }
+</style>
+
+<script>
+  // Utility: Convert thumbnail URL to full URL
+  function getFullImageUrl(thumbnail) {
+    if (!thumbnail) return 'https://picsum.photos/300?random=1';
+    return thumbnail.startsWith('http') ? thumbnail : 'http://localhost:3000' + thumbnail;
+  }
+
+  // Utility: Format currency
+  function formatPrice(price) {
+    return Number(price).toLocaleString('vi-VN') + 'đ';
+  }
+
+  // Utility: Sanitize HTML in product names
+  function sanitizeName(name) {
+    return (name || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // Main function to render products
+  function renderProducts(containerId, products, options = {}) {
+    const {
+      showDiscount = true,
+      showFavorite = true,
+      filterFn = null,
+      onAddToCart = null,
+      onToggleFavorite = null
+    } = options;
+
+    const container = document.getElementById(containerId);
+    if (!container) {
+      console.error(`❌ Container with id "${containerId}" not found`);
+      return;
+    }
+
+    let filteredProducts = products;
+    if (filterFn && typeof filterFn === 'function') {
+      filteredProducts = products.filter(filterFn);
+    }
+
+    if (filteredProducts.length === 0) {
+      container.innerHTML = '<p style="color:#aaa; grid-column:1/-1; text-align:center;">Chưa có sản phẩm nào.</p>';
+      return;
+    }
+
+    container.innerHTML = filteredProducts.map(p => {
+      const pid = p._id || p.id;
+      const imgUrl = getFullImageUrl(p.thumbnail);
+      const nameSafe = sanitizeName(p.name);
+
+      // Calculate final price after discount
+      const discount = parseFloat(p.discount || 0);
+      const price = parseFloat(p.price || 0);
+      const finalPrice = price - (price * discount / 100);
+
+      const finalPriceFmt = formatPrice(Math.round(finalPrice));
+      const originPriceFmt = formatPrice(price);
+      const discountPct = Math.round(discount);
+
+      // Show discount badge only if discount > 0
+      const discountBadge = showDiscount && discount > 0
+        ? `<div class="discount">-${discountPct}%</div>`
+        : `<div class="discount hidden"></div>`;
+
+      const safeAttrName = nameSafe.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+      const favoriteBadge = showFavorite
+        ? `<button type="button" class="fav-badge" onclick="event.preventDefault(); event.stopPropagation(); window.productCardComponent.handleFavorite('${pid}', '${safeAttrName}')" aria-label="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>`
+        : '';
+
+      // Handle add to cart
+      const buttonHandler = onAddToCart
+        ? `onclick="window.productCardComponent.addToCart('${pid}', '${safeAttrName}')"`
+        : `onclick="event.preventDefault(); alert('Đã thêm sản phẩm vào giỏ hàng!')"`;
+
+      return `
+        <div class="product-card">
+          <div class="product-img-wrapper">
+            ${favoriteBadge}
+            <a href="/SmashShop/productdetail.html?id=${pid}">
+              <img src="${imgUrl}" alt="${nameSafe}" loading="lazy"
+                   onerror="this.src='https://picsum.photos/300?random=99'">
+            </a>
+          </div>
+          <div class="product-info">
+            <a href="/SmashShop/productdetail.html?id=${pid}">
+              <h3>${nameSafe}</h3>
+            </a>
+            <div class="old-price">${originPriceFmt}</div>
+            <div class="price">${finalPriceFmt}</div>
+            ${discountBadge}
+            <button ${buttonHandler}>
+              Mua ngay
+            </button>
+          </div>
+        </div>`;
+    }).join('');
+
+    console.log(`✅ Rendered ${filteredProducts.length} products in "${containerId}"`);
+  }
+
+  // Global namespace for product card component
+  window.productCardComponent = {
+    renderProducts: renderProducts,
+    getFullImageUrl: getFullImageUrl,
+    formatPrice: formatPrice,
+    sanitizeName: sanitizeName,
+    addToCart: function(productId, productName) {
+      alert(`Đã thêm "${productName}" vào giỏ hàng!`);
+    },
+    onToggleFavorite: null,
+    handleFavorite: function(productId, productName) {
+      if (typeof window.productCardComponent.onToggleFavorite === 'function') {
+        window.productCardComponent.onToggleFavorite(productId, productName);
+        return;
+      }
+      alert(`Đã thêm "${productName}" vào yêu thích!`);
+    }
+  };
+</script>

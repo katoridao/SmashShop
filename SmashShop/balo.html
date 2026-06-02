@@ -98,9 +98,7 @@
   <main class="container">
     <h2 class="section-title">Balo Cầu Lông Chính Hãng</h2>
     
-    <div class="products" id="products-container">
-      <div class="text-center w-100 col-span-full py-5 text-muted">Đang tải danh sách balo cầu lông...</div>
-    </div>
+    <div class="products" id="baloProducts"></div>
 
     <h2 class="section-title">Sản phẩm liên quan</h2>
     <div class="categories">
@@ -232,113 +230,82 @@
     loadHeaderComponent();
 
   </script>
+
   <script>
-    // Định nghĩa cổng kết nối với Server NodeJS Backend
-    const SERVER_URL = 'http://localhost:3000';
-    const API_ENDPOINT = `${SERVER_URL}/api/products`; 
-
-    const productsContainer = document.getElementById('products-container');
-
-    // Helper: Giải quyết triệt để lỗi ảnh 404 từ Live Server tĩnh
-    function getFullImageUrl(path) {
-      if (!path) return 'https://picsum.photos/300?random=88';
-      if (path.startsWith('http')) return path;
-      return `${SERVER_URL}${path}`;
-    }
-
-    // Tiến hành gọi API lấy dữ liệu và hiển thị danh sách Balo
-    async function fetchAndRenderProducts() {
-      try {
-        const response = await fetch(API_ENDPOINT);
-        const data = await response.json();
-
-        if (!data.success) {
-          throw new Error(data.message || 'Không thể lấy dữ liệu sản phẩm.');
-        }
-
-        // Lọc chuẩn xác theo danh mục: "Balo cầu lông"
-        const backpackProducts = data.products.filter(product => 
-          product.category && product.category.trim().toLowerCase() === 'balo cầu lông'
-        );
-
-        if (backpackProducts.length === 0) {
-          productsContainer.innerHTML = '<div class="text-center w-100 col-span-full py-5 text-warning">Hiện chưa có sản phẩm nào thuộc danh mục Balo cầu lông.</div>';
-          return;
-        }
-
-        // Xây dựng giao diện chuỗi HTML động từ API
-        const htmlContent = backpackProducts.map(product => {
-          const formattedPrice = Number(product.price).toLocaleString('vi-VN') + 'đ';
-          const finalImgUrl = getFullImageUrl(product.thumbnail);
-          
-          return `
-            <div class="product-card" data-id="${product._id || product.id}">
-              <div class="product-img-wrapper">
-                <button class="fav-badge" title="Thêm vào yêu thích">
-                  <i class="fa-regular fa-heart"></i>
-                </button>
-                <a href="/SmashShop/productdetail.html?id=${product._id || product.id}">
-                  <img src="${finalImgUrl}" alt="${product.name}" onerror="this.src='https://picsum.photos/300?random=22'">
-                </a>
-              </div>
-              <div class="product-info">
-                <a href="/SmashShop/productdetail.html?id=${product._id || product.id}">
-                  <h3>${product.name}</h3>
-                </a>
-                <div class="price">${formattedPrice}</div>
-                <button class="add-cart-btn">
-                  <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ
-                </button>
-              </div>
-            </div>
-          `;
-        }).join('');
-
-        productsContainer.innerHTML = htmlContent;
-
-      } catch (error) {
-        console.error('Lỗi khi fetch sản phẩm:', error);
-        productsContainer.innerHTML = `<div class="text-center w-100 col-span-full py-5 text-danger">Không thể kết nối máy chủ API: ${error.message}</div>`;
-      }
-    }
-
-    // SỬ DỤNG EVENT DELEGATION: Đồng bộ bắt sự kiện Click cho mọi thành phần động thêm vào sau
-    productsContainer.addEventListener('click', function(e) {
+  async function loadProductCardComponent() {
+    try {
+      const response = await fetch('/SmashShop/components/productCard.html');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
       
-      // Hành động: Thả tim yêu thích sản phẩm
-      const favBadge = e.target.closest('.fav-badge');
-      if (favBadge) {
-        e.preventDefault();
-        const icon = favBadge.querySelector('i');
-        const card = favBadge.closest('.product-card');
-        const productId = card ? card.getAttribute('data-id') : null;
-
-        favBadge.classList.toggle('active');
-        if (favBadge.classList.contains('active')) {
-          icon.className = 'fa-solid fa-heart';
-          console.log(`Đã thích Balo ID: ${productId}`);
-        } else {
-          icon.className = 'fa-regular fa-heart';
-          console.log(`Đã bỏ thích Balo ID: ${productId}`);
-        }
-        return;
+      let html = await response.text();
+      
+      // Extract and inject <style> tags
+      const styleRegex = /<style[^>]*>([\s\S]*?)<\/style>/g;
+      let styleMatch;
+      while ((styleMatch = styleRegex.exec(html)) !== null) {
+        const styleEl = document.createElement('style');
+        styleEl.textContent = styleMatch[1];
+        document.head.appendChild(styleEl);
       }
+      
+      // Extract and execute <script> tags
+      const scriptRegex = /<script[^>]*>([\s\S]*?)<\/script>/g;
+      let scriptMatch;
+      while ((scriptMatch = scriptRegex.exec(html)) !== null) {
+        const script = document.createElement('script');
+        script.textContent = scriptMatch[1];
+        document.body.appendChild(script);
+      }
+      
+      console.log('✅ Product Card component loaded');
+    } catch (error) {
+      console.error('❌ Lỗi tải Product Card component:', error);
+    }
+  }
+  
+  async function loadBaloProducts() {
+    try {
+      const response = await fetch('http://localhost:3000/api/products');
+      const data = await response.json();
+      
+      const products = Array.isArray(data) ? data : (data.data || data.products || data.result || []);
+      const racketProducts = products.filter(product => {
+        const category = product.category || product.type || '';
+        return category.toString().trim().toLowerCase() === 'balo cầu lông';
+      });
+      
+      // Render only racket products with favorite badge support
+      window.productCardComponent.onToggleFavorite = function(productId, productName) {
+        alert(`Đã thêm "${productName}" vào yêu thích!`);
+      };
 
-      // Hành động: Click nút thêm vào giỏ hàng
-      const addCartBtn = e.target.closest('.add-cart-btn');
-      if (addCartBtn) {
-        e.preventDefault();
-        const card = addCartBtn.closest('.product-card');
-        const productId = card ? card.getAttribute('data-id') : null;
+      window.productCardComponent.renderProducts('baloProducts', racketProducts, {
+        showFavorite: true
+      });
+    } catch (err) {
+      console.error('Lỗi:', err);
+    }
+  }
+  
+  document.addEventListener('DOMContentLoaded', async function() {
+    try {
+      await loadProductCardComponent();
+      await loadBaloProducts();
+    } catch (e) {
+      console.error('Lỗi khi load component hoặc sản phẩm:', e);
+    }
+  });
+</script>
 
-        alert("Đã thêm balo cầu lông vào giỏ hàng thành công!");
-        console.log(`Thêm giỏ hàng cho sản phẩm có mã ID: ${productId}`);
-        return;
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const headerHeartIcon = document.querySelector('.header-icons .fa-heart');
+      if (headerHeartIcon) {
+        headerHeartIcon.addEventListener('click', function() {
+          window.location.href = 'wishlist.html';
+        });
       }
     });
-
-    // Gọi hàm render ngay khi cây thư mục DOM sẵn sàng
-    document.addEventListener('DOMContentLoaded', fetchAndRenderProducts);
   </script>
 </body>
 </html>

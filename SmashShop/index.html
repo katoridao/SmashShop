@@ -503,17 +503,47 @@
     }
 
     // Execute as soon as DOM starts loading
-    loadHeaderComponent();
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadHeaderComponent();
+      await loadProductCardComponent();
+      loadFeaturedProducts();
+    });
 
     const API_BASE = 'http://localhost:3000/api';
 
-    // ==========================================
-    // FETCH SẢN PHẨM NỔI BẬT TỪ SERVER
-    // ==========================================
-    function getFullImageUrl(path) {
-      if (!path) return 'https://picsum.photos/300?random=99';
-      if (path.startsWith('http')) return path;
-      return 'http://localhost:3000' + path;
+    async function loadProductCardComponent() {
+      try {
+        const response = await fetch('/SmashShop/components/productCard.html');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        let html = await response.text();
+
+        // Extract and inject <style> tags
+        const styleRegex = /<style[^>]*>([\s\S]*?)<\/style>/g;
+        let styleMatch;
+        while ((styleMatch = styleRegex.exec(html)) !== null) {
+          const styleEl = document.createElement('style');
+          styleEl.textContent = styleMatch[1];
+          document.head.appendChild(styleEl);
+        }
+
+        // Extract and execute <script> tags
+        const scriptRegex = /<script[^>]*>([\s\S]*?)<\/script>/g;
+        let scriptMatch;
+        while ((scriptMatch = scriptRegex.exec(html)) !== null) {
+          const script = document.createElement('script');
+          script.textContent = scriptMatch[1];
+          document.body.appendChild(script);
+        }
+
+        window.productCardComponent.onToggleFavorite = function(productId, productName) {
+          alert(`Đã thêm "${productName}" vào yêu thích!`);
+        };
+
+        console.log('✅ Product Card component loaded');
+      } catch (error) {
+        console.error('❌ Lỗi tải Product Card component:', error);
+      }
     }
 
     async function loadFeaturedProducts() {
@@ -537,13 +567,28 @@
         const res = await fetch(API_BASE + '/products');
         const data = await res.json();
 
-        if (!data.success || !data.products || data.products.length === 0) {
+        if (!data.success || !Array.isArray(data.products)) {
           container.innerHTML = '<p style="color:#666; grid-column:1/-1; padding:20px 0;">Chưa có sản phẩm nào.</p>';
           return;
         }
 
-        // Lấy tối đa 6 sản phẩm mới nhất (server đã sort createdAt: -1)
-        const featured = data.products.slice(0, 6);
+        const featured = [...data.products]
+          .sort((a, b) => (Number(a.stock) || 0) - (Number(b.stock) || 0))
+          .slice(0, 6);
+
+        if (featured.length === 0) {
+          container.innerHTML = '<p style="color:#666; grid-column:1/-1; padding:20px 0;">Chưa có sản phẩm nào.</p>';
+          return;
+        }
+
+        if (window.productCardComponent && typeof window.productCardComponent.renderProducts === 'function') {
+          window.productCardComponent.renderProducts('featuredProducts', featured, {
+            showDiscount: true,
+            showFavorite: true,
+            onAddToCart: true
+          });
+          return;
+        }
 
         container.innerHTML = featured.map(p => {
           const pid = p._id || p.id;
@@ -574,7 +619,6 @@
 
     // Event delegation cho fav badge và add-cart trong grid động
     document.getElementById('featuredProducts').addEventListener('click', function(e) {
-      // Nút yêu thích
       const favBtn = e.target.closest('.fav-badge');
       if (favBtn) {
         e.preventDefault();
@@ -592,7 +636,6 @@
         return;
       }
 
-      // Nút thêm vào giỏ
       const cartBtn = e.target.closest('.add-cart-btn');
       if (cartBtn) {
         e.preventDefault();
@@ -600,8 +643,11 @@
       }
     });
 
-    // Gọi load sản phẩm ngay khi script chạy
-    loadFeaturedProducts();
+    function getFullImageUrl(path) {
+      if (!path) return 'https://picsum.photos/300?random=99';
+      if (path.startsWith('http')) return path;
+      return 'http://localhost:3000' + path;
+    }
 
     // MAIN SLIDER (GIỮ NGUYÊN)
     const slides = document.querySelector('.slides');
