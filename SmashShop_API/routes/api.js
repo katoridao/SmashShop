@@ -6,7 +6,9 @@ const multer = require("multer");
 const fs = require("fs");
 
 const User = require("../models/User");
-const Product = require("../models/Product"); // Đã gom group import lên đầu
+const Product = require("../models/Product");
+const Review = require("../models/Review");
+const Order = require("../models/Order");
 const {
   generateRandomPassword,
   sendPasswordResetEmail,
@@ -531,6 +533,77 @@ router.post("/chat", (req, res) => {
   setTimeout(() => {
     res.json({ success: true, reply });
   }, 1000);
+});
+
+// ==========================================
+// THỐNG KÊ ADMIN (ADMIN STATS)
+// ==========================================
+router.get("/admin/stats", async (req, res) => {
+  try {
+    const [totalOrders, orders, newUsers, lowStockProducts] = await Promise.all([
+      Order.countDocuments(),
+      Order.find({}),
+      User.countDocuments({ role: "user" }),
+      Product.countDocuments({ stock: { $lte: 5 } }),
+    ]);
+
+    const totalRevenue = orders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+
+    res.status(200).json({
+      success: true,
+      stats: {
+        totalRevenue,
+        totalOrders,
+        newUsers,
+        lowStockProducts,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// ==========================================
+// ĐÁNH GIÁ (REVIEW)
+// ==========================================
+router.post("/reviews", async (req, res) => {
+  try {
+    const { userId, productId, rating, comment } = req.body;
+    if (!userId || !productId || !rating || !comment) {
+      return res.status(400).json({ success: false, message: "Thiếu thông tin bắt buộc" });
+    }
+
+    const review = await Review.create({ userId, productId, rating, comment });
+    await review.populate("userId", "name");
+
+    res.status(201).json({ success: true, message: "Đánh giá thành công", review });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+router.get("/reviews/:productId", async (req, res) => {
+  try {
+    const reviews = await Review.find({ productId: req.params.productId })
+      .populate("userId", "name")
+      .sort({ createdAt: -1 });
+
+    const totalReviews = reviews.length;
+    let averageRating = 0;
+    if (totalReviews > 0) {
+      const sum = reviews.reduce((acc, rev) => acc + rev.rating, 0);
+      averageRating = (sum / totalReviews).toFixed(1);
+    }
+
+    res.status(200).json({
+      success: true,
+      reviews,
+      totalReviews,
+      averageRating,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 });
 
 module.exports = router;

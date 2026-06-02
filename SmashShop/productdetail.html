@@ -1652,6 +1652,9 @@
           return;
         }
         showToast('Đang chuyển tới trang thanh toán...', 'info');
+        setTimeout(() => {
+          window.location.href = '/SmashShop/checkout.html';
+        }, 800);
       });
     }
 
