@@ -62,183 +62,6 @@
         .container{ max-width:1280px; }
     }
 
-    /* HEADER */
-
-    header{
-      background:#1A1A1A;
-      box-shadow:0 2px 10px rgba(0,0,0,0.4);
-      position:sticky;
-      top:0;
-      z-index:999;
-    }
-
-    .top-header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:20px;
-      padding:18px 0;
-      flex-wrap:wrap;
-      flex-direction:column;
-      align-items:stretch;
-    }
-
-    .logo{
-      font-size:30px;
-      font-weight:700;
-      color:#2563EB;
-      text-align:center;
-    }
-
-    @media(min-width:992px){
-      .top-header{
-          flex-direction:row;
-          align-items:center;
-      }
-      .logo{
-          text-align:left;
-      }
-    }
-
-    .search-box{
-      flex:1;
-      max-width:100%;
-      position:relative;
-    }
-
-    .search-box input{
-      width:100%;
-      padding:12px 50px 12px 16px;
-      border-radius:50px;
-      background:#222;
-      border:1px solid #333;
-      color:#fff;
-      outline:none;
-    }
-
-    .search-box input::placeholder{
-        color:#999;
-    }
-
-    .search-box i{
-      position:absolute;
-      right:18px;
-      top:50%;
-      transform:translateY(-50%);
-      color:#777;
-    }
-
-    .header-icons{
-      display:flex;
-      align-items:center;
-      gap:20px;
-      justify-content:center;
-    }
-
-    .header-icons i{
-      font-size:22px;
-      cursor:pointer;
-      transition:.3s;
-    }
-
-    .header-icons i:hover{
-      color:#ff3c00;
-    }
-
-    .login-btn{
-      padding:10px 22px;
-      border:none;
-      background:linear-gradient(135deg, #2563EB, #1D4ED8);
-      color:#fff;
-      border-radius:30px;
-      cursor:pointer;
-      font-weight:600;
-      transition:.3s;
-    }
-
-    .login-btn:hover{
-      transform:translateY(-2px);
-      opacity:.9;
-    }
-
-    /* NAVBAR & DROPDOWN */
-
-    .nav-link.active{
-        color:#2563EB !important;
-    }
-
-    nav{
-      background:#121212;
-    }
-
-    .main-navbar{
-      display:flex;
-      align-items:center;
-      gap:30px;
-      position:relative;
-    }
-
-    .main-navbar > li > a{
-      display:block;
-      padding:16px 0;
-      color:#fff;
-      font-weight:500;
-    }
-
-    /* Kích hoạt Hover mở dropdown menu trên Desktop màn hình lớn */
-    @media(min-width:992px) {
-      .main-navbar li.dropdown:hover .dropdown-menu {
-        display: block;
-        margin-top: 0; 
-      }
-    }
-
-    /* Định dạng menu Dropdown đồng nhất */
-    .dropdown-menu-dark {
-      background:#1E1E1E !important;
-      border:1px solid #2A2A2A !important;
-      border-radius:10px;
-      box-shadow:0 10px 20px rgba(0,0,0,0.3);
-      padding: 8px 0;
-    }
-
-    .dropdown-menu-dark .dropdown-item {
-      padding: 10px 20px;
-      color: #fff;
-      transition: .2s ease;
-    }
-
-    .dropdown-menu-dark .dropdown-item:hover {
-      background: #2563EB !important;
-      color: #fff !important;
-    }
-
-    @media(max-width:991px){
-      .navbar-collapse{
-          background:#1A1A1A;
-          padding:15px;
-          border-radius:16px;
-          margin-top:12px;
-      }
-      .navbar-nav{
-          gap:10px;
-      }
-      .main-navbar{
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 10px;
-      }
-      .main-navbar > li > a {
-          padding: 8px 0;
-      }
-      .dropdown-menu{
-          border:none !important;
-          background:#222 !important;
-          box-shadow: none;
-          width: 100%;
-      }
-    }
-
     /* SALE CONTENT */
 
     .section-title{
@@ -328,7 +151,7 @@
     }
 
     .product-card:hover img{
-        transform:scale(1.05);
+      transform:scale(1.05);
     }
 
     .product-info{
@@ -378,7 +201,7 @@
     }
 
     .product-info button:hover{
-        background:#1D4ED8;
+      background:#1D4ED8;
     }
 
     /* FOOTER */
@@ -406,16 +229,15 @@
     }
 
     .footer-col{
-        display:flex;
-        flex-direction:column;
+      display:flex;
+      flex-direction:column;
     }
 
     .footer-col h3{
       margin-bottom:20px;
     }
 
-    .footer-col p,
-    .footer-col a{
+    .footer-col p, .footer-col a{
       color:#ccc;
       line-height:1.9;
       font-size:14px;
@@ -451,116 +273,31 @@
       color:#999;
       font-size:14px;
     }
-
-    html{
-        scroll-behavior:smooth;
-    }
-
-    @keyframes shimmer {
-      0%   { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="container top-header">
-      <div class="logo">
-        <a href="/SmashShop/index.html">SmashShop</a>
-      </div>
-
-      <div class="search-box">
-        <input type="text" placeholder="Tìm kiếm sản phẩm...">
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </div>
-
-      <div class="header-icons">
-        <a href="wishlist.html"><i class="fa-regular fa-heart"></i></a>
-        <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
-        <button class="login-btn">Login</button>
-      </div>
-    </div>
-
-    <nav class="navbar navbar-expand-lg navbar-dark">
-      <div class="container">
-        <button class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#mainMenu">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="mainMenu">
-          <ul class="navbar-nav gap-lg-4 main-navbar">
-            <li class="nav-item">
-              <a class="nav-link" href="/SmashShop/index.html">Trang chủ</a>
-            </li>
-
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle"
-                href="#"
-                id="navbarDropdown"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false">
-                Sản phẩm
-              </a>
-              <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="/SmashShop/vot.html">Vợt cầu lông</a></li>
-                <li><a class="dropdown-item" href="/SmashShop/giay.html">Giày cầu lông</a></li>
-                <li><a class="dropdown-item" href="/SmashShop/balo.html">Balo cầu lông</a></li>
-                <li><a class="dropdown-item" href="/SmashShop/tuivot.html">Túi vợt cầu lông</a></li>
-                <li><a class="dropdown-item" href="/SmashShop/phukien.html">Phụ kiện cầu lông</a></li>
-              </ul>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link active" href="/SmashShop/sale.html">Khuyến mãi</a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" href="/SmashShop/about.html">Giới thiệu</a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" href="/SmashShop/contact.html">Liên hệ</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-  </header>
+  <div id="header-container"></div>
 
   <main class="container">
-
     <div class="sale-banner">
-      <img src="https://picsum.photos/1400/500?random=99" alt="Flash Sale">
+      <img src="https://picsum.photos/1200/400?random=40" alt="Flash Sale">
       <div class="sale-overlay">
         <h1>FLASH SALE 50%</h1>
-        <p>
-          Giảm giá hàng loạt vợt cầu lông, giày thi đấu và phụ kiện chính hãng. 
-          Số lượng có hạn.
-        </p>
+        <p>Giảm giá hàng loạt vợt cầu lông, giày thi đấu và phụ kiện chính hãng. Số lượng có hạn.</p>
       </div>
     </div>
 
     <h2 class="section-title">Sản phẩm khuyến mại</h2>
-
     <div class="products" id="saleProducts">
-      <!-- Được render động từ server -->
-    </div>
-
+      </div>
   </main>
 
   <footer>
     <div class="container footer-grid">
       <div class="footer-col">
         <h3>SmashShop</h3>
-        <p>
-          Hệ thống bán vợt và phụ kiện cầu lông chính hãng với giá tốt,
-          hỗ trợ khách hàng tận tâm.
-        </p>
+        <p>Hệ thống bán vợt và phụ kiện cầu lông chính hãng với giá tốt, hỗ trợ khách hàng tận tâm.</p>
         <div class="socials">
           <a href="https://www.facebook.com/le.vinh.686378" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
           <a href="https://www.instagram.com/leevinh_05" target="_blank"><i class="fa-brands fa-instagram"></i></a>
@@ -593,57 +330,123 @@
         <a href="https://maps.app.goo.gl/XQcabwWphX5mqsZs6" target="_blank"><p>Địa chỉ: 183 Đ. Yên Xá, Yên Xá, Thanh Liệt, Hà Nội, Vietnam</p></a>
       </div>
     </div>
-
-    <div class="footer-bottom">
-      © 2026 SmashShop. All Rights Reserved.
-    </div>
+    <div class="footer-bottom">© 2026 SmashShop. All Rights Reserved.</div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="public/auth_sync.js"></script>
-  <script>
-    const API_BASE = 'http://localhost:3000/api';
 
-    function getFullImageUrl(path) {
-      if (!path) return 'https://picsum.photos/300?random=99';
-      if (path.startsWith('http')) return path;
-      return 'http://localhost:3000/' + path;
+  <script>
+    async function loadHeaderComponent() {
+      try {
+        const response = await fetch('/SmashShop/components/header.html');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        
+        let html = await response.text();
+        
+        // Extract <style> tags and inject into <head>
+        const styleRegex = /<style[^>]*>([\s\S]*?)<\/style>/g;
+        let styleMatch;
+        while ((styleMatch = styleRegex.exec(html)) !== null) {
+          const styleEl = document.createElement('style');
+          styleEl.textContent = styleMatch[1];
+          document.head.appendChild(styleEl);
+        }
+        
+        // Remove <style> tags from html string
+        html = html.replace(/<style[^>]*>[\s\S]*?<\/style>/g, '');
+        
+        // Extract <script> tags before inserting HTML
+        const scriptRegex = /<script[^>]*>([\s\S]*?)<\/script>/g;
+        const scripts = [];
+        let scriptMatch;
+        while ((scriptMatch = scriptRegex.exec(html)) !== null) {
+          scripts.push(scriptMatch[1]);
+        }
+        
+        // Remove <script> tags from html string
+        html = html.replace(/<script[^>]*>[\s\S]*?<\/script>/g, '');
+        
+        // Insert cleaned HTML
+        const container = document.getElementById('header-container');
+        container.innerHTML += html;
+        
+        // Execute scripts after slight delay to ensure DOM is ready
+        setTimeout(() => {
+          scripts.forEach(scriptContent => {
+            if (scriptContent && scriptContent.trim()) {
+              try {
+                const script = document.createElement('script');
+                script.textContent = scriptContent;
+                document.body.appendChild(script);
+              } catch (e) {
+                console.error('❌ Script error:', e);
+              }
+            }
+          });
+          
+          console.log('✅ Header loaded successfully');
+          window.headerLoaded = true;
+          
+        }, 50);
+        
+      } catch (error) {
+        console.error('❌ Lỗi tải header:', error);
+      }
+    }
+
+    // Execute as soon as DOM starts loading
+    loadHeaderComponent();
+  </script>
+
+  <script>
+    function getFullImageUrl(thumbnail) {
+      if (!thumbnail) return 'https://picsum.photos/300?random=1';
+      return thumbnail.startsWith('http') ? thumbnail : 'http://localhost:3000' + thumbnail;
     }
 
     async function loadSaleProducts() {
       const container = document.getElementById('saleProducts');
-      if (!container) return;
-
-      // Skeleton loading
-      container.innerHTML = Array(3).fill(0).map(() => `
-        <div class="product-card" style="pointer-events:none;">
-          <div style="height:250px; background:linear-gradient(90deg,#1E1E1E 25%,#2A2A2A 50%,#1E1E1E 75%); background-size:200% 100%; animation:shimmer 1.4s infinite;"></div>
-          <div class="product-info">
-            <div style="height:20px; background:#2A2A2A; border-radius:6px; margin-bottom:10px;"></div>
-            <div style="height:14px; background:#2A2A2A; border-radius:6px; width:50%; margin-bottom:8px;"></div>
-            <div style="height:24px; background:#2A2A2A; border-radius:6px; width:65%; margin-bottom:14px;"></div>
-            <div style="height:38px; background:#2A2A2A; border-radius:10px;"></div>
-          </div>
-        </div>`).join('');
-
       try {
-        const res = await fetch(API_BASE + '/products');
-        const data = await res.json();
+        const response = await fetch('http://localhost:3000/api/products');
+        if (!response.ok) throw new Error('Kết nối API thất bại (Network response was not ok)');
+        
+        const data = await response.json();
+        
+        // Dòng này giúp bạn kiểm tra cấu trúc chính xác của API trong tab Console (F12)
+        console.log("Dữ liệu thực tế nhận từ API:", data); 
 
-        if (!data.success || !data.products) {
-          container.innerHTML = '<p style="color:#ef4444; grid-column:1/-1; padding:20px 0;">Không thể tải sản phẩm. Vui lòng thử lại.</p>';
+        // Tự động phân tích và tìm kiếm mảng (Array) chứa danh sách sản phẩm hợp lệ
+        let products = [];
+        if (Array.isArray(data)) {
+          products = data;
+        } else if (data && Array.isArray(data.data)) {
+          products = data.data;
+        } else if (data && Array.isArray(data.products)) {
+          products = data.products;
+        } else if (data && Array.isArray(data.result)) {
+          products = data.result;
+        } else {
+          // Quét sâu vào bên trong Object để tự động lấy ra thuộc tính đầu tiên có kiểu mảng
+          const foundArray = Object.values(data || {}).find(val => Array.isArray(val));
+          if (foundArray) {
+            products = foundArray;
+          }
+        }
+
+        // Nếu sau khi quét toàn bộ vẫn không tìm thấy mảng hợp lệ, ném ra lỗi để xử lý
+        if (!Array.isArray(products)) {
+          throw new TypeError('Dữ liệu API trả về không chứa danh sách (Array) sản phẩm hợp lệ.');
+        }
+
+        // Lọc ra các sản phẩm đang có mức giảm giá > 0
+        let saleProducts = products.filter(p => parseFloat(p.discount || 0) > 0);
+
+        if (saleProducts.length === 0) {
+          container.innerHTML = '<p style="color:#aaa; grid-column:1/-1; text-align:center;">Chưa có sản phẩm khuyến mại nào.</p>';
           return;
         }
 
-        // Chỉ lấy sản phẩm có discount > 0
-        const saleItems = data.products.filter(p => p.discount && p.discount > 0);
-
-        if (saleItems.length === 0) {
-          container.innerHTML = '<p style="color:#999; grid-column:1/-1; padding:20px 0;">Hiện chưa có sản phẩm khuyến mại nào.</p>';
-          return;
-        }
-
-        container.innerHTML = saleItems.map(p => {
+        container.innerHTML = saleProducts.map(p => {
           const pid = p._id || p.id;
           const imgUrl = getFullImageUrl(p.thumbnail);
           const nameSafe = (p.name || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -664,7 +467,7 @@
                   <div class="old-price">${originPriceFmt}</div>
                   <div class="price">${finalPriceFmt}</div>
                   <div class="discount">-${discountPct}%</div>
-                  <button onclick="event.preventDefault(); alert('Da them san pham vao gio hang!')">
+                  <button onclick="event.preventDefault(); alert('Đã thêm sản phẩm vào giỏ hàng!')">
                     Mua ngay
                   </button>
                 </div>
@@ -673,12 +476,12 @@
         }).join('');
 
       } catch (err) {
-        console.error('Loi tai san pham khuyen mai:', err);
-        container.innerHTML = '<p style="color:#ef4444; grid-column:1/-1; padding:20px 0;">Loi ket noi den may chu. Vui long thu lai.</p>';
+        console.error('Lỗi tải sản phẩm khuyến mại:', err);
+        container.innerHTML = `<p style="color:#ef4444; grid-column:1/-1; text-align:center;">Lỗi cấu trúc dữ liệu: ${err.message}</p>`;
       }
     }
 
-    loadSaleProducts();
+    document.addEventListener('DOMContentLoaded', loadSaleProducts);
   </script>
 </body>
 </html>
