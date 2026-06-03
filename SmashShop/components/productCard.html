@@ -1,4 +1,3 @@
-<!-- Product Card Component -->
 <style>
   .products {
     display: grid;
@@ -43,6 +42,7 @@
     overflow: hidden;
   }
 
+  /* --- HIỆU ỨNG MƯỢT MÀ CHO NÚT TIM --- */
   .fav-badge {
     position: absolute;
     top: 15px;
@@ -59,8 +59,12 @@
     font-size: 18px;
     cursor: pointer;
     z-index: 10;
-    transition: 0.3s;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     border: 1px solid #333;
+  }
+
+  .fav-badge i {
+    transition: transform 0.2s ease;
   }
 
   .fav-badge:hover {
@@ -75,6 +79,13 @@
     color: #fff;
     border-color: #ff3c00;
   }
+
+  @keyframes heartPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.35); }
+    100% { transform: scale(1); }
+  }
+
   .product-info {
     padding: 15px;
     position: relative;
@@ -98,16 +109,19 @@
     margin-bottom: 12px;
   }
 
+  /* --- SỬA VỊ TRÍ BADGE GIẢM GIÁ --- */
   .discount {
     position: absolute;
     top: 15px;
-    right: 15px;
+    left: 15px; /* Đổi sang góc trái trên của ảnh */
     background: #ff3c00;
     color: #fff;
-    padding: 4px 10px;
+    padding: 6px 12px;
     border-radius: 8px;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 700;
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(255, 60, 0, 0.3); /* Thêm chút bóng mờ cho nổi bật */
   }
 
   .discount.hidden {
@@ -131,24 +145,20 @@
 </style>
 
 <script>
-  // Utility: Convert thumbnail URL to full URL
   function getFullImageUrl(thumbnail) {
     if (!thumbnail) return 'https://picsum.photos/300?random=1';
     return thumbnail.startsWith('http') ? thumbnail : 'http://localhost:3000' + thumbnail;
   }
 
-  // Utility: Format currency
   function formatPrice(price) {
     return Number(price).toLocaleString('vi-VN') + 'đ';
   }
 
-  // Utility: Sanitize HTML in product names
   function sanitizeName(name) {
     return (name || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
-  // Main function to render products
-  function renderProducts(containerId, products, options = {}) {
+  async function renderProducts(containerId, products, options = {}) {
     const {
       showDiscount = true,
       showFavorite = true,
@@ -158,10 +168,7 @@
     } = options;
 
     const container = document.getElementById(containerId);
-    if (!container) {
-      console.error(`❌ Container with id "${containerId}" not found`);
-      return;
-    }
+    if (!container) return;
 
     let filteredProducts = products;
     if (filterFn && typeof filterFn === 'function') {
@@ -173,12 +180,28 @@
       return;
     }
 
+    let favoriteIds = new Set();
+    let userId = window.currentUserId || localStorage.getItem('userId');
+    
+    if (showFavorite && userId && userId !== 'null' && userId !== 'undefined') {
+      try {
+        const favRes = await fetch(`http://localhost:3000/api/users/${userId}/favorites`);
+        const favData = await favRes.json();
+        const favList = favData.favorites || favData.data || favData.products || [];
+        favList.forEach(item => {
+          const id = item._id || item.id;
+          if (id) favoriteIds.add(id.toString());
+        });
+      } catch (err) {
+        console.error("❌ Lỗi tự động đồng bộ danh sách yêu thích:", err);
+      }
+    }
+
     container.innerHTML = filteredProducts.map(p => {
       const pid = p._id || p.id;
       const imgUrl = getFullImageUrl(p.thumbnail);
       const nameSafe = sanitizeName(p.name);
 
-      // Calculate final price after discount
       const discount = parseFloat(p.discount || 0);
       const price = parseFloat(p.price || 0);
       const finalPrice = price - (price * discount / 100);
@@ -187,18 +210,24 @@
       const originPriceFmt = formatPrice(price);
       const discountPct = Math.round(discount);
 
-      // Show discount badge only if discount > 0
+      const oldPriceHtml = discount > 0 
+        ? `<div class="old-price">${originPriceFmt}</div>` 
+        : '';
+
       const discountBadge = showDiscount && discount > 0
         ? `<div class="discount">-${discountPct}%</div>`
         : `<div class="discount hidden"></div>`;
 
       const safeAttrName = nameSafe.replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
+      const isFav = favoriteIds.has(pid ? pid.toString() : '') || !!p.isFavorite; 
+      const favClass = isFav ? 'fav-badge active' : 'fav-badge';
+      const favIcon = isFav ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+
       const favoriteBadge = showFavorite
-        ? `<button type="button" class="fav-badge" onclick="event.preventDefault(); event.stopPropagation(); window.productCardComponent.handleFavorite('${pid}', '${safeAttrName}')" aria-label="Thêm vào yêu thích"><i class="fa-regular fa-heart"></i></button>`
+        ? `<button type="button" class="${favClass}" onclick="event.preventDefault(); event.stopPropagation(); window.productCardComponent.handleFavorite(this, '${pid}')" aria-label="Thêm vào yêu thích"><i class="${favIcon}"></i></button>`
         : '';
 
-      // Handle add to cart
       const buttonHandler = onAddToCart
         ? `onclick="window.productCardComponent.addToCart('${pid}', '${safeAttrName}')"`
         : `onclick="event.preventDefault(); alert('Đã thêm sản phẩm vào giỏ hàng!')"`;
@@ -206,6 +235,7 @@
       return `
         <div class="product-card">
           <div class="product-img-wrapper">
+            ${discountBadge}
             ${favoriteBadge}
             <a href="/SmashShop/productdetail.html?id=${pid}">
               <img src="${imgUrl}" alt="${nameSafe}" loading="lazy"
@@ -216,20 +246,16 @@
             <a href="/SmashShop/productdetail.html?id=${pid}">
               <h3>${nameSafe}</h3>
             </a>
-            <div class="old-price">${originPriceFmt}</div>
+            ${oldPriceHtml}
             <div class="price">${finalPriceFmt}</div>
-            ${discountBadge}
             <button ${buttonHandler}>
               Mua ngay
             </button>
           </div>
         </div>`;
     }).join('');
-
-    console.log(`✅ Rendered ${filteredProducts.length} products in "${containerId}"`);
   }
 
-  // Global namespace for product card component
   window.productCardComponent = {
     renderProducts: renderProducts,
     getFullImageUrl: getFullImageUrl,
@@ -238,13 +264,48 @@
     addToCart: function(productId, productName) {
       alert(`Đã thêm "${productName}" vào giỏ hàng!`);
     },
-    onToggleFavorite: null,
-    handleFavorite: function(productId, productName) {
-      if (typeof window.productCardComponent.onToggleFavorite === 'function') {
-        window.productCardComponent.onToggleFavorite(productId, productName);
+    
+    handleFavorite: async function(btnElement, productId) {
+      let userId = window.currentUserId || localStorage.getItem('userId');
+      
+      if (!userId || userId === 'null' || userId === 'undefined') {
+        alert("Vui lòng đăng nhập để sử dụng tính năng này!");
         return;
       }
-      alert(`Đã thêm "${productName}" vào yêu thích!`);
+
+      try {
+        const res = await fetch(`http://localhost:3000/api/users/${userId}/favorites`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productId })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          const icon = btnElement.querySelector('i');
+          
+          if (data.isFavorite) {
+            btnElement.classList.add('active'); 
+            if (icon) icon.classList.replace('fa-regular', 'fa-solid'); 
+          } else {
+            btnElement.classList.remove('active'); 
+            if (icon) icon.classList.replace('fa-solid', 'fa-regular'); 
+            
+            if (window.location.pathname.includes('wishlist.html')) {
+              const card = btnElement.closest('.product-card');
+              if (card) card.style.display = 'none';
+              
+              const countSpan = document.getElementById('favoriteCount');
+              if (countSpan) {
+                let currentCount = parseInt(countSpan.innerText) || 0;
+                countSpan.innerText = `${Math.max(0, currentCount - 1)} sản phẩm`;
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Lỗi yêu thích:", error);
+      }
     }
   };
 </script>

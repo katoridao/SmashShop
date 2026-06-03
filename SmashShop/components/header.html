@@ -719,7 +719,17 @@
   function getStoredAuth() {
     try {
       const raw = localStorage.getItem(AUTH_KEY);
-      return raw ? JSON.parse(raw) : null;
+      if (raw) {
+        const authData = JSON.parse(raw);
+        
+        // === BỔ SUNG: Khôi phục lại biến global khi F5 hoặc sang trang mới ===
+        if (authData && authData.user) {
+           window.currentUserId = authData.user._id || authData.user.id;
+        }
+        
+        return authData;
+      }
+      return null;
     } catch (error) {
       localStorage.removeItem(AUTH_KEY);
       return null;
@@ -729,6 +739,17 @@
   function saveAuth(auth) {
     currentAuth = auth;
     localStorage.setItem(AUTH_KEY, JSON.stringify(auth));
+
+    // === BỔ SUNG ĐỂ ĐỒNG BỘ VỚI NÚT TIM & WISHLIST ===
+    if (auth && auth.success && auth.user) {
+      localStorage.setItem('token', auth.token);
+      localStorage.setItem('user', JSON.stringify(auth.user));
+      localStorage.setItem('userId', auth.user._id || auth.user.id);
+      
+      // Gán vào biến global để productCard.html lấy được ngay lập tức mà không cần reload
+      window.currentUserId = auth.user._id || auth.user.id; 
+    }
+
     const redirectUrl = sessionStorage.getItem('auth_redirect');
     if (redirectUrl) {
       sessionStorage.removeItem('auth_redirect');
@@ -739,20 +760,25 @@
   }
 
   function clearAuth() {
+    authStatus.textContent = '';
+    authStatus.className = 'auth-status'; 
+
     currentAuth = null;
     localStorage.removeItem(AUTH_KEY);
+
+    // === BỔ SUNG XÓA SẠCH DỮ LIỆU ĐỒNG BỘ KHI ĐĂNG XUẤT ===
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('userId');
+    window.currentUserId = null; // Reset lại biến global
+
     updateAuthUI();
   }
 
   function setAuthStatus(message, type = 'success') {
-    authStatus.textContent = message;
-    authStatus.className = `auth-status ${type}`;
-  }
-
-  function clearAuthStatus() {
-    authStatus.textContent = '';
-    authStatus.className = 'auth-status';
-  }
+      authStatus.textContent = message;
+      authStatus.className = `auth-status ${type}`;
+    }
 
   function updateAuthUI() {
     const auth = currentAuth || getStoredAuth();
@@ -839,11 +865,22 @@
 
     try {
       const data = await apiRequest('/login', 'POST', { identifier, password });
+      
+      // === ÉP BUỘC TRÌNH DUYỆT LƯU ĐÚNG ĐỊNH DẠNG VÀO LOCALSTORAGE ===
+      if (data.success && data.user) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user)); // Chuyển object thành chuỗi JSON
+        localStorage.setItem('userId', data.user._id || data.user.id); // Lưu riêng ID để sơ cua
+      }
+
       saveAuth(data);
       setAuthStatus('Đăng nhập thành công', 'success');
       closeUserMenu();
+      
       setTimeout(() => {
         closeAuthModal();
+        // Reload lại trang để cập nhật trạng thái "Đã đăng nhập" cho toàn bộ nút Tim và Giỏ hàng
+        window.location.reload(); 
       }, 600);
     } catch (error) {
       setAuthStatus(error.message, 'error');

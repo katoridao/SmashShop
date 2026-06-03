@@ -79,58 +79,10 @@
   <section class="container" style="min-height: 50vh;">
     <div class="wishlist-header">
       <h2>Sản phẩm yêu thích</h2>
-      <span>4 sản phẩm</span>
+      <span id="favoriteCount">0 sản phẩm</span>
     </div>
 
-    <div class="products">
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <div class="fav-badge" title="Bỏ yêu thích"><i class="fa-solid fa-heart"></i></div>
-          <img src="https://picsum.photos/300?random=21" alt="Product 1">
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Yonex Astrox 100ZZ</h3></a>
-          <div class="price">5.200.000đ</div>
-          <button><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <div class="fav-badge" title="Bỏ yêu thích"><i class="fa-solid fa-heart"></i></div>
-          <img src="https://picsum.photos/300?random=22" alt="Product 2">
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Lining Aeronaut 9000C</h3></a>
-          <div class="price">3.800.000đ</div>
-          <button><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <div class="fav-badge" title="Bỏ yêu thích"><i class="fa-solid fa-heart"></i></div>
-          <img src="https://picsum.photos/300?random=24" alt="Product 4">
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Balo Yonex BA92012EX</h3></a>
-          <div class="price">1.200.000đ</div>
-          <button><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
-
-      <div class="product-card">
-        <div class="product-img-wrapper">
-          <div class="fav-badge" title="Bỏ yêu thích"><i class="fa-solid fa-heart"></i></div>
-          <img src="https://picsum.photos/300?random=23" alt="Product 3">
-        </div>
-        <div class="product-info">
-          <a href="/SmashShop/productdetail.html"><h3>Giày Victor P9200</h3></a>
-          <div class="price">2.100.000đ</div>
-          <button><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ</button>
-        </div>
-      </div>
-    </div>
+    <div class="products" id="favoriteProducts"></div>
   </section>
 
   <footer>
@@ -241,26 +193,88 @@
   </script>
 
   <script>
-    // Lấy đúng icon trái tim trên Header (nằm trong .header-icons)
-    const headerHeartIcon = document.querySelector('.header-icons .fa-heart');
-    
-    if (headerHeartIcon) {
-      // Khi click vào icon trái tim sẽ chuyển sang trang wishlist.html
-      headerHeartIcon.addEventListener('click', function() {
-        window.location.href = 'wishlist.html';
-      });
+  async function loadProductCardComponent() {
+    try {
+      const response = await fetch('/SmashShop/components/productCard.html');
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      
+      let html = await response.text();
+      
+      // Extract and inject <style> tags
+      const styleRegex = /<style[^>]*>([\s\S]*?)<\/style>/g;
+      let styleMatch;
+      while ((styleMatch = styleRegex.exec(html)) !== null) {
+        const styleEl = document.createElement('style');
+        styleEl.textContent = styleMatch[1];
+        document.head.appendChild(styleEl);
+      }
+      
+      // Extract and execute <script> tags
+      const scriptRegex = /<script[^>]*>([\s\S]*?)<\/script>/g;
+      let scriptMatch;
+      while ((scriptMatch = scriptRegex.exec(html)) !== null) {
+        const script = document.createElement('script');
+        script.textContent = scriptMatch[1];
+        document.body.appendChild(script);
+      }
+      
+      console.log('✅ Product Card component loaded');
+    } catch (error) {
+      console.error('❌ Lỗi tải Product Card component:', error);
     }
+  }
+  
+  async function loadFavoriteProducts() {
+    try {
+      // Lấy ID y hệt như bên productCard
+      let userId = window.currentUserId || localStorage.getItem('userId');
+      
+      // KIỂM TRA CHẶT CHẼ: Chặn cả trường hợp chuỗi 'null' hoặc 'undefined' trái quấy
+      if (!userId || userId === 'null' || userId === 'undefined') {
+        document.getElementById('favoriteProducts').innerHTML = 
+          '<p style="color:#aaa; grid-column:1/-1; text-align:center; font-size: 1.2rem;">Vui lòng đăng nhập để xem danh sách yêu thích.</p>';
+        return; // Dừng lại nếu chưa đăng nhập hợp lệ
+      }
 
-    // Xử lý nút xóa khỏi danh sách yêu thích khi click chọn icon trái tim trên thẻ sản phẩm
-    const favBadges = document.querySelectorAll('.fav-badge');
-    favBadges.forEach(badge => {
-      badge.addEventListener('click', function() {
-        const productCard = this.closest('.product-card');
-        if (productCard) {
-          productCard.style.display = 'none'; // Tạm thời ẩn thẻ khi bấm bỏ thích
-        }
+      const response = await fetch(`http://localhost:3000/api/users/${userId}/favorites`);
+      const data = await response.json();
+      
+      console.log("Dữ liệu API trả về trang Wishlist:", data); // In ra để check
+      
+      // Dự phòng trường hợp Backend trả về là data.data hoặc data.products thay vì data.favorites
+      const products = data.favorites || data.data || data.products || []; 
+      
+      document.getElementById('favoriteCount').innerText = `${products.length} sản phẩm`;
+      
+      if (products.length === 0) {
+         document.getElementById('favoriteProducts').innerHTML = '<p style="color:#aaa; grid-column:1/-1; text-align:center;">Bạn chưa có sản phẩm yêu thích nào.</p>';
+         return;
+      }
+
+      // Render tất cả sản phẩm bằng component dùng chung
+      window.productCardComponent.renderProducts('favoriteProducts', products, {
+        showFavorite: true
       });
-    });
-  </script>
+      
+      // Thêm class .active cho tất cả các nút tim 
+      setTimeout(() => {
+        const allHearts = document.querySelectorAll('#favoriteProducts .fav-badge');
+        allHearts.forEach(heart => heart.classList.add('active'));
+      }, 100);
+
+    } catch (err) {
+      console.error('Lỗi tải danh sách yêu thích:', err);
+    }
+  }
+  document.addEventListener('DOMContentLoaded', async function() {
+    try {
+      await loadProductCardComponent();
+      await loadFavoriteProducts();
+    } catch (e) {
+      console.error('Lỗi khi load component hoặc sản phẩm:', e);
+    }
+  });
+</script>
+
 </body>
 </html>

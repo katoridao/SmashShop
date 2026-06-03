@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
+const mongoose = require("mongoose");
 
 const User = require("../models/User");
 const Product = require("../models/Product");
@@ -481,73 +482,24 @@ router.delete("/products/:id", async (req, res) => {
   }
 });
 
-// 7. CHATBOT FAQ AI
-router.post("/chat", (req, res) => {
-  const { message } = req.body;
-  if (!message) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Thiếu nội dung chat" });
-  }
-
-  const userMsg = message.toLowerCase();
-  let reply =
-    "Xin lỗi, tôi chưa hiểu ý bạn lắm. Bạn có thể nói rõ hơn được không? (Thử hỏi về: vận chuyển, bảo hành, vợt, giày...)";
-
-  if (
-    userMsg.includes("vận chuyển") ||
-    userMsg.includes("giao hàng") ||
-    userMsg.includes("ship")
-  ) {
-    reply =
-      "SmashShop miễn phí giao hàng toàn quốc cho đơn hàng từ 1.000.000đ. Đơn hàng dưới mức này phí ship đồng giá 30k nhé ạ! Thời gian giao từ 1-3 ngày tùy khu vực.";
-  } else if (userMsg.includes("bảo hành") || userMsg.includes("đổi trả")) {
-    reply =
-      "Vợt và giày cầu lông được bảo hành chính hãng 90 ngày với lỗi nhà sản xuất (nứt, gãy do phôi). Các sản phẩm khác được đổi trả trong 7 ngày nếu chưa sử dụng.";
-  } else if (userMsg.includes("vợt")) {
-    reply =
-      "Hiện tại SmashShop đang có rất nhiều dòng vợt hot của Yonex, Lining, Victor. Nếu bạn mới chơi, nên chọn các dòng vợt cân bằng, thân dẻo dễ thuần. Bạn có thể ghé danh mục Vợt để xem chi tiết nhé!";
-  } else if (userMsg.includes("giày") || userMsg.includes("size")) {
-    reply =
-      "Với giày cầu lông, bạn nên chọn lớn hơn 0.5 - 1 size so với giày thể thao bình thường để mũi chân không bị cấn khi di chuyển cường độ cao. Shop có đủ size từ 37 đến 45 đó ạ.";
-  } else if (
-    userMsg.includes("địa chỉ") ||
-    userMsg.includes("cửa hàng") ||
-    userMsg.includes("ở đâu")
-  ) {
-    reply =
-      "Cửa hàng SmashShop hiện đang có chi nhánh chính tại TP. Hồ Chí Minh. Bạn có thể đặt hàng online qua website, shop giao tận nơi nhanh chóng nhé!";
-  } else if (
-    userMsg.includes("chào") ||
-    userMsg.includes("hi") ||
-    userMsg.includes("hello")
-  ) {
-    reply =
-      "Chào bạn! Mình là trợ lý ảo của SmashShop. Mình có thể giúp gì cho bạn hôm nay?";
-  } else if (userMsg.includes("cảm ơn") || userMsg.includes("thanks")) {
-    reply =
-      "Dạ không có gì ạ! Chúc bạn một ngày tốt lành và có trải nghiệm mua sắm vui vẻ tại SmashShop! ❤️";
-  }
-
-  // Simulate network delay to make it feel like AI is thinking
-  setTimeout(() => {
-    res.json({ success: true, reply });
-  }, 1000);
-});
-
 // ==========================================
 // THỐNG KÊ ADMIN (ADMIN STATS)
 // ==========================================
 router.get("/admin/stats", async (req, res) => {
   try {
-    const [totalOrders, orders, newUsers, lowStockProducts] = await Promise.all([
-      Order.countDocuments(),
-      Order.find({}),
-      User.countDocuments({ role: "user" }),
-      Product.countDocuments({ stock: { $lte: 5 } }),
-    ]);
+    const [totalOrders, orders, newUsers, lowStockProducts] = await Promise.all(
+      [
+        Order.countDocuments(),
+        Order.find({}),
+        User.countDocuments({ role: "user" }),
+        Product.countDocuments({ stock: { $lte: 5 } }),
+      ],
+    );
 
-    const totalRevenue = orders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+    const totalRevenue = orders.reduce(
+      (sum, order) => sum + (order.totalPrice || 0),
+      0,
+    );
 
     res.status(200).json({
       success: true,
@@ -570,13 +522,17 @@ router.post("/reviews", async (req, res) => {
   try {
     const { userId, productId, rating, comment } = req.body;
     if (!userId || !productId || !rating || !comment) {
-      return res.status(400).json({ success: false, message: "Thiếu thông tin bắt buộc" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Thiếu thông tin bắt buộc" });
     }
 
     const review = await Review.create({ userId, productId, rating, comment });
     await review.populate("userId", "name");
 
-    res.status(201).json({ success: true, message: "Đánh giá thành công", review });
+    res
+      .status(201)
+      .json({ success: true, message: "Đánh giá thành công", review });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -601,6 +557,64 @@ router.get("/reviews/:productId", async (req, res) => {
       totalReviews,
       averageRating,
     });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// API: Toggle (Thêm hoặc Xóa) sản phẩm khỏi danh sách yêu thích
+router.post("/users/:id/favorites", async (req, res) => {
+  try {
+    const { productId } = req.body;
+    const userId = req.params.id;
+
+    const user = await User.findById(userId);
+    if (!user)
+      return res.status(404).json({ message: "Không tìm thấy người dùng" });
+
+    // Bảo vệ code nếu user cũ chưa có mảng favorites
+    if (!user.favorites) user.favorites = [];
+
+    // Kiểm tra xem sản phẩm đã có trong wishlist chưa
+    const index = user.favorites.indexOf(productId);
+
+    if (index === -1) {
+      user.favorites.push(productId);
+      await user.save();
+      return res
+        .status(200)
+        .json({
+          success: true,
+          message: "Đã thêm vào yêu thích",
+          isFavorite: true,
+        });
+    } else {
+      user.favorites.splice(index, 1);
+      await user.save();
+      return res
+        .status(200)
+        .json({ success: true, message: "Đã bỏ yêu thích", isFavorite: false });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// API: Lấy danh sách sản phẩm yêu thích của User
+router.get("/users/:id/favorites", async (req, res) => {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "ID người dùng không hợp lệ" });
+    }
+
+    const user = await User.findById(req.params.id).populate("favorites");
+    if (!user)
+      return res.status(404).json({ message: "Không tìm thấy người dùng" });
+
+    // Trả về danh sách favorites đã được populate
+    res.status(200).json({ success: true, favorites: user.favorites || [] });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
