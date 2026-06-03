@@ -1195,7 +1195,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="public/auth_sync.js"></script>
-  
+
   <script>
     async function loadHeaderComponent() {
       try {
@@ -1331,96 +1331,96 @@
       return null;
     }
 
-    // async function loadUserFavorites() {
-    //   const userId = getLoggedInUserId();
-    //   if (!userId) return;
-    //   try {
-    //     const res = await fetch(`${API_BASE}/users/${userId}/favorites`);
-    //     const data = await res.json();
-    //     if (data.success) {
-    //       userFavorites = data.favorites || [];
-    //     }
-    //   } catch (err) {
-    //     console.error("Lỗi tải danh sách yêu thích:", err);
-    //   }
-    // }
+    async function loadUserFavorites() {
+      const userId = getLoggedInUserId();
+      if (!userId) return;
+      try {
+        const res = await fetch(`${API_BASE}/users/${userId}/favorites`);
+        const data = await res.json();
+        if (data.success) {
+          userFavorites = data.favorites || [];
+        }
+      } catch (err) {
+        console.error("Lỗi tải danh sách yêu thích:", err);
+      }
+    }
 
-    // function updateMainWishlistButton(isFavorite) {
-    //   const btn = document.getElementById('btnWishlist');
-    //   if (!btn) return;
-    //   if (isFavorite) {
-    //     btn.classList.add('active');
-    //     btn.innerHTML = '<i class="fa-solid fa-heart"></i> Gỡ bỏ khỏi danh sách yêu thích';
-    //   } else {
-    //     btn.classList.remove('active');
-    //     btn.innerHTML = '<i class="fa-regular fa-heart"></i> Thêm vào danh sách yêu thích';
-    //   }
-    // }
+    function updateMainWishlistButton(isFavorite) {
+      const btn = document.getElementById('btnWishlist');
+      if (!btn) return;
+      if (isFavorite) {
+        btn.classList.add('active');
+        btn.innerHTML = '<i class="fa-solid fa-heart"></i> Gỡ bỏ khỏi danh sách yêu thích';
+      } else {
+        btn.classList.remove('active');
+        btn.innerHTML = '<i class="fa-regular fa-heart"></i> Thêm vào danh sách yêu thích';
+      }
+    }
 
-    // async function handleToggleWishlist(event, productId, btnEl) {
-    //   if (event) {
-    //     event.preventDefault();
-    //     event.stopPropagation();
-    //   }
-    //   const userId = getLoggedInUserId();
-    //   if (!userId) {
-    //     showToast("Vui lòng đăng nhập để lưu sản phẩm yêu thích!", "error");
-    //     return;
-    //   }
-    //   try {
-    //     const res = await fetch(`${API_BASE}/users/${userId}/favorites`, {
-    //       method: 'POST',
-    //       headers: { 'Content-Type': 'application/json' },
-    //       body: JSON.stringify({ productId })
-    //     });
-    //     const data = await res.json();
-    //     if (data.success) {
-    //       const isFavorite = data.isFavorite;
+    async function handleToggleWishlist(event, productId, btnEl) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      const userId = getLoggedInUserId();
+      if (!userId) {
+        showToast("Vui lòng đăng nhập để lưu sản phẩm yêu thích!", "error");
+        return;
+      }
+      try {
+        const res = await fetch(`${API_BASE}/users/${userId}/favorites`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productId })
+        });
+        const data = await res.json();
+        if (data.success) {
+          const isFavorite = data.isFavorite;
 
-    //       if (isFavorite) {
-    //         if (!userFavorites.some(id => (id._id || id).toString() === productId)) {
-    //           userFavorites.push(productId);
-    //         }
-    //       } else {
-    //         userFavorites = userFavorites.filter(id => (id._id || id).toString() !== productId);
-    //       }
+          if (isFavorite) {
+            if (!userFavorites.some(id => (id._id || id).toString() === productId)) {
+              userFavorites.push(productId);
+            }
+          } else {
+            userFavorites = userFavorites.filter(id => (id._id || id).toString() !== productId);
+          }
 
-    //       // Cập nhật trạng thái nút yêu thích chính
-    //       const targetId = getProductIdFromUrl();
-    //       if (productId === targetId) {
-    //         updateMainWishlistButton(isFavorite);
-    //       }
+          // Cập nhật trạng thái nút yêu thích chính
+          const targetId = getProductIdFromUrl();
+          if (productId === targetId) {
+            updateMainWishlistButton(isFavorite);
+          }
 
-    //       // Cập nhật nút yêu thích trên thẻ sản phẩm liên quan được bấm
-    //       if (btnEl && btnEl.id !== 'btnWishlist') {
-    //         if (isFavorite) {
-    //           btnEl.classList.add('active');
-    //           const icon = btnEl.querySelector('i');
-    //           if (icon) {
-    //             icon.classList.remove('fa-regular');
-    //             icon.classList.add('fa-solid');
-    //           }
-    //         } else {
-    //           btnEl.classList.remove('active');
-    //           const icon = btnEl.querySelector('i');
-    //           if (icon) {
-    //             icon.classList.remove('fa-solid');
-    //             icon.classList.add('fa-regular');
-    //           }
-    //         }
-    //       }
+          // Cập nhật nút yêu thích trên thẻ sản phẩm liên quan được bấm
+          if (btnEl && btnEl.id !== 'btnWishlist') {
+            if (isFavorite) {
+              btnEl.classList.add('active');
+              const icon = btnEl.querySelector('i');
+              if (icon) {
+                icon.classList.remove('fa-regular');
+                icon.classList.add('fa-solid');
+              }
+            } else {
+              btnEl.classList.remove('active');
+              const icon = btnEl.querySelector('i');
+              if (icon) {
+                icon.classList.remove('fa-solid');
+                icon.classList.add('fa-regular');
+              }
+            }
+          }
 
-    //       if (isFavorite) {
-    //         showToast('Đã lưu vào mục yêu thích!', 'success');
-    //       } else {
-    //         showToast('Đã xoá khỏi mục yêu thích!', 'info');
-    //       }
-    //     }
-    //   } catch (err) {
-    //     console.error("Lỗi toggle yêu thích:", err);
-    //     showToast("Có lỗi xảy ra!", "error");
-    //   }
-    // }
+          if (isFavorite) {
+            showToast('Đã lưu vào mục yêu thích!', 'success');
+          } else {
+            showToast('Đã xoá khỏi mục yêu thích!', 'info');
+          }
+        }
+      } catch (err) {
+        console.error("Lỗi toggle yêu thích:", err);
+        showToast("Có lỗi xảy ra!", "error");
+      }
+    }
 
     async function loadReviews() {
       const productId = getProductIdFromUrl();
