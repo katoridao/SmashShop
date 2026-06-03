@@ -780,6 +780,11 @@
       authStatus.className = `auth-status ${type}`;
     }
 
+  function clearAuthStatus() {
+    authStatus.textContent = '';
+    authStatus.className = 'auth-status';
+  }
+
   function updateAuthUI() {
     const auth = currentAuth || getStoredAuth();
 
