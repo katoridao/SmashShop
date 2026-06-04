@@ -1054,83 +1054,8 @@
 </head>
 <body>
 
-  <!-- ===== HEADER (GIỮ NGUYÊN) ===== -->
-  <header>
-    <div class="container top-header">
-      <div class="logo">
-        <a href="/SmashShop/index.html">SmashShop</a>
-      </div>
-
-      <div class="search-box">
-        <input type="text" placeholder="Tìm kiếm sản phẩm...">
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </div>
-
-      <div class="header-user-area">
-        <div class="header-icons">
-          <a href="wishlist.html"><i class="fa-regular fa-heart"></i></a>
-          <a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a>
-        </div>
-
-        <button id="loginBtn" class="login-btn" type="button">Login</button>
-
-        <button id="userAvatarBtn" class="user-avatar-btn" type="button" aria-label="Tài khoản" style="display:none;">
-          <img id="userAvatarImg" src="public/img/user_loginned.png" alt="User logged in">
-        </button>
-
-        <div id="userMenu" class="user-menu-dropdown" aria-hidden="true">
-          <div class="user-menu-header">
-            <div>
-              <p class="user-menu-title">Xin chào</p>
-              <h3 id="userMenuName">Khách</h3>
-            </div>
-            <span id="userMenuRole" class="user-menu-role">Guest</span>
-          </div>
-          <div class="user-menu-actions">
-            <button class="user-menu-action" type="button" data-action="profile">Thông tin cá nhân</button>
-            <button class="user-menu-action" type="button" data-action="history">Lịch sử đặt hàng</button>
-            <button class="user-menu-action admin-only" type="button" data-action="products">Quản lý sản phẩm</button>
-            <button class="user-menu-action admin-only" type="button" data-action="orders">Quản lý đơn hàng</button>
-            <button class="user-menu-action admin-only" type="button" data-action="revenue">Thống kê doanh thu</button>
-            <button class="user-menu-action logout" type="button" data-action="logout">Đăng xuất</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <nav class="navbar navbar-expand-lg navbar-dark">
-      <div class="container">
-        <button class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#mainMenu">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="mainMenu">
-          <ul class="navbar-nav gap-lg-4 main-navbar">
-            <li class="nav-item">
-              <a class="nav-link" href="/SmashShop/index.html">Trang chủ</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                data-bs-toggle="dropdown" aria-expanded="false">Sản phẩm</a>
-              <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="/SmashShop/vot.html">Vợt cầu lông</a></li>
-                <li><a class="dropdown-item" href="/SmashShop/giay.html">Giày cầu lông</a></li>
-                <li><a class="dropdown-item" href="/SmashShop/balo.html">Balo cầu lông</a></li>
-                <li><a class="dropdown-item" href="/SmashShop/tuivot.html">Túi vợt cầu lông</a></li>
-                <li><a class="dropdown-item" href="/SmashShop/phukien.html">Phụ kiện cầu lông</a></li>
-              </ul>
-            </li>
-            <li class="nav-item"><a class="nav-link" href="/SmashShop/sale.html">Khuyến mãi</a></li>
-            <li class="nav-item"><a class="nav-link" href="/SmashShop/about.html">Giới thiệu</a></li>
-            <li class="nav-item"><a class="nav-link" href="/SmashShop/contact.html">Liên hệ</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-  </header>
+  <!-- ===== HEADER DYNAMIC ===== -->
+  <div id="header-container"></div>
 
   <!-- ===== MAIN: TRANG THANH TOÁN ===== -->
   <main>
@@ -2127,10 +2052,51 @@
       document.getElementById('recipientPhone').value = auth.user.phone || '';
     }
 
+    async function loadHeaderComponent() {
+      try {
+        const response = await fetch('/SmashShop/components/header.html');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        let html = await response.text();
+        const styleRegex = /<style[^>]*>([\s\S]*?)<\/style>/g;
+        let styleMatch;
+        while ((styleMatch = styleRegex.exec(html)) !== null) {
+          const styleEl = document.createElement('style');
+          styleEl.textContent = styleMatch[1];
+          document.head.appendChild(styleEl);
+        }
+        html = html.replace(/<style[^>]*>[\s\S]*?<\/style>/g, '');
+        const scriptRegex = /<script[^>]*>([\s\S]*?)<\/script>/g;
+        const scripts = [];
+        let scriptMatch;
+        while ((scriptMatch = scriptRegex.exec(html)) !== null) {
+          scripts.push(scriptMatch[1]);
+        }
+        html = html.replace(/<script[^>]*>[\s\S]*?<\/script>/g, '');
+        document.getElementById('header-container').innerHTML += html;
+        setTimeout(() => {
+          scripts.forEach(scriptContent => {
+            if (scriptContent && scriptContent.trim()) {
+              try {
+                const script = document.createElement('script');
+                script.textContent = scriptContent;
+                document.body.appendChild(script);
+              } catch (e) {
+                console.error('❌ Script error:', e);
+              }
+            }
+          });
+          window.headerLoaded = true;
+        }, 50);
+      } catch (error) {
+        console.error('❌ Lỗi tải header:', error);
+      }
+    }
+
     // Init total
     updateTotal();
     populateRecipientInfo();
     loadCheckoutCart();
+    loadHeaderComponent();
   
     // Cross-tab synchronization
     window.addEventListener('storage', (e) => {
