@@ -341,11 +341,6 @@
       cursor: default;
     }
 
-    .stat-card:hover {
-      border-color: var(--accent);
-      transform: translateY(-3px);
-    }
-
     .stat-card .stat-icon {
       width: 38px;
       height: 38px;
@@ -989,11 +984,8 @@
 
         <h1><span><i class="fa-solid fa-box-archive" style="font-size:22px;"></i></span> Quản lý <span>Đơn hàng</span></h1>
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <button class="btn-sm primary" onclick="showToast('Tính năng xuất file đang được phát triển','success')">
+          <button class="btn-sm primary" onclick="exportOrders()">
             <i class="fa-solid fa-file-export"></i> Xuất Excel
-          </button>
-          <button class="btn-sm primary" onclick="showToast('Đã làm mới dữ liệu','success')">
-            <i class="fa-solid fa-rotate-right"></i> Làm mới
           </button>
         
 </div>
@@ -1035,40 +1027,6 @@
         </div>
       </div>
 
-      <!-- Filter Bar -->
-      <div class="filter-bar">
-        <div class="filter-group">
-          <label><i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm</label>
-          <input type="text" id="searchInput" placeholder="Mã đơn, tên, SĐT...">
-        </div>
-        <div class="filter-group">
-          <label><i class="fa-solid fa-credit-card"></i> Thanh toán</label>
-          <select id="filterPayment">
-            <option value="">Tất cả</option>
-            <option value="COD">COD</option>
-            <option value="BANKING">BANKING</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label><i class="fa-solid fa-money-bill-wave"></i> Trạng thái TT</label>
-          <select id="filterPaymentStatus">
-            <option value="">Tất cả</option>
-            <option value="unpaid">Chưa thanh toán</option>
-            <option value="paid">Đã thanh toán</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label><i class="fa-solid fa-calendar-day"></i> Từ ngày</label>
-          <input type="date" id="filterFrom">
-        </div>
-        <div class="filter-group">
-          <label><i class="fa-solid fa-calendar-day"></i> Đến ngày</label>
-          <input type="date" id="filterTo">
-        </div>
-        <button class="btn-filter" onclick="applyFilters()"><i class="fa-solid fa-filter"></i> Lọc</button>
-        <button class="btn-reset" onclick="resetFilters()"><i class="fa-solid fa-xmark"></i> Xoá lọc</button>
-      </div>
-
       <!-- Status Tabs -->
       <div class="status-tabs" id="statusTabs">
         <button class="status-tab active" data-status="all" onclick="filterByStatus('all',this)">
@@ -1095,10 +1053,6 @@
       <div class="table-wrapper">
         <div class="table-top">
           <div class="table-top-left">Hiển thị <strong id="showingCount">0</strong> đơn hàng</div>
-          <div class="table-top-right">
-            <button class="btn-sm" onclick="showToast('Đã sao chép liên kết','success')"><i class="fa-solid fa-copy"></i> Copy</button>
-            <button class="btn-sm" onclick="window.print()"><i class="fa-solid fa-print"></i> In</button>
-          </div>
         </div>
 
         <div style="overflow-x:auto;">
@@ -1144,6 +1098,7 @@
         <div class="detail-section-title"><i class="fa-solid fa-user"></i> Thông tin người nhận</div>
         <div class="detail-grid">
           <div class="detail-field"><label>Họ tên</label><p id="dReceiverName">—</p></div>
+          <div class="detail-field"><label>Email</label><p id="dEmail">—</p></div>
           <div class="detail-field"><label>Số điện thoại</label><p id="dPhone">—</p></div>
           <div class="detail-field" style="grid-column:1/-1"><label>Địa chỉ</label><p id="dAddress">—</p></div>
         </div>
@@ -1155,6 +1110,14 @@
         <div class="total-row">
           <span>Tổng cộng</span>
           <span id="dTotalPrice">—</span>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <div class="detail-section-title"><i class="fa-solid fa-truck"></i> Vận chuyển</div>
+        <div class="detail-grid">
+          <div class="detail-field"><label>Phương thức ship</label><p id="dShippingMethod">—</p></div>
+          <div class="detail-field"><label>Phí vận chuyển</label><p id="dShippingCost">—</p></div>
         </div>
       </div>
 
@@ -1214,6 +1177,7 @@
     // ---- AUTH (GIỮ NGUYÊN LOGIC) ----
     const loginBtn = document.getElementById('loginBtn');
     const userAvatarBtn = document.getElementById('userAvatarBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
     const userMenu = document.getElementById('userMenu');
     const userMenuName = document.getElementById('userMenuName');
     const userMenuRole = document.getElementById('userMenuRole');
@@ -1242,36 +1206,43 @@
     function updateAuthUI() {
       const auth = currentAuth || getStoredAuth();
       if (auth && auth.user) {
-        loginBtn.style.display = 'none'; userAvatarBtn.style.display = 'flex';
-        userMenuName.textContent = auth.user.name || 'Người dùng';
-        userMenuRole.textContent = auth.user.role === 'admin' ? 'Admin' : 'Guest';
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (userAvatarBtn) userAvatarBtn.style.display = 'flex';
+        if (logoutBtn) logoutBtn.style.display = 'inline-block';
+        if (userMenuName) userMenuName.textContent = auth.user.name || 'Người dùng';
+        if (userMenuRole) userMenuRole.textContent = auth.user.role === 'admin' ? 'Admin' : 'Guest';
         document.querySelectorAll('.admin-only').forEach(el => el.classList.toggle('show', auth.user.role === 'admin'));
       } else {
-        loginBtn.style.display = 'inline-block'; userAvatarBtn.style.display = 'none';
-        userMenu.classList.remove('show'); userMenuName.textContent = 'Khách'; userMenuRole.textContent = 'Guest';
+        if (loginBtn) loginBtn.style.display = 'inline-block';
+        if (userAvatarBtn) userAvatarBtn.style.display = 'none';
+        if (logoutBtn) logoutBtn.style.display = 'none';
+        if (userMenu) userMenu.classList.remove('show');
+        if (userMenuName) userMenuName.textContent = 'Khách';
+        if (userMenuRole) userMenuRole.textContent = 'Guest';
         document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('show'));
       }
     }
     function openAuthModal(tab = 'login') {
-      authModal.classList.add('show');
+      authModal?.classList.add('show');
       ['login','register','forgot'].forEach(t => {
-        document.getElementById(t+'Form').classList.toggle('active', t === tab);
+        document.getElementById(t+'Form')?.classList.toggle('active', t === tab);
       });
-      loginTabBtn.classList.toggle('active', tab === 'login');
-      registerTabBtn.classList.toggle('active', tab === 'register');
-      forgotTabBtn.classList.toggle('active', tab === 'forgot');
+      loginTabBtn?.classList.toggle('active', tab === 'login');
+      registerTabBtn?.classList.toggle('active', tab === 'register');
+      forgotTabBtn?.classList.toggle('active', tab === 'forgot');
     }
-    function closeAuthModal() { authModal.classList.remove('show'); }
-    function toggleUserMenu() { userMenu.classList.toggle('show'); }
-    function closeUserMenu() { userMenu.classList.remove('show'); }
+    function closeAuthModal() { authModal?.classList.remove('show'); }
+    function toggleUserMenu() { userMenu?.classList.toggle('show'); }
+    function closeUserMenu() { userMenu?.classList.remove('show'); }
 
-    loginBtn.addEventListener('click', () => openAuthModal('login'));
-    userAvatarBtn.addEventListener('click', toggleUserMenu);
-    loginTabBtn.addEventListener('click', () => openAuthModal('login'));
-    registerTabBtn.addEventListener('click', () => openAuthModal('register'));
-    forgotTabBtn.addEventListener('click', () => openAuthModal('forgot'));
+    loginBtn?.addEventListener('click', () => openAuthModal('login'));
+    userAvatarBtn?.addEventListener('click', toggleUserMenu);
+    logoutBtn?.addEventListener('click', () => { clearAuth(); window.location.href = '/SmashShop/index.html'; });
+    loginTabBtn?.addEventListener('click', () => openAuthModal('login'));
+    registerTabBtn?.addEventListener('click', () => openAuthModal('register'));
+    forgotTabBtn?.addEventListener('click', () => openAuthModal('forgot'));
     document.querySelectorAll('[data-close-auth]').forEach(b => b.addEventListener('click', closeAuthModal));
-    authModal.addEventListener('click', e => { if (e.target === authModal) closeAuthModal(); });
+    authModal?.addEventListener('click', e => { if (e.target === authModal) closeAuthModal(); });
     document.addEventListener('click', e => { if (!e.target.closest('.header-user-area')) closeUserMenu(); });
     document.querySelectorAll('.user-menu-action').forEach(b => b.addEventListener('click', () => {
       closeUserMenu();
@@ -1301,155 +1272,170 @@
       setTimeout(() => t.remove(), 3000);
     }
 
-    // ---- MOCK DATA (dựa theo Order.js schema) ----
-    const PRODUCT_NAMES = [
-      'Yonex Astrox 100ZZ', 'Lining Aeronaut 9000C', 'Victor Thruster K9900',
-      'Giày Victor P9200', 'Giày Yonex SHB-03EX', 'Balo Yonex BA92012EX',
-      'Quấn cán Yonex BG80', 'Ống cầu Vina Star', 'Túi vợt Yonex BAG0226'
-    ];
-
-    function randomId() {
-      return Math.random().toString(36).substring(2,10).toUpperCase();
-    }
-    function randomObjectId() {
-      return Math.random().toString(16).substring(2,26);
-    }
-    function randomDate(start, end) {
-      return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-    }
-    function randomPhone() {
-      const prefixes = ['090','091','093','094','096','097','098','032','033','034','035','036','037','038','039'];
-      return prefixes[Math.floor(Math.random()*prefixes.length)] + Math.floor(1000000 + Math.random()*9000000);
-    }
-    const STATUSES = ['pending','confirmed','shipping','delivered','cancelled'];
-    const PAYMENT_METHODS = ['COD','BANKING'];
-    const PAYMENT_STATUSES = ['unpaid','paid'];
-    const RECEIVER_NAMES = [
-      'Nguyễn Văn An','Trần Thị Bích','Lê Hoàng Phúc','Phạm Minh Khoa',
-      'Hoàng Thị Lan','Đặng Quốc Toàn','Vũ Thị Hoa','Bùi Văn Nam',
-      'Đỗ Thị Mai','Ngô Minh Đức','Lý Văn Hùng','Đinh Thị Thu'
-    ];
-    const ADDRESSES = [
-      '12 Trần Phú, Ba Đình, Hà Nội',
-      '45 Lê Lợi, Quận 1, TP.HCM',
-      '78 Nguyễn Huệ, Hải Châu, Đà Nẵng',
-      '23 Hoàng Diệu, Hải Phòng',
-      '156 Phan Chu Trinh, Đà Lạt',
-      '89 Trường Chinh, Cầu Giấy, Hà Nội',
-      '34 Lý Thái Tổ, Hoàn Kiếm, Hà Nội'
-    ];
-    const NOTES = [
-      'Giao giờ hành chính', 'Gọi trước khi giao', 'Để ở bảo vệ',
-      'Tặng thêm dây căng vợt nếu có', '', '', '', ''
-    ];
-
-    function generateOrders(count = 52) {
-      const orders = [];
-      const now = new Date();
-      const past = new Date(now.getFullYear(), now.getMonth() - 3, 1);
-      for (let i = 0; i < count; i++) {
-        const numProducts = Math.ceil(Math.random() * 3);
-        const products = [];
-        let total = 0;
-        for (let p = 0; p < numProducts; p++) {
-          const price = (Math.ceil(Math.random() * 50) * 100000) + 50000;
-          const qty = Math.ceil(Math.random() * 3);
-          products.push({
-            productId: randomObjectId(),
-            name: PRODUCT_NAMES[Math.floor(Math.random() * PRODUCT_NAMES.length)],
-            quantity: qty,
-            price
-          });
-          total += price * qty;
-        }
-        const createdAt = randomDate(past, now);
-        const status = STATUSES[Math.floor(Math.random() * STATUSES.length)];
-        const paymentMethod = PAYMENT_METHODS[Math.floor(Math.random() * 2)];
-        const paymentStatus = paymentMethod === 'BANKING' ? 'paid' : PAYMENT_STATUSES[Math.floor(Math.random() * 2)];
-        orders.push({
-          _id: randomId(),
-          userId: randomObjectId(),
-          receiverName: RECEIVER_NAMES[Math.floor(Math.random() * RECEIVER_NAMES.length)],
-          phone: randomPhone(),
-          address: ADDRESSES[Math.floor(Math.random() * ADDRESSES.length)],
-          products,
-          totalPrice: total,
-          paymentMethod,
-          paymentStatus,
-          status,
-          note: NOTES[Math.floor(Math.random() * NOTES.length)],
-          createdAt,
-          updatedAt: new Date(createdAt.getTime() + Math.random() * 86400000 * 2)
-        });
+    function exportOrders() {
+      const exportList = filteredOrders.length ? filteredOrders : allOrders;
+      if (!exportList.length) {
+        showToast('Không có đơn hàng để xuất', 'error');
+        return;
       }
-      return orders.sort((a, b) => b.createdAt - a.createdAt);
+      const rows = [
+        ['Mã đơn', 'Khách hàng', 'Email', 'SĐT', 'Trạng thái', 'Thanh toán', 'Tổng tiền', 'Ngày đặt', 'Phí ship', 'Phương thức ship'],
+        ...exportList.map((o) => [
+          o._id,
+          o.receiverName,
+          o.user?.email || o.email || '',
+          o.phone,
+          o.status,
+          o.paymentStatus,
+          formatVND(o.totalPrice),
+          formatDate(o.createdAt),
+          formatVND(Number(o.shippingCost || 0)),
+          o.shippingMethod || '',
+        ]),
+      ];
+      const csvContent = rows.map((r) => r.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\r\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `orders_export_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('Đã xuất file CSV đơn hàng', 'success');
     }
 
-    let allOrders = generateOrders(52);
-    let filteredOrders = [...allOrders];
+    let allOrders = [];
+    let filteredOrders = [];
     let currentPage = 1;
     let activeStatus = 'all';
 
-    // ---- HELPERS ----
+    function isAdminUser() {
+      return (currentAuth || getStoredAuth())?.user?.role === 'admin';
+    }
+
+    function apiRequest(url, method = 'GET', body = null) {
+      const options = { method, headers: { 'Content-Type': 'application/json' } };
+      if (body) options.body = JSON.stringify(body);
+      return fetch(url, options)
+        .then((res) => res.json())
+        .catch((err) => ({ success: false, message: err.message || 'Không thể kết nối API' }));
+    }
+
+    function normalizeOrder(order) {
+      return {
+        ...order,
+        createdAt: order.createdAt ? new Date(order.createdAt).toISOString() : new Date().toISOString(),
+        updatedAt: order.updatedAt ? new Date(order.updatedAt).toISOString() : new Date().toISOString(),
+        products: (order.products || []).map((item) => ({
+          ...item,
+          quantity: Number(item.quantity) || 1,
+          price: Number(item.price) || 0,
+          name: item.name || 'Sản phẩm',
+        })),
+      };
+    }
+
     function formatVND(n) {
-      return n.toLocaleString('vi-VN') + 'đ';
+      return Number(n).toLocaleString('vi-VN') + 'đ';
     }
     function formatDate(d) {
       const dt = new Date(d);
-      return dt.toLocaleDateString('vi-VN') + ' ' + dt.toLocaleTimeString('vi-VN', {hour:'2-digit',minute:'2-digit'});
+      return dt.toLocaleDateString('vi-VN') + ' ' + dt.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
     }
 
     function statusBadge(s) {
       const map = {
-        pending:   ['badge-pending','fa-clock','Chờ xác nhận'],
-        confirmed: ['badge-confirmed','fa-circle-check','Đã xác nhận'],
-        shipping:  ['badge-shipping','fa-truck','Đang giao'],
-        delivered: ['badge-delivered','fa-box-open','Đã giao'],
-        cancelled: ['badge-cancelled','fa-ban','Đã huỷ'],
+        pending: ['badge-pending', 'fa-clock', 'Chờ xác nhận'],
+        confirmed: ['badge-confirmed', 'fa-circle-check', 'Đã xác nhận'],
+        shipping: ['badge-shipping', 'fa-truck', 'Đang giao'],
+        delivered: ['badge-delivered', 'fa-box-open', 'Đã giao'],
+        cancelled: ['badge-cancelled', 'fa-ban', 'Đã huỷ'],
       };
-      const [cls, icon, label] = map[s] || ['badge-pending','fa-clock',s];
+      const [cls, icon, label] = map[s] || ['badge-pending', 'fa-clock', s];
       return `<span class="badge ${cls}"><i class="fa-solid ${icon}"></i> ${label}</span>`;
     }
 
     function paymentBadge(method, pStatus) {
-      const mBadge = method === 'COD'
-        ? `<span class="badge badge-cod"><i class="fa-solid fa-money-bill-wave"></i> COD</span>`
-        : `<span class="badge badge-banking"><i class="fa-solid fa-building-columns"></i> Banking</span>`;
-      const sBadge = pStatus === 'paid'
-        ? `<span class="badge badge-paid"><i class="fa-solid fa-circle-check"></i> Đã TT</span>`
-        : `<span class="badge badge-unpaid"><i class="fa-solid fa-clock"></i> Chưa TT</span>`;
-      return `<div class="payment-info">${mBadge}${sBadge}</div>`;
+      const map = {
+        COD: ['badge-cod', 'fa-money-bill-wave', 'COD'],
+        BANKING: ['badge-banking', 'fa-building-columns', 'Banking'],
+        MOMO: ['badge-banking', 'fa-mobile-screen', 'MoMo'],
+        CARD: ['badge-banking', 'fa-credit-card', 'Card'],
+        VNPAY: ['badge-banking', 'fa-wallet', 'VNPAY'],
+      };
+      const [badgeClass, icon, label] = map[method] || ['badge-banking', 'fa-credit-card', method || 'Không xác định'];
+      const statusClass = pStatus === 'paid' ? 'badge-paid' : 'badge-unpaid';
+      const statusLabel = pStatus === 'paid' ? 'Đã thanh toán' : 'Chưa thanh toán';
+      return `
+        <div class="payment-info">
+          <span class="badge ${badgeClass}"><i class="fa-solid ${icon}"></i> ${label}</span>
+          <span class="badge ${statusClass}"><i class="fa-solid ${pStatus === 'paid' ? 'fa-circle-check' : 'fa-clock'}"></i> ${statusLabel}</span>
+        </div>
+      `;
     }
 
-    // ---- STATS ----
     function updateStats(orders) {
-      const counts = {pending:0,confirmed:0,shipping:0,delivered:0,cancelled:0};
-      orders.forEach(o => counts[o.status] = (counts[o.status] || 0) + 1);
-      document.getElementById('stat-pending').textContent   = counts.pending;
+      const counts = { pending: 0, confirmed: 0, shipping: 0, delivered: 0, cancelled: 0 };
+      orders.forEach((o) => { counts[o.status] = (counts[o.status] || 0) + 1; });
+      document.getElementById('stat-pending').textContent = counts.pending;
       document.getElementById('stat-confirmed').textContent = counts.confirmed;
-      document.getElementById('stat-shipping').textContent  = counts.shipping;
+      document.getElementById('stat-shipping').textContent = counts.shipping;
       document.getElementById('stat-delivered').textContent = counts.delivered;
       document.getElementById('stat-cancelled').textContent = counts.cancelled;
-      document.getElementById('stat-total').textContent     = orders.length;
-
-      document.getElementById('tab-all').textContent       = orders.length;
-      document.getElementById('tab-pending').textContent   = counts.pending;
+      document.getElementById('stat-total').textContent = orders.length;
+      document.getElementById('tab-all').textContent = orders.length;
+      document.getElementById('tab-pending').textContent = counts.pending;
       document.getElementById('tab-confirmed').textContent = counts.confirmed;
-      document.getElementById('tab-shipping').textContent  = counts.shipping;
+      document.getElementById('tab-shipping').textContent = counts.shipping;
       document.getElementById('tab-delivered').textContent = counts.delivered;
       document.getElementById('tab-cancelled').textContent = counts.cancelled;
     }
 
-    // ---- RENDER TABLE ----
+    function initStatusTabs() {
+      document.querySelectorAll('.status-tab').forEach((btn) => {
+        // keyboard accessibility: allow Enter/Space to activate
+        btn.tabIndex = 0;
+        btn.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            btn.click();
+          }
+        });
+      });
+      // ensure initial active tab reflects state
+      document.querySelectorAll('.status-tab').forEach((t) => t.classList.toggle('active', t.dataset.status === activeStatus));
+    }
+
+    function renderActionButtons(order) {
+      const buttons = [];
+      // Always allow viewing details
+      buttons.push(`<button class="action-btn" title="Xem chi tiết" onclick="openOrderDetail('${order._id}')"><i class="fa-solid fa-eye"></i></button>`);
+
+      // Only show status-change actions to admins
+      if (!isAdminUser()) return buttons.join('');
+
+      if (order.status === 'pending') {
+        buttons.push(`<button class="action-btn primary" title="Xác nhận" onclick="updateOrderStatus('${order._id}','confirmed')"><i class="fa-solid fa-circle-check"></i></button>`);
+        buttons.push(`<button class="action-btn danger" title="Huỷ" onclick="updateOrderStatus('${order._id}','cancelled')"><i class="fa-solid fa-ban"></i></button>`);
+      }
+      if (order.status === 'confirmed') {
+        buttons.push(`<button class="action-btn" title="Đang giao" onclick="updateOrderStatus('${order._id}','shipping')"><i class="fa-solid fa-truck"></i></button>`);
+        buttons.push(`<button class="action-btn danger" title="Huỷ" onclick="updateOrderStatus('${order._id}','cancelled')"><i class="fa-solid fa-ban"></i></button>`);
+      }
+      if (order.status === 'shipping') {
+        buttons.push(`<button class="action-btn success" title="Hoàn thành" onclick="updateOrderStatus('${order._id}','delivered')"><i class="fa-solid fa-box-open"></i></button>`);
+      }
+      return buttons.join('');
+    }
+
     function renderTable() {
       const tbody = document.getElementById('ordersTableBody');
       const start = (currentPage - 1) * ITEMS_PER_PAGE;
-      const end   = start + ITEMS_PER_PAGE;
+      const end = start + ITEMS_PER_PAGE;
       const pageOrders = filteredOrders.slice(start, end);
 
       document.getElementById('showingCount').textContent = filteredOrders.length;
-      document.getElementById('paginationInfo').textContent =
-        `${filteredOrders.length === 0 ? 0 : start + 1}–${Math.min(end, filteredOrders.length)} trong ${filteredOrders.length} đơn`;
+      document.getElementById('paginationInfo').textContent = `${filteredOrders.length === 0 ? 0 : start + 1}–${Math.min(end, filteredOrders.length)} trong ${filteredOrders.length} đơn`;
 
       if (pageOrders.length === 0) {
         tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><i class="fa-solid fa-box-open"></i><p>Không có đơn hàng nào</p></div></td></tr>`;
@@ -1457,18 +1443,20 @@
         return;
       }
 
-      tbody.innerHTML = pageOrders.map(o => `
+      tbody.innerHTML = pageOrders.map((o) => `
         <tr>
           <td><span class="order-id">#${o._id}</span></td>
           <td>
             <div class="customer-info">
               <div class="name">${o.receiverName}</div>
               <div class="phone"><i class="fa-solid fa-phone" style="font-size:10px;margin-right:4px;"></i>${o.phone}</div>
+              <div class="prod-item" style="font-size:11px;color:#94a3b8;">${o.user?.name || 'Khách'}</div>
+              <div class="prod-item" style="font-size:11px;color:#94a3b8;">${o.user?.email || o.email || ''}</div>
             </div>
           </td>
           <td>
             <div class="products-preview">
-              ${o.products.slice(0, 2).map(p => `<div class="prod-item">${p.name} <span>×${p.quantity}</span></div>`).join('')}
+              ${o.products.slice(0, 2).map((p) => `<div class="prod-item">${p.name} <span>×${p.quantity}</span></div>`).join('')}
               ${o.products.length > 2 ? `<div class="prod-item" style="color:#555;">+${o.products.length - 2} sản phẩm khác</div>` : ''}
             </div>
           </td>
@@ -1476,35 +1464,27 @@
           <td>${paymentBadge(o.paymentMethod, o.paymentStatus)}</td>
           <td>${statusBadge(o.status)}</td>
           <td><div class="date-col">${formatDate(o.createdAt)}</div></td>
-          <td>
-            <div class="action-buttons">
-              <button class="action-btn" title="Xem chi tiết" onclick="openOrderDetail('${o._id}')"><i class="fa-solid fa-eye"></i></button>
-              <button class="action-btn success" title="Xác nhận đơn" onclick="quickStatusUpdate('${o._id}','confirmed')"><i class="fa-solid fa-circle-check"></i></button>
-              <button class="action-btn" title="Đang giao" onclick="quickStatusUpdate('${o._id}','shipping')"><i class="fa-solid fa-truck"></i></button>
-              <button class="action-btn danger" title="Huỷ đơn" onclick="quickStatusUpdate('${o._id}','cancelled')"><i class="fa-solid fa-ban"></i></button>
-            </div>
-          </td>
+          <td><div class="action-buttons">${renderActionButtons(o)}</div></td>
         </tr>
       `).join('');
 
       renderPagination();
     }
 
-    // ---- PAGINATION ----
     function renderPagination() {
       const totalPages = Math.ceil(filteredOrders.length / ITEMS_PER_PAGE);
       const wrap = document.getElementById('paginationBtns');
       if (totalPages <= 1) { wrap.innerHTML = ''; return; }
 
-      let html = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}><i class="fa-solid fa-chevron-left"></i></button>`;
+      let html = `<button class="page-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}><i class="fa-solid fa-chevron-left"></i></button>`;
       for (let i = 1; i <= totalPages; i++) {
         if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
-          html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+          html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goPage(${i})">${i}</button>`;
         } else if (i === currentPage - 2 || i === currentPage + 2) {
           html += `<button class="page-btn" disabled>…</button>`;
         }
       }
-      html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}><i class="fa-solid fa-chevron-right"></i></button>`;
+      html += `<button class="page-btn" onclick="goPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}><i class="fa-solid fa-chevron-right"></i></button>`;
       wrap.innerHTML = html;
     }
 
@@ -1515,21 +1495,20 @@
       renderTable();
     }
 
-    // ---- FILTER ----
     function applyFilters() {
-      const q       = document.getElementById('searchInput').value.trim().toLowerCase();
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
       const payment = document.getElementById('filterPayment').value;
       const pStatus = document.getElementById('filterPaymentStatus').value;
-      const from    = document.getElementById('filterFrom').value ? new Date(document.getElementById('filterFrom').value) : null;
-      const to      = document.getElementById('filterTo').value   ? new Date(document.getElementById('filterTo').value + 'T23:59:59') : null;
+      const from = document.getElementById('filterFrom').value ? new Date(document.getElementById('filterFrom').value) : null;
+      const to = document.getElementById('filterTo').value ? new Date(document.getElementById('filterTo').value + 'T23:59:59') : null;
 
-      filteredOrders = allOrders.filter(o => {
+      filteredOrders = allOrders.filter((o) => {
         if (activeStatus !== 'all' && o.status !== activeStatus) return false;
-        if (q && !o._id.toLowerCase().includes(q) && !o.receiverName.toLowerCase().includes(q) && !o.phone.includes(q)) return false;
+        if (q && !o._id.toLowerCase().includes(q) && !o.receiverName.toLowerCase().includes(q) && !o.phone.includes(q) && !(o.user?.name || '').toLowerCase().includes(q) && !(o.user?.email || o.email || '').toLowerCase().includes(q)) return false;
         if (payment && o.paymentMethod !== payment) return false;
         if (pStatus && o.paymentStatus !== pStatus) return false;
         if (from && new Date(o.createdAt) < from) return false;
-        if (to   && new Date(o.createdAt) > to)   return false;
+        if (to && new Date(o.createdAt) > to) return false;
         return true;
       });
 
@@ -1546,7 +1525,7 @@
       document.getElementById('filterFrom').value = '';
       document.getElementById('filterTo').value = '';
       activeStatus = 'all';
-      document.querySelectorAll('.status-tab').forEach(t => t.classList.toggle('active', t.dataset.status === 'all'));
+      document.querySelectorAll('.status-tab').forEach((t) => t.classList.toggle('active', t.dataset.status === 'all'));
       filteredOrders = [...allOrders];
       currentPage = 1;
       updateStats(allOrders);
@@ -1555,58 +1534,101 @@
 
     function filterByStatus(status, btn) {
       activeStatus = status;
-      document.querySelectorAll('.status-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.status-tab').forEach((t) => t.classList.remove('active'));
       btn.classList.add('active');
-
-      const q       = document.getElementById('searchInput').value.trim().toLowerCase();
-      const payment = document.getElementById('filterPayment').value;
-      const pStatus = document.getElementById('filterPaymentStatus').value;
-
-      filteredOrders = allOrders.filter(o => {
-        if (status !== 'all' && o.status !== status) return false;
-        if (q && !o._id.toLowerCase().includes(q) && !o.receiverName.toLowerCase().includes(q) && !o.phone.includes(q)) return false;
-        if (payment && o.paymentMethod !== payment) return false;
-        if (pStatus && o.paymentStatus !== pStatus) return false;
-        return true;
-      });
-
-      currentPage = 1;
-      renderTable();
+      applyFilters();
     }
 
-    // ---- QUICK STATUS UPDATE ----
-    function quickStatusUpdate(id, newStatus) {
-      const order = allOrders.find(o => o._id === id);
-      if (!order) return;
-      const labels = { confirmed:'Đã xác nhận', shipping:'Đang giao', cancelled:'Đã huỷ' };
-      order.status = newStatus;
-      order.updatedAt = new Date();
-      filteredOrders = filteredOrders.map(o => o._id === id ? order : o);
+    async function loadOrders() {
+      if (!isAdminUser()) {
+        showToast('Chỉ quản trị viên mới có thể xem trang này.', 'error');
+        return;
+      }
+      const result = await apiRequest(`${API_BASE}/orders`);
+      if (!result.success) {
+        showToast(result.message || 'Không thể tải đơn hàng.', 'error');
+        return;
+      }
+      allOrders = (result.orders || []).map(normalizeOrder);
+      filteredOrders = [...allOrders];
+      currentPage = 1;
       updateStats(allOrders);
       renderTable();
-      showToast(`Đơn #${id} → ${labels[newStatus] || newStatus}`, 'success');
     }
 
-    // ---- DETAIL MODAL ----
+    async function updateOrderStatus(id, status, paymentStatus = null) {
+      const order = allOrders.find((o) => o._id === id);
+      if (!order) { showToast('Không tìm thấy đơn hàng', 'error'); return; }
+      const statusChanged = order.status !== status;
+      const paymentChanged = paymentStatus !== null && order.paymentStatus !== paymentStatus;
+      if (!statusChanged && !paymentChanged) return;
+
+      if (!statusChanged && paymentChanged) {
+        order.paymentStatus = paymentStatus;
+        filteredOrders = filteredOrders.map((o) => (o._id === id ? order : o));
+        updateStats(allOrders);
+        renderTable();
+        if (currentDetailId === id) openOrderDetail(id);
+        showToast('Đã cập nhật trạng thái thanh toán', 'success');
+        return;
+      }
+
+      // Extract userId - handle both nested object and direct string/id
+      let userId = null;
+      if (typeof order.userId === 'object' && order.userId?._id) {
+        userId = order.userId._id;
+      } else if (typeof order.userId === 'string') {
+        userId = order.userId;
+      }
+
+      if (!userId) {
+        showToast('Lỗi: Không có thông tin người đặt hàng', 'error');
+        console.error('updateOrderStatus: Missing userId. Order:', order);
+        return;
+      }
+
+      const payload = { userId, status };
+      console.log('Sending order status update:', { orderId: id, payload });
+
+      const result = await apiRequest(`${API_BASE}/orders/${id}/status`, 'PUT', payload);
+      if (!result.success) {
+        showToast(result.message || 'Cập nhật trạng thái thất bại', 'error');
+        console.error('API Error:', result);
+        return;
+      }
+
+      order.status = status;
+      if (paymentChanged) {
+        order.paymentStatus = paymentStatus;
+      }
+      order.updatedAt = new Date().toISOString();
+      filteredOrders = filteredOrders.map((o) => (o._id === id ? order : o));
+      updateStats(allOrders);
+      renderTable();
+      if (currentDetailId === id) openOrderDetail(id);
+      showToast(`Đơn #${id} đã được cập nhật`, 'success');
+    }
+
     let currentDetailId = null;
 
     function openOrderDetail(id) {
-      const o = allOrders.find(o => o._id === id);
+      const o = allOrders.find((order) => order._id === id);
       if (!o) return;
       currentDetailId = id;
-
       document.getElementById('modalOrderId').textContent = `Chi tiết đơn hàng #${o._id}`;
       document.getElementById('dReceiverName').textContent = o.receiverName;
+      document.getElementById('dEmail').textContent = o.user?.email || o.email || '—';
       document.getElementById('dPhone').textContent = o.phone;
       document.getElementById('dAddress').textContent = o.address;
       document.getElementById('dTotalPrice').textContent = formatVND(o.totalPrice);
+      document.getElementById('dShippingMethod').textContent = o.shippingMethod || '—';
+      document.getElementById('dShippingCost').textContent = formatVND(Number(o.shippingCost || 0));
       document.getElementById('dCreatedAt').textContent = formatDate(o.createdAt);
       document.getElementById('dUpdatedAt').textContent = formatDate(o.updatedAt);
       document.getElementById('dNote').textContent = o.note || 'Không có ghi chú';
       document.getElementById('dPaymentMethod').innerHTML = `<span class="badge ${o.paymentMethod === 'COD' ? 'badge-cod' : 'badge-banking'}">${o.paymentMethod}</span>`;
       document.getElementById('dPaymentStatus').innerHTML = `<span class="badge ${o.paymentStatus === 'paid' ? 'badge-paid' : 'badge-unpaid'}">${o.paymentStatus === 'paid' ? 'Đã thanh toán' : 'Chưa thanh toán'}</span>`;
-
-      document.getElementById('dProductList').innerHTML = o.products.map(p => `
+      document.getElementById('dProductList').innerHTML = o.products.map((p) => `
         <div class="product-row-modal">
           <div>
             <div class="prod-name">${p.name}</div>
@@ -1615,10 +1637,8 @@
           <div class="prod-subtotal">${formatVND(p.price * p.quantity)}</div>
         </div>
       `).join('');
-
       document.getElementById('modalStatusSelect').value = o.status;
-      document.getElementById('modalPaymentSelect').value = o.paymentStatus;
-
+      document.getElementById('modalPaymentSelect').value = o.paymentStatus || 'unpaid';
       document.getElementById('orderDetailModal').classList.add('show');
     }
 
@@ -1627,34 +1647,48 @@
       currentDetailId = null;
     }
 
-    document.getElementById('orderDetailModal').addEventListener('click', function(e) {
-      if (e.target === this) closeModal();
-    });
+    const _orderDetailModal = document.getElementById('orderDetailModal');
+    if (_orderDetailModal) {
+      _orderDetailModal.addEventListener('click', function (e) {
+        if (e.target === _orderDetailModal) closeModal();
+      });
+    }
 
-    function updateOrderFromModal() {
+    async function updateOrderFromModal() {
       if (!currentDetailId) return;
-      const newStatus  = document.getElementById('modalStatusSelect').value;
-      const newPayment = document.getElementById('modalPaymentSelect').value;
-      const order = allOrders.find(o => o._id === currentDetailId);
+      const id = currentDetailId;
+      const newStatus = document.getElementById('modalStatusSelect').value;
+      const newPaymentStatus = document.getElementById('modalPaymentSelect').value;
+      const order = allOrders.find((o) => o._id === id);
       if (!order) return;
-      order.status = newStatus;
-      order.paymentStatus = newPayment;
-      order.updatedAt = new Date();
-      filteredOrders = filteredOrders.map(o => o._id === currentDetailId ? order : o);
-      updateStats(allOrders);
-      renderTable();
+      const statusChanged = order.status !== newStatus;
+      const paymentChanged = order.paymentStatus !== newPaymentStatus;
+      if (!statusChanged && !paymentChanged) { closeModal(); return; }
+      if (statusChanged) {
+        await updateOrderStatus(id, newStatus, newPaymentStatus);
+      } else if (paymentChanged) {
+        order.paymentStatus = newPaymentStatus;
+        filteredOrders = filteredOrders.map((o) => (o._id === id ? order : o));
+        updateStats(allOrders);
+        renderTable();
+        openOrderDetail(id);
+        showToast('Đã cập nhật trạng thái thanh toán', 'success');
+      }
       closeModal();
-      showToast('Đã cập nhật đơn hàng thành công', 'success');
     }
 
     // ---- INIT ----
-    updateStats(allOrders);
-    renderTable();
+    loadOrders();
 
     // Realtime search on enter
-    document.getElementById('searchInput').addEventListener('keydown', e => {
-      if (e.key === 'Enter') applyFilters();
-    });
+    const _searchInput = document.getElementById('searchInput');
+    if (_searchInput) {
+      _searchInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter') applyFilters();
+      });
+    }
+    // initialize status tabs (keyboard accessibility + initial state)
+    if (typeof initStatusTabs === 'function') initStatusTabs();
   
     // Cross-tab synchronization
     window.addEventListener('storage', (e) => {

@@ -500,6 +500,34 @@ router.get("/admin/stats", async (req, res) => {
   }
 });
 
+router.get("/orders", async (req, res) => {
+  try {
+    const orders = await Order.find({})
+      .populate("products.productId", "name thumbnail images")
+      .populate("userId", "name email phone")
+      .sort({ createdAt: -1 });
+
+    const enrichedOrders = orders.map((order) => ({
+      ...order.toObject(),
+      products: order.products.map((item) => ({
+        ...item.toObject(),
+        name:
+          item.name || item.productId?.name || item.product?.name || "Sản phẩm",
+        img:
+          item.img ||
+          item.productId?.thumbnail ||
+          (item.productId?.images && item.productId.images[0]) ||
+          item.product?.thumbnail ||
+          "",
+      })),
+    }));
+
+    res.status(200).json({ success: true, orders: enrichedOrders });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 // ==========================================
 // ĐÁNH GIÁ (REVIEW)
 // ==========================================
@@ -972,6 +1000,22 @@ router.put("/orders/:orderId/status", async (req, res) => {
       });
     }
 
+    // Validate status is one of the allowed values
+    const validStatuses = [
+      "pending",
+      "confirmed",
+      "shipping",
+      "delivered",
+      "cancelled",
+    ];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Trạng thái không hợp lệ. Các trạng thái được phép: pending, confirmed, shipping, delivered, cancelled.",
+      });
+    }
+
     const order = await Order.findById(orderId);
     if (!order) {
       return res.status(404).json({
@@ -980,14 +1024,20 @@ router.put("/orders/:orderId/status", async (req, res) => {
       });
     }
 
-    if (order.userId.toString() !== userId) {
+    // Convert MongoDB ObjectId to string for comparison
+    const orderUserId = order.userId.toString
+      ? order.userId.toString()
+      : order.userId;
+    if (orderUserId !== userId) {
       return res.status(403).json({
         success: false,
         message: "Bạn không có quyền thay đổi trạng thái đơn hàng này.",
       });
     }
 
+    // Handle status transitions
     if (status === "cancelled") {
+      // Can only cancel from pending or confirmed status
       if (["shipping", "delivered", "cancelled"].includes(order.status)) {
         return res.status(400).json({
           success: false,
@@ -995,6 +1045,7 @@ router.put("/orders/:orderId/status", async (req, res) => {
             "Đơn hàng đã vào quá trình giao hoặc đã hoàn thành, không thể hủy.",
         });
       }
+      // Restock products when cancelling
       await Promise.all(
         order.products.map((item) => {
           if (!item.productId || !item.quantity) return null;
@@ -1004,7 +1055,26 @@ router.put("/orders/:orderId/status", async (req, res) => {
         }),
       );
       order.status = "cancelled";
+    } else if (status === "confirmed") {
+      // Can only confirm from pending
+      if (order.status !== "pending") {
+        return res.status(400).json({
+          success: false,
+          message: "Chỉ có thể xác nhận từ trạng thái chờ xác nhận.",
+        });
+      }
+      order.status = "confirmed";
+    } else if (status === "shipping") {
+      // Can only ship from confirmed
+      if (order.status !== "confirmed") {
+        return res.status(400).json({
+          success: false,
+          message: "Chỉ có thể giao từ trạng thái đã xác nhận.",
+        });
+      }
+      order.status = "shipping";
     } else if (status === "delivered") {
+      // Can only deliver from shipping
       if (order.status !== "shipping") {
         return res.status(400).json({
           success: false,
@@ -1013,18 +1083,21 @@ router.put("/orders/:orderId/status", async (req, res) => {
         });
       }
       order.status = "delivered";
-    } else {
-      return res.status(400).json({
-        success: false,
-        message: "Trạng thái cập nhật không hợp lệ.",
-      });
     }
+    // pending status cannot be set (it's initial state)
 
+    order.updatedAt = new Date();
     await order.save();
+
+    // Return populated order with user and products info
+    const populatedOrder = await Order.findById(orderId)
+      .populate("userId", "name email phone role")
+      .populate("products.productId", "name price");
+
     res.status(200).json({
       success: true,
       message: "Cập nhật trạng thái đơn hàng thành công.",
-      order,
+      order: populatedOrder,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
