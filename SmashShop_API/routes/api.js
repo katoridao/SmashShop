@@ -503,7 +503,7 @@ router.get("/admin/stats", async (req, res) => {
 router.get("/orders", async (req, res) => {
   try {
     const orders = await Order.find({})
-      .populate("products.productId", "name thumbnail images")
+      .populate("products.productId", "name thumbnail images category")
       .populate("userId", "name email phone")
       .sort({ createdAt: -1 });
 
@@ -964,7 +964,7 @@ router.get("/orders/user/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
     const orders = await Order.find({ userId })
-      .populate("products.productId", "name thumbnail images")
+      .populate("products.productId", "name thumbnail images category")
       .sort({ createdAt: -1 });
 
     const enrichedOrders = orders.map((order) => ({

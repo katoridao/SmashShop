@@ -894,19 +894,19 @@
     function updateAuthUI() {
       const auth = currentAuth || getStoredAuth();
       if (auth && auth.user) {
-        loginBtn.style.display = 'none';
-        userAvatarBtn.style.display = 'flex';
-        userMenuName.textContent = auth.user.name || 'Người dùng';
-        userMenuRole.textContent = auth.user.role === 'admin' ? 'Admin' : 'Guest';
+        if(loginBtn) loginBtn.style.display = 'none';
+        if(userAvatarBtn) userAvatarBtn.style.display = 'flex';
+        if(userMenuName) userMenuName.textContent = auth.user.name || 'Người dùng';
+        if(userMenuRole) userMenuRole.textContent = auth.user.role === 'admin' ? 'Admin' : 'Guest';
         document.querySelectorAll('.admin-only').forEach(el => {
           el.classList.toggle('show', auth.user.role === 'admin');
         });
       } else {
-        loginBtn.style.display = 'inline-block';
-        userAvatarBtn.style.display = 'none';
-        userMenu.classList.remove('show');
-        userMenuName.textContent = 'Khách';
-        userMenuRole.textContent = 'Guest';
+        if(loginBtn) loginBtn.style.display = 'inline-block';
+        if(userAvatarBtn) userAvatarBtn.style.display = 'none';
+        if(userMenu) userMenu.classList.remove('show');
+        if(userMenuName) userMenuName.textContent = 'Khách';
+        if(userMenuRole) userMenuRole.textContent = 'Guest';
         document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('show'));
       }
     }
@@ -931,21 +931,21 @@
     }
 
     function toggleUserMenu() {
-      userMenu.classList.toggle('show');
+      if(userMenu) userMenu.classList.toggle('show');
     }
 
     function closeUserMenu() {
-      userMenu.classList.remove('show');
+      if(userMenu) userMenu.classList.remove('show');
     }
 
-    loginBtn.addEventListener('click', () => openAuthModal('login'));
-    userAvatarBtn.addEventListener('click', toggleUserMenu);
-    loginTabBtn.addEventListener('click', () => openAuthModal('login'));
-    registerTabBtn.addEventListener('click', () => openAuthModal('register'));
-    forgotTabBtn.addEventListener('click', () => openAuthModal('forgot'));
+    loginBtn?.addEventListener('click', () => openAuthModal('login'));
+    userAvatarBtn?.addEventListener('click', toggleUserMenu);
+    loginTabBtn?.addEventListener('click', () => openAuthModal('login'));
+    registerTabBtn?.addEventListener('click', () => openAuthModal('register'));
+    forgotTabBtn?.addEventListener('click', () => openAuthModal('forgot'));
 
     document.querySelectorAll('[data-close-auth]').forEach(btn => btn.addEventListener('click', closeAuthModal));
-    authModal.addEventListener('click', e => { if (e.target === authModal) closeAuthModal(); });
+    authModal?.addEventListener('click', e => { if (e.target === authModal) closeAuthModal(); });
     document.addEventListener('click', e => { if (!e.target.closest('.header-user-area')) closeUserMenu(); });
     window.addEventListener('keydown', e => { if (e.key==='Escape') { closeUserMenu(); closeAuthModal(); } });
 
@@ -982,190 +982,222 @@
     Chart.defaults.borderColor = '#1E2A3A';
     Chart.defaults.font.family = 'Poppins';
 
-    /* ============ DATA ============ */
-    const months = ['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10','T11','T12'];
-
-    const revenueData = {
-      '7d':  [12,18,14,22,19,25,28],
-      '30d': [42,55,48,62,70,58,75,80,65,88,76,92,85,70,95,102,89,78,108,115,97,122,110,105,130,118,125,140,135,150],
-      '3m':  [380,420,487],
-      'year':[280,320,380,350,420,395,450,490,460,510,530,487]
-    };
-
-    const ordersData = {
-      '7d':  [8,12,10,16,14,18,21],
-      '30d': [28,35,30,42,50,38,55,60,45,68,58,72,65,50,75,82,69,58,88,95,77,102,90,85,110,98,105,120,115,130],
-      '3m':  [280,320,380],
-      'year':[180,210,260,240,290,275,310,340,320,360,370,280]
-    };
-
-    const labelMap = {
-      '7d':  ['T2','T3','T4','T5','T6','T7','CN'],
-      '30d': Array.from({length:30}, (_,i) => `${i+1}/5`),
-      '3m':  ['Tháng 3','Tháng 4','Tháng 5'],
-      'year': months
-    };
-
-    /* ============ LINE CHART ============ */
-    const lineCtx = document.getElementById('revenueLineChart').getContext('2d');
+    /* ============ REAL DATA PROCESSING ============ */
+    const months = ["T1","T2","T3","T4","T5","T6","T7","T8","T9","T10","T11","T12"];
+    let allOrders = [];
+    
+    const lineCtx = document.getElementById("revenueLineChart").getContext("2d");
     const lineGrad = lineCtx.createLinearGradient(0, 0, 0, 260);
-    lineGrad.addColorStop(0, 'rgba(37,99,235,0.3)');
-    lineGrad.addColorStop(1, 'rgba(37,99,235,0)');
+    lineGrad.addColorStop(0, "rgba(37,99,235,0.3)");
+    lineGrad.addColorStop(1, "rgba(37,99,235,0)");
 
     const lineChart = new Chart(lineCtx, {
-      type: 'line',
-      data: {
-        labels: labelMap['30d'],
-        datasets: [{
-          label: 'Doanh thu (Tr.đ)',
-          data: revenueData['30d'],
-          borderColor: '#2563EB',
-          backgroundColor: lineGrad,
-          borderWidth: 2.5,
-          pointRadius: 0,
-          pointHoverRadius: 6,
-          pointHoverBackgroundColor: '#2563EB',
-          pointHoverBorderColor: '#fff',
-          pointHoverBorderWidth: 2,
-          tension: 0.45,
-          fill: true,
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
-        scales: {
-          x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } },
-          y: { grid: { color: '#1E2A3A' }, ticks: { callback: v => v + 'M' } }
-        },
-        interaction: { mode: 'index', intersect: false }
-      }
+      type: "line",
+      data: { labels: [], datasets: [{
+        label: "Doanh thu (Tr.đ)", data: [], borderColor: "#2563EB", backgroundColor: lineGrad, borderWidth: 2.5, pointRadius: 0, pointHoverRadius: 6, pointHoverBackgroundColor: "#2563EB", pointHoverBorderColor: "#fff", pointHoverBorderWidth: 2, tension: 0.45, fill: true,
+      }]},
+      options: { responsive: true, plugins: { legend: { display: false }, tooltip: { mode: "index", intersect: false } }, scales: { x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } }, y: { grid: { color: "#1E2A3A" }, ticks: { callback: v => v + "M" } } }, interaction: { mode: "index", intersect: false } }
     });
 
-    /* ============ DOUGHNUT CHART ============ */
-    new Chart(document.getElementById('categoryDoughnut'), {
-      type: 'doughnut',
-      data: {
-        labels: ['Vợt cầu lông','Giày cầu lông','Balo cầu lông','Phụ kiện','Túi vợt'],
-        datasets: [{
-          data: [42, 28, 15, 10, 5],
-          backgroundColor: ['#2563EB','#10B981','#F59E0B','#EF4444','#8B5CF6'],
-          borderColor: '#1A1A1A',
-          borderWidth: 3,
-          hoverOffset: 8
-        }]
-      },
-      options: {
-        cutout: '70%',
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` } } }
-      }
+    const doughnutChart = new Chart(document.getElementById("categoryDoughnut"), {
+      type: "doughnut",
+      data: { labels: [], datasets: [{ data: [], backgroundColor: ["#2563EB","#10B981","#F59E0B","#EF4444","#8B5CF6", "#ec4899", "#14b8a6"], borderColor: "#1A1A1A", borderWidth: 3, hoverOffset: 8 }] },
+      options: { cutout: "70%", plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}%` } } } }
     });
 
-    /* ============ BAR CHART ============ */
-    const barCtx = document.getElementById('ordersBarChart').getContext('2d');
+    const barCtx = document.getElementById("ordersBarChart").getContext("2d");
     const barChart = new Chart(barCtx, {
-      type: 'bar',
-      data: {
-        labels: months,
-        datasets: [
-          {
-            label: 'Tháng này',
-            data: [180, 210, 260, 240, 290, 275, 310, 340, 320, 360, 370, 280],
-            backgroundColor: 'rgba(37,99,235,0.8)',
-            borderRadius: 6,
-            barPercentage: 0.45,
-          },
-          {
-            label: 'Tháng trước',
-            data: [160, 190, 230, 210, 260, 250, 280, 310, 290, 330, 340, 255],
-            backgroundColor: 'rgba(37,99,235,0.2)',
-            borderRadius: 6,
-            barPercentage: 0.45,
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { position: 'top', labels: { boxWidth: 12, padding: 20 } }, tooltip: { mode: 'index' } },
-        scales: {
-          x: { grid: { display: false } },
-          y: { grid: { color: '#1E2A3A' } }
-        }
-      }
+      type: "bar",
+      data: { labels: months, datasets: [
+        { label: "Tháng này", data: [], backgroundColor: "rgba(37,99,235,0.8)", borderRadius: 6, barPercentage: 0.45 },
+        { label: "Tháng trước", data: [], backgroundColor: "rgba(37,99,235,0.2)", borderRadius: 6, barPercentage: 0.45 }
+      ]},
+      options: { responsive: true, plugins: { legend: { position: "top", labels: { boxWidth: 12, padding: 20 } }, tooltip: { mode: "index" } }, scales: { x: { grid: { display: false } }, y: { grid: { color: "#1E2A3A" } } } }
     });
 
-    /* ============ UPDATE CHARTS BY FILTER ============ */
-    function updateCharts(period) {
-      const labels = labelMap[period];
-      const rev = revenueData[period];
-      const ord = ordersData[period];
+    async function loadDashboardData() {
+      try {
+        const res = await fetch(API_BASE + "/orders");
+        const data = await res.json();
+        if (data.success) {
+          allOrders = data.orders;
+          updateDashboard("30d");
+          renderTopProducts();
+          renderRecentOrders();
+        }
+      } catch(e) { console.error(e); }
+    }
+
+    function updateDashboard(period) {
+      const now = new Date();
+      let startDate = new Date();
+      let labels = [];
+      let revData = [];
+      let ordData = [];
+      
+      if(period === "7d") {
+        startDate.setDate(now.getDate() - 6);
+        for(let i=0; i<7; i++) {
+          let d = new Date(startDate);
+          d.setDate(d.getDate() + i);
+          labels.push(`${d.getDate()}/${d.getMonth()+1}`);
+          revData.push(0); ordData.push(0);
+        }
+      } else if(period === "30d") {
+        startDate.setDate(now.getDate() - 29);
+        for(let i=0; i<30; i++) {
+          let d = new Date(startDate);
+          d.setDate(d.getDate() + i);
+          labels.push(`${d.getDate()}/${d.getMonth()+1}`);
+          revData.push(0); ordData.push(0);
+        }
+      } else if(period === "3m") {
+        startDate.setMonth(now.getMonth() - 2);
+        startDate.setDate(1);
+        for(let i=0; i<3; i++) {
+          let d = new Date(startDate);
+          d.setMonth(d.getMonth() + i);
+          labels.push(`Tháng ${d.getMonth()+1}`);
+          revData.push(0); ordData.push(0);
+        }
+      } else { 
+        startDate = new Date(now.getFullYear(), 0, 1);
+        labels = months;
+        for(let i=0; i<12; i++) { revData.push(0); ordData.push(0); }
+      }
+
+      let totalRev = 0; let totalOrd = 0; let cancelled = 0;
+      let categories = {};
+
+      allOrders.forEach(o => {
+        const oDate = new Date(o.createdAt);
+        if(o.status === "cancelled") cancelled++;
+        else {
+          totalOrd++;
+          totalRev += o.totalPrice || 0;
+          
+          o.products.forEach(p => {
+             const cat = p.productId?.category || "Khác";
+             categories[cat] = (categories[cat] || 0) + (p.price * p.quantity);
+          });
+        }
+        
+        if(oDate >= startDate && o.status !== "cancelled") {
+          let idx = -1;
+          if(period === "7d" || period === "30d") {
+            const diffTime = Math.abs(oDate - startDate);
+            idx = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+          } else if(period === "3m") {
+             idx = (oDate.getFullYear() - startDate.getFullYear()) * 12 + (oDate.getMonth() - startDate.getMonth());
+          } else {
+             if(oDate.getFullYear() === now.getFullYear()) idx = oDate.getMonth();
+          }
+          if(idx >= 0 && idx < labels.length) {
+            revData[idx] += (o.totalPrice || 0) / 1000000;
+            ordData[idx] += 1;
+          }
+        }
+      });
+
+      document.getElementById("kpiRevenue").textContent = totalRev.toLocaleString("vi-VN") + "đ";
+      document.getElementById("kpiOrders").textContent = totalOrd;
+      document.getElementById("kpiAvgOrder").textContent = totalOrd ? Math.round(totalRev/totalOrd).toLocaleString("vi-VN") + "đ" : "0đ";
+      document.getElementById("kpiCancelled").textContent = cancelled;
 
       lineChart.data.labels = labels;
-      lineChart.data.datasets[0].data = rev;
+      lineChart.data.datasets[0].data = revData.map(v => v.toFixed(1));
       lineChart.update();
 
-      barChart.data.labels = period === 'year' ? months : labels;
-      barChart.data.datasets[0].data = ord;
-      barChart.data.datasets[1].data = ord.map(v => Math.round(v * 0.88));
+      const catLabels = Object.keys(categories);
+      const catData = Object.values(categories);
+      const totalCatRev = catData.reduce((a,b)=>a+b,0);
+      const catPct = catData.map(v => totalCatRev ? Math.round((v/totalCatRev)*100) : 0);
+      doughnutChart.data.labels = catLabels;
+      doughnutChart.data.datasets[0].data = catPct;
+      doughnutChart.update();
+
+      const catHtml = document.querySelector("#categoryDoughnut").parentNode.nextElementSibling;
+      const colors = ["#2563EB","#10B981","#F59E0B","#EF4444","#8B5CF6", "#ec4899", "#14b8a6"];
+      let htmlStr = "";
+      catLabels.forEach((c, i) => {
+         htmlStr += `<div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;"><span><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${colors[i%colors.length]};margin-right:6px;"></span>${c}</span><strong>${catPct[i]}%</strong></div>`;
+      });
+      catHtml.innerHTML = htmlStr;
+
+      let thisYearOrd = Array(12).fill(0);
+      let lastYearOrd = Array(12).fill(0);
+      allOrders.forEach(o => {
+         if(o.status !== "cancelled") {
+           const d = new Date(o.createdAt);
+           if(d.getFullYear() === now.getFullYear()) thisYearOrd[d.getMonth()]++;
+           if(d.getFullYear() === now.getFullYear() - 1) lastYearOrd[d.getMonth()]++;
+         }
+      });
+      barChart.data.datasets[0].data = thisYearOrd;
+      barChart.data.datasets[1].data = lastYearOrd;
       barChart.update();
     }
 
-    /* ============ TOP PRODUCTS ============ */
-    const topProducts = [
-      { name: 'Yonex Astrox 100ZZ', revenue: 85600000, pct: 100 },
-      { name: 'Lining Aeronaut 9000C', revenue: 62400000, pct: 73 },
-      { name: 'Victor Thruster K9900', revenue: 54800000, pct: 64 },
-      { name: 'Yonex SHB-65Z3', revenue: 38200000, pct: 45 },
-      { name: 'Balo Yonex BA92012EX', revenue: 29500000, pct: 34 },
-      { name: 'Ống cầu Vina Star', revenue: 18700000, pct: 22 },
-    ];
+    function setFilter(period, el) {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      el.classList.add("active");
+      updateDashboard(period);
+    }
 
-    const tbody = document.getElementById('topProductsBody');
-    topProducts.forEach((p, i) => {
-      const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
-      tbody.innerHTML += `
-        <tr>
+    function renderTopProducts() {
+      let pMap = {};
+      allOrders.forEach(o => {
+        if(o.status !== "cancelled") {
+          o.products.forEach(p => {
+             const name = p.name || p.productId?.name || "SP";
+             pMap[name] = (pMap[name] || 0) + (p.price * p.quantity);
+          });
+        }
+      });
+      let arr = Object.keys(pMap).map(k => ({name: k, revenue: pMap[k]}));
+      arr.sort((a,b) => b.revenue - a.revenue);
+      const topArr = arr.slice(0, 6);
+      const maxRev = topArr.length ? topArr[0].revenue : 1;
+
+      const tbody = document.getElementById("topProductsBody");
+      tbody.innerHTML = "";
+      topArr.forEach((p, i) => {
+        const pct = Math.round((p.revenue / maxRev) * 100);
+        const rankClass = i === 0 ? "rank-1" : i === 1 ? "rank-2" : i === 2 ? "rank-3" : "rank-other";
+        tbody.innerHTML += `<tr>
           <td><span class="prod-rank ${rankClass}">${i+1}</span></td>
-          <td>
-            <div>${p.name}</div>
-            <div class="progress-bar-wrap">
-              <div class="progress-bar-fill" style="width:${p.pct}%"></div>
-            </div>
-          </td>
+          <td><div>${p.name}</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%"></div></div></td>
           <td class="prod-revenue">${(p.revenue/1000000).toFixed(1)}M đ</td>
         </tr>`;
-    });
+      });
+    }
 
-    /* ============ RECENT ORDERS ============ */
-    const recentOrders = [
-      { name: 'Nguyễn Văn A', product: 'Yonex Astrox 100ZZ', amount: '5.200.000đ', status: 'success', statusLabel: 'Thành công' },
-      { name: 'Trần Thị B', product: 'Giày Victor P9200', amount: '2.100.000đ', status: 'success', statusLabel: 'Thành công' },
-      { name: 'Lê Minh K', product: 'Balo Yonex BA92012', amount: '1.200.000đ', status: 'pending', statusLabel: 'Đang xử lý' },
-      { name: 'Phạm Hồng Q', product: 'Lining Aeronaut 9000C', amount: '3.800.000đ', status: 'success', statusLabel: 'Thành công' },
-      { name: 'Hoàng Thị D', product: 'Ống cầu Vina Star x5', amount: '1.750.000đ', status: 'cancelled', statusLabel: 'Đã huỷ' },
-      { name: 'Vũ Thanh T', product: 'Victor Thruster K9900', amount: '4.600.000đ', status: 'pending', statusLabel: 'Đang xử lý' },
-      { name: 'Đỗ Quang H', product: 'Quấn cán Yonex x3', amount: '240.000đ', status: 'success', statusLabel: 'Thành công' },
-    ];
-
-    const orderList = document.getElementById('recentOrdersList');
-    recentOrders.forEach(o => {
-      const initials = o.name.split(' ').map(w => w[0]).slice(-2).join('');
-      orderList.innerHTML += `
-        <div class="order-item">
+    function renderRecentOrders() {
+      const orderList = document.getElementById("recentOrdersList");
+      orderList.innerHTML = "";
+      const recent = allOrders.slice(0, 7);
+      recent.forEach(o => {
+        const initials = (o.receiverName || "Khách").split(" ").map(w => w[0]).slice(-2).join("");
+        const prodNames = o.products.map(p => p.name || p.productId?.name).join(", ");
+        const statusClass = o.status === "cancelled" ? "cancelled" : (o.status === "pending" ? "pending" : "success");
+        const statusLabel = o.status === "cancelled" ? "Đã huỷ" : (o.status === "pending" ? "Đang xử lý" : "Thành công");
+        orderList.innerHTML += `<div class="order-item">
           <div class="order-left">
             <div class="order-avatar">${initials}</div>
-            <div>
-              <div class="order-name">${o.name}</div>
-              <div class="order-product">${o.product}</div>
-            </div>
+            <div><div class="order-name">${o.receiverName}</div><div class="order-product" style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${prodNames}</div></div>
           </div>
           <div class="order-right">
-            <div class="order-amount">${o.amount}</div>
-            <span class="order-status status-${o.status}">${o.statusLabel}</span>
+            <div class="order-amount">${(o.totalPrice || 0).toLocaleString("vi-VN")}đ</div>
+            <span class="order-status status-${statusClass}">${statusLabel}</span>
           </div>
         </div>`;
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadDashboardData();
     });
-  
+
     // Cross-tab synchronization
     window.addEventListener('storage', (e) => {
       if (e.key === AUTH_KEY) {
