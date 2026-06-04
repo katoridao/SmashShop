@@ -16,6 +16,7 @@ const {
   generateRandomPassword,
   sendPasswordResetEmail,
 } = require("../utils/emailHelper");
+const { sendEmail } = require("../config/email");
 
 const router = express.Router();
 
@@ -621,7 +622,6 @@ router.get("/cart/:userId", async (req, res) => {
   }
 });
 
-
 // 2. PUT: Thêm sản phẩm mới hoặc cập nhật số lượng của sản phẩm trong giỏ
 router.put("/cart/:userId/update", async (req, res) => {
   try {
@@ -629,20 +629,25 @@ router.put("/cart/:userId/update", async (req, res) => {
     const { productId, quantity } = req.body;
 
     if (!productId || quantity === undefined) {
-      return res.status(400).json({ success: false, message: "Thiếu dữ liệu cập nhật!" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Thiếu dữ liệu cập nhật!" });
     }
 
     // Lấy thông tin giá bán mới nhất và tồn kho từ Product
     const product = await Product.findById(productId);
     if (!product) {
-      return res.status(404).json({ success: false, message: "Sản phẩm không tồn tại trong hệ thống" });
+      return res.status(404).json({
+        success: false,
+        message: "Sản phẩm không tồn tại trong hệ thống",
+      });
     }
 
     // KIỂM TRA TỒN KHO GẤT QUAN TRỌNG
     if (Number(quantity) > product.stock) {
-      return res.status(400).json({ 
-        success: false, 
-        message: `Chỉ còn ${product.stock} sản phẩm trong kho.` 
+      return res.status(400).json({
+        success: false,
+        message: `Chỉ còn ${product.stock} sản phẩm trong kho.`,
       });
     }
 
@@ -653,13 +658,20 @@ router.put("/cart/:userId/update", async (req, res) => {
 
     // Nếu quantity <= 0, tự động xóa sản phẩm khỏi giỏ hàng
     if (Number(quantity) <= 0) {
-      cart.items = cart.items.filter(item => item.productId.toString() !== productId);
+      cart.items = cart.items.filter(
+        (item) => item.productId.toString() !== productId,
+      );
       await cart.save();
-      return res.status(200).json({ success: true, message: "Đã xóa sản phẩm khỏi giỏ", cart });
+      return res
+        .status(200)
+        .json({ success: true, message: "Đã xóa sản phẩm khỏi giỏ", cart });
     }
 
-    const finalPrice = product.price - (product.price * (product.discount || 0) / 100);
-    const itemIndex = cart.items.findIndex(item => item.productId.toString() === productId);
+    const finalPrice =
+      product.price - (product.price * (product.discount || 0)) / 100;
+    const itemIndex = cart.items.findIndex(
+      (item) => item.productId.toString() === productId,
+    );
 
     if (itemIndex > -1) {
       cart.items[itemIndex].quantity = Number(quantity);
@@ -673,7 +685,9 @@ router.put("/cart/:userId/update", async (req, res) => {
     }
 
     await cart.save();
-    res.status(200).json({ success: true, message: "Cập nhật giỏ hàng thành công!", cart });
+    res
+      .status(200)
+      .json({ success: true, message: "Cập nhật giỏ hàng thành công!", cart });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -692,12 +706,10 @@ router.delete("/cart/:userId/remove", async (req, res) => {
 
     let cart = await Cart.findOne({ userId });
     if (!cart) {
-      return res
-        .status(404)
-        .json({
-          success: false,
-          message: "Không tìm thấy giỏ hàng của người dùng này",
-        });
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy giỏ hàng của người dùng này",
+      });
     }
 
     // Lọc loại bỏ productId cần xóa khỏi mảng items
@@ -706,13 +718,221 @@ router.delete("/cart/:userId/remove", async (req, res) => {
     );
 
     await cart.save();
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Đã xóa sản phẩm khỏi giỏ hàng thành công!",
-        cart,
+    res.status(200).json({
+      success: true,
+      message: "Đã xóa sản phẩm khỏi giỏ hàng thành công!",
+      cart,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// ==============================
+// ORDER CHECKOUT
+// ==============================
+router.post("/orders", async (req, res) => {
+  try {
+    const {
+      userId,
+      products,
+      totalPrice,
+      receiverName,
+      phone,
+      address,
+      email,
+      paymentMethod,
+      shippingMethod,
+      shippingCost,
+      discount = 0,
+      couponCode = "",
+      note = "",
+    } = req.body;
+
+    if (
+      !userId ||
+      !Array.isArray(products) ||
+      products.length === 0 ||
+      !receiverName ||
+      !phone ||
+      !address ||
+      !email ||
+      !paymentMethod ||
+      !shippingMethod ||
+      shippingCost === undefined
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Thiếu thông tin đơn hàng. Vui lòng kiểm tra lại.",
       });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Người dùng không tồn tại.",
+      });
+    }
+
+    const allowedMethods = ["COD", "BANKING", "MOMO", "CARD", "VNPAY"];
+    const allowedShipping = ["standard", "express", "same_day"];
+    if (
+      !allowedMethods.includes(paymentMethod) ||
+      !allowedShipping.includes(shippingMethod)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Phương thức thanh toán hoặc vận chuyển không hợp lệ.",
+      });
+    }
+
+    const calculatedSubtotal = products.reduce((sum, item) => {
+      const quantity = Number(item.quantity) || 0;
+      const price = Number(item.price) || 0;
+      return sum + quantity * price;
+    }, 0);
+
+    const calculatedTotal =
+      calculatedSubtotal + Number(shippingCost) - Number(discount || 0);
+    if (calculatedTotal < 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Tổng đơn hàng không hợp lệ." });
+    }
+
+    // Validate stock and enrich products with server-side names
+    const enrichedProducts = [];
+    for (const it of products) {
+      const quantity = Number(it.quantity) || 0;
+      const price = Number(it.price) || 0;
+      if (!quantity || quantity <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Số lượng sản phẩm không hợp lệ.",
+        });
+      }
+
+      const existingProduct = await Product.findById(it.productId).select(
+        "name stock",
+      );
+      if (!existingProduct) {
+        return res.status(404).json({
+          success: false,
+          message: `Sản phẩm với ID ${it.productId} không tồn tại.`,
+        });
+      }
+      if (existingProduct.stock < quantity) {
+        return res.status(400).json({
+          success: false,
+          message: `Sản phẩm "${existingProduct.name}" chỉ còn ${existingProduct.stock} sản phẩm trong kho.`,
+        });
+      }
+
+      enrichedProducts.push({
+        productId: it.productId,
+        name: existingProduct.name,
+        quantity,
+        price,
+      });
+    }
+
+    // Decrement stock atomically per ordered product
+    await Promise.all(
+      enrichedProducts.map((item) =>
+        Product.findByIdAndUpdate(item.productId, {
+          $inc: { stock: -item.quantity },
+        }),
+      ),
+    );
+
+    const order = await Order.create({
+      userId,
+      products: enrichedProducts,
+      totalPrice: calculatedTotal,
+      receiverName,
+      phone,
+      address,
+      email,
+      paymentMethod,
+      shippingMethod,
+      shippingCost,
+      discount: Number(discount || 0),
+      couponCode: couponCode.trim(),
+      note: note.trim(),
+    });
+
+    await Cart.findOneAndUpdate({ userId }, { items: [] });
+
+    // Send order confirmation email (non-blocking but awaited inside async IIFE)
+    (async () => {
+      try {
+        const subject = `SmashShop - Xác nhận đơn hàng ${order._id}`;
+        const itemsHtml = enrichedProducts
+          .map(
+            (it) => `
+            <tr>
+              <td style="padding:8px;border:1px solid #eee">${it.name}</td>
+              <td style="padding:8px;border:1px solid #eee;text-align:center">${it.quantity}</td>
+              <td style="padding:8px;border:1px solid #eee;text-align:right">${Number(it.price).toLocaleString("vi-VN")}đ</td>
+              <td style="padding:8px;border:1px solid #eee;text-align:right">${(it.quantity * it.price).toLocaleString("vi-VN")}đ</td>
+            </tr>`,
+          )
+          .join("");
+
+        const html = `
+          <div style="font-family:Arial,Helvetica,sans-serif;max-width:760px;margin:0 auto;padding:20px;">
+            <h2 style="color:#1D4ED8">SmashShop - Xác nhận đơn hàng</h2>
+            <p>Xin chào, <strong>${receiverName}</strong></p>
+            <p>Chúng tôi đã nhận được đơn hàng <strong>#${order._id}</strong>. Chi tiết đơn hàng như sau:</p>
+            <table style="width:100%;border-collapse:collapse;margin-top:12px;margin-bottom:12px;border:1px solid #eee">
+              <thead>
+                <tr>
+                  <th style="padding:8px;border:1px solid #eee;text-align:left">Sản phẩm</th>
+                  <th style="padding:8px;border:1px solid #eee">Số lượng</th>
+                  <th style="padding:8px;border:1px solid #eee">Đơn giá</th>
+                  <th style="padding:8px;border:1px solid #eee">Thành tiền</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${itemsHtml}
+              </tbody>
+            </table>
+            <div style="text-align:right;font-size:16px;margin-top:8px">Tạm tính: <strong>${calculatedSubtotal.toLocaleString("vi-VN")}đ</strong></div>
+            <div style="text-align:right;font-size:16px">Phí vận chuyển: <strong>${Number(shippingCost).toLocaleString("vi-VN")}đ</strong></div>
+            <div style="text-align:right;font-size:18px;margin-top:6px">Tổng cộng: <strong style="color:#ec4899">${calculatedTotal.toLocaleString("vi-VN")}đ</strong></div>
+            <hr style="margin:18px 0" />
+            <h4>Thông tin người nhận</h4>
+            <p>Tên: ${receiverName}<br/>SĐT: ${phone}<br/>Địa chỉ: ${address}<br/>Email: ${email}</p>
+            <p style="color:#666;font-size:13px">Cảm ơn bạn đã mua hàng tại SmashShop.</p>
+          </div>
+        `;
+
+        await sendEmail(email, subject, html);
+        console.log("Order confirmation email sent to", email);
+      } catch (err) {
+        console.error(
+          "Failed to send order email:",
+          err && err.message ? err.message : err,
+        );
+      }
+    })();
+
+    res.status(201).json({
+      success: true,
+      message: "Đơn hàng đã được tạo thành công.",
+      order,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+router.get("/orders/user/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+    res.status(200).json({ success: true, orders });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

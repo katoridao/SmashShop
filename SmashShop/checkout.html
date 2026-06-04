@@ -513,20 +513,6 @@
 
     /* ===== CHECKOUT PAGE STYLES ===== */
 
-    /* Breadcrumb */
-    .checkout-breadcrumb {
-      padding: 20px 0 0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: #888;
-    }
-    .checkout-breadcrumb a { color: #888; transition: color .2s; }
-    .checkout-breadcrumb a:hover { color: #2563EB; }
-    .checkout-breadcrumb i { font-size: 10px; }
-    .checkout-breadcrumb span { color: #fff; font-weight: 500; }
-
     /* Checkout Steps */
     .checkout-steps {
       display: flex;
@@ -1150,15 +1136,6 @@
   <main>
     <div class="container">
 
-      <!-- Breadcrumb -->
-      <div class="checkout-breadcrumb">
-        <a href="/SmashShop/index.html">Trang chủ</a>
-        <i class="fa-solid fa-chevron-right"></i>
-        <a href="/SmashShop/cart.html">Giỏ hàng</a>
-        <i class="fa-solid fa-chevron-right"></i>
-        <span>Thanh toán</span>
-      </div>
-
       <!-- Steps -->
       <div class="checkout-steps">
         <div class="step done">
@@ -1204,34 +1181,6 @@
             <div class="form-group">
               <label>Email <span style="color:#ef4444">*</span></label>
               <input type="email" placeholder="email@example.com" id="recipientEmail">
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label>Tỉnh / Thành phố</label>
-                <select id="province">
-                  <option value="">-- Chọn tỉnh/thành --</option>
-                  <option>Hà Nội</option>
-                  <option>TP. Hồ Chí Minh</option>
-                  <option>Đà Nẵng</option>
-                  <option>Hải Phòng</option>
-                  <option>Cần Thơ</option>
-                  <option>Bình Dương</option>
-                  <option>Đồng Nai</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Quận / Huyện</label>
-                <select id="district">
-                  <option value="">-- Chọn quận/huyện --</option>
-                  <option>Hoàn Kiếm</option>
-                  <option>Ba Đình</option>
-                  <option>Đống Đa</option>
-                  <option>Hai Bà Trưng</option>
-                  <option>Cầu Giấy</option>
-                  <option>Thanh Xuân</option>
-                </select>
-              </div>
             </div>
 
             <div class="form-group">
@@ -1467,55 +1416,20 @@
         <!-- RIGHT: Order summary -->
         <div class="checkout-right">
           <div class="checkout-card" style="position:sticky;top:90px;">
-            <div class="checkout-card-title">
+            <div class="checkout-card-title" id="checkoutTitle">
               <i class="fa-solid fa-bag-shopping"></i>
-              Đơn hàng của bạn (3 sản phẩm)
+              Đơn hàng của bạn
             </div>
 
-            <div class="order-items">
-              <div class="order-item">
-                <img class="order-item-img" src="https://picsum.photos/60?random=21" alt="Vợt">
-                <div class="order-item-details">
-                  <h4>Yonex Astrox 100ZZ</h4>
-                  <span>x1 &nbsp;|&nbsp; Màu: Đen Vàng</span>
-                </div>
-                <div class="order-item-price">5.200.000đ</div>
-              </div>
-
-              <div class="order-item">
-                <img class="order-item-img" src="https://picsum.photos/60?random=23" alt="Giày">
-                <div class="order-item-details">
-                  <h4>Giày Victor P9200</h4>
-                  <span>x1 &nbsp;|&nbsp; Size: 42</span>
-                </div>
-                <div class="order-item-price">2.100.000đ</div>
-              </div>
-
-              <div class="order-item">
-                <img class="order-item-img" src="https://picsum.photos/60?random=26" alt="Quấn cán">
-                <div class="order-item-details">
-                  <h4>Quấn cán Yonex AC102EX</h4>
-                  <span>x2 &nbsp;|&nbsp; Màu: Trắng</span>
-                </div>
-                <div class="order-item-price">160.000đ</div>
-              </div>
+            <div class="order-items" id="orderItems">
+              <p style="color:#bbb; text-align:center; padding: 24px 0;">Đang tải giỏ hàng...</p>
             </div>
 
             <hr class="divider">
 
-            <!-- Coupon -->
-            <div class="coupon-row" style="margin-bottom:16px;">
-              <input type="text" placeholder="Nhập mã giảm giá..." id="couponInput">
-              <button class="coupon-btn" onclick="applyCoupon()">Áp dụng</button>
-            </div>
-
             <div class="summary-row">
               <span>Tạm tính</span>
-              <span>7.460.000đ</span>
-            </div>
-            <div class="summary-row discount" id="discountRow" style="display:none;">
-              <span>Giảm giá <span id="couponLabel"></span></span>
-              <span id="discountValue">-0đ</span>
+              <span id="subtotalAmount">0đ</span>
             </div>
             <div class="summary-row" id="shippingRow">
               <span>Phí vận chuyển</span>
@@ -1568,7 +1482,7 @@
   <div class="success-overlay" id="successOverlay">
     <div class="success-card">
       <div class="success-icon"><i class="fa-solid fa-check"></i></div>
-      <h2>Đặt hàng thành công! 🎉</h2>
+      <h2>Đặt hàng thành công!</h2>
       <p>Cảm ơn bạn đã tin tưởng SmashShop.</p>
       <p>Mã đơn hàng của bạn:</p>
       <div class="order-code" id="successOrderCode">SS-2605-0001</div>
@@ -1927,26 +1841,133 @@
     let selectedPayment = 'cod';
     let selectedShipping = 'standard';
     let discount = 0;
+    let subtotal = 0;
+    let cartItems = [];
+    // Demo mode: allow placing order without filling form
+    const DEMO_FORCE_PLACE_ORDER = true;
 
     const shippingCosts = { standard: 30000, express: 50000, same_day: 80000 };
-    const subtotal = 7460000;
-
-    // Generate order code
     const orderCode = 'SS-' + new Date().toLocaleDateString('vi-VN').replace(/\//g, '') + '-' + Math.floor(1000 + Math.random() * 9000);
     document.getElementById('bankOrderCode').textContent = orderCode;
     document.getElementById('momoCode').textContent = orderCode;
     document.getElementById('successOrderCode').textContent = orderCode;
 
     function formatVND(n) {
-      return n.toLocaleString('vi-VN') + 'đ';
+      return Number(n || 0).toLocaleString('vi-VN') + 'đ';
+    }
+
+    function getFullImageUrl(thumbnail) {
+      if (!thumbnail) return 'https://picsum.photos/300?random=1';
+      const s = String(thumbnail || '');
+      if (/^https?:\/\//i.test(s)) return s;
+      // Prefix with backend origin used across the site
+      const backendOrigin = 'http://localhost:3000';
+      if (s.startsWith('/')) return backendOrigin + s;
+      return backendOrigin + '/' + s;
+    }
+
+    function getUserId() {
+      const auth = currentAuth || getStoredAuth();
+      return auth?.user?._id || localStorage.getItem('userId');
     }
 
     function updateTotal() {
-      const ship = shippingCosts[selectedShipping];
-      const total = subtotal - discount + ship;
-      document.getElementById('totalAmount').textContent = formatVND(total);
-      document.getElementById('bankAmount').textContent = formatVND(total);
-      document.getElementById('momoAmount').textContent = formatVND(total);
+      const ship = shippingCosts[selectedShipping] || 0;
+      const total = Math.max(0, subtotal - discount + ship);
+
+      const elTotal = document.getElementById('totalAmount');
+      const elBank = document.getElementById('bankAmount');
+      const elMomo = document.getElementById('momoAmount');
+      const elShip = document.getElementById('shippingFee');
+      const elSubtotal = document.getElementById('subtotalAmount');
+
+      if (elTotal) elTotal.textContent = formatVND(total);
+      if (elBank) elBank.textContent = formatVND(total);
+      if (elMomo) elMomo.textContent = formatVND(total);
+      if (elShip) elShip.textContent = formatVND(ship);
+      if (elSubtotal) elSubtotal.textContent = formatVND(subtotal);
+    }
+
+    function renderCartItems(items) {
+      const listEl = document.getElementById('orderItems');
+      const titleEl = document.getElementById('checkoutTitle');
+      cartItems = items.map((item) => {
+        const product = item.productId || {};
+        return {
+          productId: product._id || product.id || item.productId,
+          name: product.name || 'Sản phẩm không xác định',
+          thumbnail: getFullImageUrl(product.thumbnail),
+          quantity: Number(item.quantity) || 1,
+          price: Number(item.price) || 0,
+        };
+      });
+
+      subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      const totalCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+      titleEl.textContent = `Đơn hàng của bạn (${totalCount} sản phẩm)`;
+
+      if (!cartItems.length) {
+        listEl.innerHTML = '<p style="color:#bbb; text-align:center; padding: 24px 0;">Giỏ hàng của bạn đang trống.</p>';
+        document.querySelector('.checkout-btn').disabled = true;
+        document.querySelector('.checkout-btn').style.opacity = '0.6';
+        updateTotal();
+        return;
+      }
+
+      document.querySelector('.checkout-btn').disabled = false;
+      document.querySelector('.checkout-btn').style.opacity = '1';
+
+      listEl.innerHTML = cartItems
+        .map((item) => `
+          <div class="order-item">
+            <img class="order-item-img" src="${item.thumbnail}" alt="${item.name}" onerror="this.src='https://picsum.photos/60?random=99'">
+            <div class="order-item-details">
+              <h4>${item.name}</h4>
+              <span>x${item.quantity}</span>
+            </div>
+            <div class="order-item-price">${formatVND(item.price * item.quantity)}</div>
+          </div>
+        `)
+        .join('');
+
+      updateTotal();
+    }
+
+    async function loadCheckoutCart() {
+      const userId = getUserId();
+      if (!userId) {
+        document.getElementById('orderItems').innerHTML = '<p style="color:#bbb; text-align:center; padding: 24px 0;">Vui lòng đăng nhập để hoàn tất thanh toán.</p>';
+        document.querySelector('.checkout-btn').disabled = true;
+        document.querySelector('.checkout-btn').style.opacity = '0.6';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/cart/${userId}`);
+        const data = await res.json();
+        if (data.success && data.cart && Array.isArray(data.cart.items) && data.cart.items.length) {
+          renderCartItems(data.cart.items);
+        } else {
+          renderCartItems([]);
+        }
+      } catch (error) {
+        console.error('Lỗi khi tải giỏ hàng:', error);
+        document.getElementById('orderItems').innerHTML = '<p style="color:#ef4444; text-align:center; padding: 24px 0;">Không thể tải giỏ hàng. Vui lòng thử lại sau.</p>';
+        document.querySelector('.checkout-btn').disabled = true;
+      }
+    }
+
+    function mapPaymentMethod(method) {
+      switch (method) {
+        case 'bank':
+          return 'BANKING';
+        case 'momo':
+          return 'MOMO';
+        case 'card':
+          return 'CARD';
+        default:
+          return 'COD';
+      }
     }
 
     function selectPayment(el, method) {
@@ -1963,9 +1984,6 @@
       document.querySelectorAll('.shipping-option').forEach(s => s.classList.remove('selected'));
       el.classList.add('selected');
       selectedShipping = method;
-
-      const feeMap = { standard: '30.000đ', express: '50.000đ', same_day: '80.000đ' };
-      document.getElementById('shippingFee').textContent = feeMap[method];
       updateTotal();
     }
 
@@ -2002,32 +2020,86 @@
       input.value = v;
     }
 
-    function placeOrder() {
-      // Validate
-      const name = document.getElementById('recipientName').value.trim();
-      const phone = document.getElementById('recipientPhone').value.trim();
-      const email = document.getElementById('recipientEmail').value.trim();
-      const address = document.getElementById('recipientAddress').value.trim();
-
-      if (!name || !phone || !email || !address) {
-        alert('Vui lòng điền đầy đủ thông tin giao hàng (Họ tên, SĐT, Email, Địa chỉ).');
-        document.querySelector('.checkout-left').scrollIntoView({ behavior: 'smooth' });
+    async function placeOrder() {
+      const userId = getUserId();
+      if (!userId) {
+        sessionStorage.setItem('auth_redirect', window.location.href);
+        openAuthModal('login');
         return;
       }
 
-      if (selectedPayment === 'card') {
-        const cardNum = document.getElementById('cardNumber').value.replace(/\s/g, '');
-        const cardName = document.getElementById('cardName').value.trim();
-        const cardExp = document.getElementById('cardExpiry').value;
-        const cardCVV = document.getElementById('cardCVV').value;
+      if (!cartItems.length) {
+        alert('Giỏ hàng của bạn đang trống. Vui lòng thêm sản phẩm trước khi thanh toán.');
+        return;
+      }
+
+      // safe read helper to avoid null reads
+      function getFieldVal(id, fallback = '') {
+        const el = document.getElementById(id);
+        if (!el) return fallback;
+        return (el.value || '').toString().trim();
+      }
+
+      let name = getFieldVal('recipientName', 'Khách hàng');
+      let phone = getFieldVal('recipientPhone', '0123456789');
+      let email = getFieldVal('recipientEmail', 'no-reply@local.test');
+      let address = getFieldVal('recipientAddress', 'Chưa cập nhật');
+      const note = getFieldVal('orderNote', '');
+
+      // If fields are empty and user is logged in, use auth info
+      const auth = currentAuth || getStoredAuth();
+      if (auth?.user) {
+        if (!name || name === 'Khách hàng') name = auth.user.name || name;
+        if ((!email || email === 'no-reply@local.test') && auth.user.email) email = auth.user.email;
+        if ((!phone || phone === '0123456789') && auth.user.phone) phone = auth.user.phone;
+      }
+
+      if (!name || !phone || !email || !address) {
+        if (!DEMO_FORCE_PLACE_ORDER) {
+          alert('Vui lòng điền đầy đủ thông tin giao hàng (Họ tên, SĐT, Email, Địa chỉ).');
+          document.querySelector('.checkout-left')?.scrollIntoView({ behavior: 'smooth' });
+          return;
+        }
+        // demo: continue with default/fallback values
+        console.warn('Proceeding with demo fallback recipient info');
+      }
+
+      if (selectedPayment === 'card' && !DEMO_FORCE_PLACE_ORDER) {
+        const cardNum = getFieldVal('cardNumber', '').replace(/\s/g, '');
+        const cardName = getFieldVal('cardName', '');
+        const cardExp = getFieldVal('cardExpiry', '');
+        const cardCVV = getFieldVal('cardCVV', '');
         if (cardNum.length < 16 || !cardName || cardExp.length < 5 || cardCVV.length < 3) {
           alert('Vui lòng điền đầy đủ thông tin thẻ.');
           return;
         }
       }
 
-      // Show success
-      document.getElementById('successOverlay').classList.add('show');
+      try {
+        const payload = {
+          userId,
+          products: cartItems.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+          receiverName: name,
+          phone,
+          address,
+          email,
+          paymentMethod: mapPaymentMethod(selectedPayment),
+          shippingMethod: selectedShipping,
+          shippingCost: shippingCosts[selectedShipping] || 0,
+          discount,
+          couponCode: getFieldVal('couponInput', '').toUpperCase(),
+          note,
+        };
+
+        await apiRequest('/orders', 'POST', payload);
+        document.getElementById('successOverlay').classList.add('show');
+      } catch (error) {
+        alert(error.message || 'Đặt hàng thất bại. Vui lòng thử lại.');
+      }
     }
 
     function closeSuccess() {
@@ -2047,8 +2119,18 @@
       countdownEl.textContent = m + ':' + s;
     }, 1000);
 
+    function populateRecipientInfo() {
+      const auth = currentAuth || getStoredAuth();
+      if (!auth?.user) return;
+      document.getElementById('recipientName').value = auth.user.name || '';
+      document.getElementById('recipientEmail').value = auth.user.email || '';
+      document.getElementById('recipientPhone').value = auth.user.phone || '';
+    }
+
     // Init total
     updateTotal();
+    populateRecipientInfo();
+    loadCheckoutCart();
   
     // Cross-tab synchronization
     window.addEventListener('storage', (e) => {

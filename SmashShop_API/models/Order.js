@@ -54,10 +54,30 @@ const orderSchema = new mongoose.Schema(
       trim: true,
     },
 
+    email: {
+      type: String,
+      required: [true, "Email người nhận là bắt buộc"],
+      lowercase: true,
+      trim: true,
+    },
+
     paymentMethod: {
       type: String,
-      enum: ["COD", "BANKING"],
+      enum: ["COD", "BANKING", "MOMO", "CARD", "VNPAY"],
       default: "COD",
+    },
+
+    shippingMethod: {
+      type: String,
+      enum: ["standard", "express", "same_day"],
+      default: "standard",
+    },
+
+    shippingCost: {
+      type: Number,
+      required: true,
+      min: [0, "Phí vận chuyển không được âm"],
+      default: 30000,
     },
 
     paymentStatus: {
