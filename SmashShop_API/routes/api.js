@@ -832,6 +832,10 @@ router.post("/orders", async (req, res) => {
       enrichedProducts.push({
         productId: it.productId,
         name: existingProduct.name,
+        img:
+          existingProduct.thumbnail ||
+          (existingProduct.images && existingProduct.images[0]) ||
+          "",
         quantity,
         price,
       });
@@ -931,8 +935,97 @@ router.post("/orders", async (req, res) => {
 router.get("/orders/user/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-    const orders = await Order.find({ userId }).sort({ createdAt: -1 });
-    res.status(200).json({ success: true, orders });
+    const orders = await Order.find({ userId })
+      .populate("products.productId", "name thumbnail images")
+      .sort({ createdAt: -1 });
+
+    const enrichedOrders = orders.map((order) => ({
+      ...order.toObject(),
+      products: order.products.map((item) => ({
+        ...item.toObject(),
+        name:
+          item.name || item.productId?.name || item.product?.name || "Sản phẩm",
+        img:
+          item.img ||
+          item.productId?.thumbnail ||
+          (item.productId?.images && item.productId.images[0]) ||
+          item.product?.thumbnail ||
+          "",
+      })),
+    }));
+
+    res.status(200).json({ success: true, orders: enrichedOrders });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+router.put("/orders/:orderId/status", async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { userId, status } = req.body;
+
+    if (!userId || !status) {
+      return res.status(400).json({
+        success: false,
+        message: "Thiếu userId hoặc status.",
+      });
+    }
+
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy đơn hàng.",
+      });
+    }
+
+    if (order.userId.toString() !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: "Bạn không có quyền thay đổi trạng thái đơn hàng này.",
+      });
+    }
+
+    if (status === "cancelled") {
+      if (["shipping", "delivered", "cancelled"].includes(order.status)) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Đơn hàng đã vào quá trình giao hoặc đã hoàn thành, không thể hủy.",
+        });
+      }
+      await Promise.all(
+        order.products.map((item) => {
+          if (!item.productId || !item.quantity) return null;
+          return Product.findByIdAndUpdate(item.productId, {
+            $inc: { stock: Number(item.quantity) },
+          });
+        }),
+      );
+      order.status = "cancelled";
+    } else if (status === "delivered") {
+      if (order.status !== "shipping") {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Chỉ có thể cập nhật thành đã nhận khi đơn hàng đang ở trạng thái đang giao.",
+        });
+      }
+      order.status = "delivered";
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: "Trạng thái cập nhật không hợp lệ.",
+      });
+    }
+
+    await order.save();
+    res.status(200).json({
+      success: true,
+      message: "Cập nhật trạng thái đơn hàng thành công.",
+      order,
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

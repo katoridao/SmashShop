@@ -1024,21 +1024,8 @@
   <script>
     const API_BASE = 'http://localhost:3000/api';
     const AUTH_KEY = 'smashshop_auth';
-
-    const loginBtn = document.getElementById('loginBtn');
-    const userAvatarBtn = document.getElementById('userAvatarBtn');
-    const userMenu = document.getElementById('userMenu');
-    const userMenuName = document.getElementById('userMenuName');
-    const userMenuRole = document.getElementById('userMenuRole');
-    const authModal = document.getElementById('authModal');
+    const logoutBtn = document.getElementById('logoutBtn');
     const authStatus = document.getElementById('authStatus');
-
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-    const forgotForm = document.getElementById('forgotForm');
-    const loginTabBtn = document.getElementById('loginTabBtn');
-    const registerTabBtn = document.getElementById('registerTabBtn');
-    const forgotTabBtn = document.getElementById('forgotTabBtn');
 
     let currentAuth = null;
 
@@ -1052,85 +1039,19 @@
       }
     }
 
-    function saveAuth(auth) {
-      currentAuth = auth;
-      localStorage.setItem(AUTH_KEY, JSON.stringify(auth));
-      const redirectUrl = sessionStorage.getItem('auth_redirect');
-      if (redirectUrl) {
-        sessionStorage.removeItem('auth_redirect');
-        window.location.href = redirectUrl;
-      }
-
-      updateAuthUI();
-    }
-
     function clearAuth() {
       currentAuth = null;
       localStorage.removeItem(AUTH_KEY);
       updateAuthUI();
     }
 
-    function setAuthStatus(message, type = 'success') {
-      authStatus.textContent = message;
-      authStatus.className = `auth-status ${type}`;
-    }
-
-    function clearAuthStatus() {
-      authStatus.textContent = '';
-      authStatus.className = 'auth-status';
-    }
-
     function updateAuthUI() {
       const auth = currentAuth || getStoredAuth();
       if (auth && auth.user) {
-        loginBtn.style.display = 'none';
-        userAvatarBtn.style.display = 'flex';
-        userMenuName.textContent = auth.user.name || 'Người dùng';
-        userMenuRole.textContent = auth.user.role === 'admin' ? 'Admin' : 'Guest';
-        document.querySelectorAll('.admin-only').forEach((item) => {
-          item.classList.toggle('show', auth.user.role === 'admin');
-        });
+        if (logoutBtn) logoutBtn.style.display = 'inline-block';
       } else {
-        loginBtn.style.display = 'inline-block';
-        userAvatarBtn.style.display = 'none';
-        userMenu.classList.remove('show');
-        userMenuName.textContent = 'Khách';
-        userMenuRole.textContent = 'Guest';
-        document.querySelectorAll('.admin-only').forEach((item) => {
-          item.classList.remove('show');
-        });
+        if (logoutBtn) logoutBtn.style.display = 'none';
       }
-    }
-
-    function openAuthModal(tab = 'login') {
-      authModal.classList.add('show');
-      authModal.setAttribute('aria-hidden', 'false');
-      clearAuthStatus();
-      loginTabBtn.classList.toggle('active', tab === 'login');
-      registerTabBtn.classList.toggle('active', tab === 'register');
-      forgotTabBtn.classList.toggle('active', tab === 'forgot');
-      loginForm.classList.toggle('active', tab === 'login');
-      registerForm.classList.toggle('active', tab === 'register');
-      forgotForm.classList.toggle('active', tab === 'forgot');
-    }
-
-    function closeAuthModal() {
-      authModal.classList.remove('show');
-      authModal.setAttribute('aria-hidden', 'true');
-      clearAuthStatus();
-      loginForm.reset();
-      registerForm.reset();
-      forgotForm.reset();
-    }
-
-    function toggleUserMenu() {
-      userMenu.classList.toggle('show');
-      userMenu.setAttribute('aria-hidden', String(!userMenu.classList.contains('show')));
-    }
-
-    function closeUserMenu() {
-      userMenu.classList.remove('show');
-      userMenu.setAttribute('aria-hidden', 'true');
     }
 
     async function apiRequest(endpoint, method, body) {
@@ -1144,260 +1065,40 @@
       return data;
     }
 
-    async function handleLoginSubmit(event) {
-      event.preventDefault();
-      const identifier = document.getElementById('loginIdentifier').value.trim();
-      const password = document.getElementById('loginPassword').value;
-      try {
-        const data = await apiRequest('/login', 'POST', { identifier, password });
-        saveAuth(data);
-        setAuthStatus('Đăng nhập thành công', 'success');
-        closeUserMenu();
-        setTimeout(() => closeAuthModal(), 600);
-      } catch (error) {
-        setAuthStatus(error.message, 'error');
-      }
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', () => {
+        clearAuth();
+        window.location.href = '/SmashShop/index.html';
+      });
     }
-
-    async function handleRegisterSubmit(event) {
-      event.preventDefault();
-      const name = document.getElementById('registerName').value.trim();
-      const email = document.getElementById('registerEmail').value.trim();
-      const phone = document.getElementById('registerPhone').value.trim();
-      const password = document.getElementById('registerPassword').value;
-      const confirmPassword = document.getElementById('registerConfirmPassword').value;
-      if (password !== confirmPassword) {
-        setAuthStatus('Mật khẩu xác nhận không khớp', 'error');
-        return;
-      }
-      try {
-        await apiRequest('/register', 'POST', { name, email, password, phone });
-        setAuthStatus('✓ Đăng ký thành công! Chuyển sang đăng nhập...', 'success');
-        registerForm.reset();
-        setTimeout(() => openAuthModal('login'), 1500);
-      } catch (error) {
-        setAuthStatus(error.message, 'error');
-      }
-    }
-
-    async function handleForgotSubmit(event) {
-      event.preventDefault();
-      const email = document.getElementById('forgotEmail').value.trim();
-      try {
-        await apiRequest('/forgot-password', 'POST', { email });
-        setAuthStatus('Email đã được gửi! Vui lòng kiểm tra hộp thư để lấy mật khẩu mới.', 'success');
-        setTimeout(() => openAuthModal('login'), 2000);
-      } catch (error) {
-        setAuthStatus(error.message, 'error');
-      }
-    }
-
-    function handleUserAction(action) {
-      closeUserMenu();
-
-      const auth = currentAuth || getStoredAuth();
-      const isAdmin = auth?.user?.role === 'admin';
-
-      switch (action) {
-        case 'profile':
-          window.location.href = '/SmashShop/profile.html';
-          break;
-        case 'history':
-          window.location.href = '/SmashShop/orderhistory.html';
-          break;
-        case 'products':
-          if (isAdmin) window.location.href = '/SmashShop/productmanagement.html';
-          break;
-        case 'orders':
-          if (isAdmin) window.location.href = '/SmashShop/orders.html';
-          break;
-        case 'revenue':
-          if (isAdmin) window.location.href = '/SmashShop/revenue.html';
-          break;
-        case 'logout':
-          clearAuth();
-          window.location.href = '/SmashShop/index.html';
-          break;
-      }
-    }
-
-    loginBtn.addEventListener('click', () => openAuthModal('login'));
-    userAvatarBtn.addEventListener('click', toggleUserMenu);
-
-    document.querySelectorAll('[data-close-auth]').forEach((button) => {
-      button.addEventListener('click', closeAuthModal);
-    });
-
-    loginTabBtn.addEventListener('click', () => openAuthModal('login'));
-    registerTabBtn.addEventListener('click', () => openAuthModal('register'));
-    forgotTabBtn.addEventListener('click', () => openAuthModal('forgot'));
-
-    loginForm.addEventListener('submit', handleLoginSubmit);
-    registerForm.addEventListener('submit', handleRegisterSubmit);
-    forgotForm.addEventListener('submit', handleForgotSubmit);
-
-    authModal.addEventListener('click', (event) => {
-      if (event.target === authModal) closeAuthModal();
-    });
-
-    document.addEventListener('click', (event) => {
-      if (!event.target.closest('.header-user-area')) closeUserMenu();
-    });
-
-    document.querySelectorAll('.user-menu-action').forEach((button) => {
-      button.addEventListener('click', () => handleUserAction(button.dataset.action));
-    });
-
-    window.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') { closeUserMenu(); closeAuthModal(); }
-    });
 
     currentAuth = getStoredAuth();
     updateAuthUI();
-  
-    // Cross-tab synchronization
+
     window.addEventListener('storage', (e) => {
       if (e.key === AUTH_KEY) {
         currentAuth = getStoredAuth();
-        if (typeof updateAuthUI === 'function') updateAuthUI();
-        if (typeof loadProfile === 'function') loadProfile();
+        updateAuthUI();
       }
     });
-
-    // Check query parameter to open auth modal (redirected from Category B)
-    window.addEventListener('DOMContentLoaded', () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has('openAuth')) {
-        const tab = urlParams.get('openAuth') || 'login';
-        if (typeof openAuthModal === 'function') {
-          openAuthModal(tab);
-          const newUrl = window.location.pathname;
-          window.history.replaceState({}, document.title, newUrl);
-        }
-      }
-    });
-</script>
+  </script>
 
   <!-- Order History Script -->
   <script>
     /* ==========================================
-       DỮ LIỆU FAKE — 5 ĐƠN HÀNG
+       ORDER HISTORY DATA
     ========================================== */
-    let ordersData = [
-      {
-        id: 'SS-20240518-001',
-        date: '18/05/2024',
-        status: 'completed',
-        address: '15 Lý Thường Kiệt, Hoàn Kiếm, Hà Nội',
-        phone: '0912 345 678',
-        payMethod: 'Thanh toán khi nhận hàng (COD)',
-        products: [
-          {
-            name: 'Vợt cầu lông Yonex Astrox 100ZZ',
-            img: 'https://cdn.shopvnb.com/img/300x300/uploads/san_pham/vot-cau-long-vnb-v200-xanh-2.webp',
-            qty: 1,
-            price: 5200000
-          },
-          {
-            name: 'Quấn cán Yonex AC102EX',
-            img: 'https://picsum.photos/80?random=11',
-            qty: 3,
-            price: 45000
-          }
-        ]
-      },
-      {
-        id: 'SS-20240510-002',
-        date: '10/05/2024',
-        status: 'shipping',
-        address: '72 Nguyễn Chí Thanh, Đống Đa, Hà Nội',
-        phone: '0987 654 321',
-        payMethod: 'Chuyển khoản ngân hàng',
-        products: [
-          {
-            name: 'Giày Victor P9200 (Size 43)',
-            img: 'https://cdn.shopvnb.com/img/300x300/uploads/gallery/giay-cau-long-yonex-shb-03ex-trang_1733364947.webp',
-            qty: 1,
-            price: 2100000
-          }
-        ]
-      },
-      {
-        id: 'SS-20240502-003',
-        date: '02/05/2024',
-        status: 'processing',
-        address: '48 Trần Hưng Đạo, Hoàn Kiếm, Hà Nội',
-        phone: '0933 111 222',
-        payMethod: 'Ví MoMo',
-        products: [
-          {
-            name: 'Balo Yonex BA92012EX',
-            img: 'https://cdn.shopvnb.com/img/300x300/uploads/gallery/balo-cau-long-yonex-bag525b1112z-bright-white-chinh-hang_1775610383.webp',
-            qty: 1,
-            price: 1200000
-          },
-          {
-            name: 'Túi vợt Yonex BAG0226',
-            img: 'https://cdn.shopvnb.com/img/300x300/uploads/san_pham/tui-cau-long-yonex-bag0226_1773858495.webp',
-            qty: 1,
-            price: 850000
-          }
-        ]
-      },
-      {
-        id: 'SS-20240420-004',
-        date: '20/04/2024',
-        status: 'cancelled',
-        address: '9 Đinh Tiên Hoàng, Hoàn Kiếm, Hà Nội',
-        phone: '0908 765 432',
-        payMethod: 'Thanh toán khi nhận hàng (COD)',
-        products: [
-          {
-            name: 'Vớ cầu lông Victor SK-170J (3 đôi)',
-            img: 'https://picsum.photos/80?random=44',
-            qty: 2,
-            price: 180000
-          }
-        ]
-      },
-      {
-        id: 'SS-20240415-005',
-        date: '15/04/2024',
-        status: 'completed',
-        address: '31 Phan Chu Trinh, Hoàn Kiếm, Hà Nội',
-        phone: '0971 222 333',
-        payMethod: 'Thẻ tín dụng / Visa',
-        products: [
-          {
-            name: 'Ống cầu thi đấu Vina Star (12 quả)',
-            img: 'https://picsum.photos/80?random=55',
-            qty: 5,
-            price: 350000
-          },
-          {
-            name: 'Băng cổ chân Victor SP-191',
-            img: 'https://cdn.shopvnb.com/img/300x300/uploads/gallery/bang-co-chan-victor-sp191-den-chinh-hang_1761593155.webp',
-            qty: 2,
-            price: 120000
-          },
-          {
-            name: 'Quấn cán Yonex AC102EX',
-            img: 'https://picsum.photos/80?random=12',
-            qty: 4,
-            price: 45000
-          }
-        ]
-      }
-    ];
+    let ordersData = [];
 
     /* ==========================================
        HELPERS
     ========================================== */
     const statusMap = {
-      completed:  { label: 'Hoàn thành',    icon: 'fa-circle-check',   cls: 'completed'  },
-      shipping:   { label: 'Đang giao',      icon: 'fa-truck',          cls: 'shipping'   },
-      processing: { label: 'Đang xử lý',    icon: 'fa-rotate',         cls: 'processing' },
-      cancelled:  { label: 'Đã hủy',        icon: 'fa-circle-xmark',   cls: 'cancelled'  },
+      pending:   { label: 'Chờ xác nhận', icon: 'fa-clock', cls: 'processing' },
+      confirmed: { label: 'Đã xác nhận', icon: 'fa-circle-check', cls: 'processing' },
+      shipping:  { label: 'Đang giao', icon: 'fa-truck', cls: 'shipping' },
+      delivered: { label: 'Đã nhận hàng', icon: 'fa-circle-check', cls: 'completed' },
+      cancelled: { label: 'Đã hủy', icon: 'fa-circle-xmark', cls: 'cancelled' },
     };
 
     function formatVND(n) {
@@ -1409,20 +1110,47 @@
     }
 
     function payIcon(method) {
-      if (method.includes('COD'))       return 'fa-money-bill-wave';
-      if (method.includes('MoMo'))      return 'fa-wallet';
+      if (!method) return 'fa-building-columns';
+      if (method.includes('COD')) return 'fa-money-bill-wave';
+      if (method.includes('MoMo')) return 'fa-wallet';
       if (method.includes('Visa') || method.includes('tín dụng')) return 'fa-credit-card';
       return 'fa-building-columns';
+    }
+
+    function humanizePaymentMethod(code) {
+      if (!code) return 'Chưa xác định';
+      const mapping = {
+        COD: 'Thanh toán khi nhận hàng (COD)',
+        BANKING: 'Chuyển khoản ngân hàng',
+        MOMO: 'Ví MoMo',
+        CARD: 'Thẻ tín dụng / Visa',
+        VNPAY: 'VNPay',
+      };
+      return mapping[code] || code;
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '';
+      return new Intl.DateTimeFormat('vi-VN', {
+        year: 'numeric', month: '2-digit', day: '2-digit',
+      }).format(new Date(iso));
+    }
+
+    function getFullImageUrl(thumbnail) {
+      if (!thumbnail) return 'https://picsum.photos/80?random=1';
+      const url = String(thumbnail || '');
+      if (url.startsWith('http://') || url.startsWith('https://')) return url;
+      return 'http://localhost:3000' + (url.startsWith('/') ? url : '/' + url);
     }
 
     /* ==========================================
        RENDER STATS
     ========================================== */
     function renderStats() {
-      const total   = ordersData.length;
-      const done    = ordersData.filter(o => o.status === 'completed').length;
-      const going   = ordersData.filter(o => o.status === 'shipping').length;
-      const spent   = ordersData.filter(o => o.status !== 'cancelled').reduce((s, o) => s + calcTotal(o.products), 0);
+      const total = ordersData.length;
+      const done = ordersData.filter((o) => o.status === 'delivered').length;
+      const going = ordersData.filter((o) => o.status === 'shipping').length;
+      const spent = ordersData.filter((o) => o.status !== 'cancelled').reduce((s, o) => s + calcTotal(o.products), 0);
 
       const statsEl = document.getElementById('ohStats');
       statsEl.innerHTML = `
@@ -1453,39 +1181,47 @@
        UPDATE FILTER COUNTS
     ========================================== */
     function updateCounts() {
-      document.getElementById('cnt-all').textContent        = ordersData.length;
-      document.getElementById('cnt-processing').textContent = ordersData.filter(o => o.status === 'processing').length;
-      document.getElementById('cnt-shipping').textContent   = ordersData.filter(o => o.status === 'shipping').length;
-      document.getElementById('cnt-completed').textContent  = ordersData.filter(o => o.status === 'completed').length;
-      document.getElementById('cnt-cancelled').textContent  = ordersData.filter(o => o.status === 'cancelled').length;
+      document.getElementById('cnt-all').textContent = ordersData.length;
+      document.getElementById('cnt-processing').textContent = ordersData.filter((o) => ['pending', 'confirmed'].includes(o.status)).length;
+      document.getElementById('cnt-shipping').textContent = ordersData.filter((o) => o.status === 'shipping').length;
+      document.getElementById('cnt-completed').textContent = ordersData.filter((o) => o.status === 'delivered').length;
+      document.getElementById('cnt-cancelled').textContent = ordersData.filter((o) => o.status === 'cancelled').length;
     }
 
     /* ==========================================
        RENDER ORDER CARD
     ========================================== */
     function renderCard(order) {
-      const st = statusMap[order.status];
-      const total = calcTotal(order.products);
-      const canCancel = order.status === 'processing';
+      const st = statusMap[order.status] || { label: 'Chờ xử lý', icon: 'fa-clock', cls: 'processing' };
+      const orderId = order.id || order._id;
+      const total = order.totalPrice || calcTotal(order.products);
+      const canCancel = ['pending', 'confirmed'].includes(order.status);
+      const canDeliver = order.status === 'shipping';
 
-      const productsHTML = order.products.map(p => `
-        <div class="oh-product-item">
-          <img class="oh-product-img" src="${p.img}" alt="${p.name}" loading="lazy">
-          <div class="oh-product-info">
-            <div class="oh-product-name">${p.name}</div>
-            <div class="oh-product-qty">Số lượng: ${p.qty}</div>
+      const productsHTML = order.products.map((p) => {
+        const name = p.name || p.productName || `Sản phẩm ${p.productId || ''}`;
+        const qty = p.quantity || p.qty || 0;
+        const price = p.price || 0;
+        const img = getFullImageUrl(p.img || p.thumbnail || p.image);
+        return `
+          <div class="oh-product-item">
+            <img class="oh-product-img" src="${img}" alt="${name}" loading="lazy">
+            <div class="oh-product-info">
+              <div class="oh-product-name">${name}</div>
+              <div class="oh-product-qty">Số lượng: ${qty}</div>
+            </div>
+            <div class="oh-product-price">${formatVND(price * qty)}</div>
           </div>
-          <div class="oh-product-price">${formatVND(p.price * p.qty)}</div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
 
       return `
-        <div class="oh-card" data-order-id="${order.id}">
+        <div class="oh-card" data-order-id="${orderId}">
           <div class="oh-card-head">
             <div class="oh-card-meta">
-              <div class="oh-order-id">Đơn hàng <span>#${order.id}</span></div>
+              <div class="oh-order-id">Đơn hàng <span>#${orderId}</span></div>
               <div class="oh-order-date">
-                <i class="fa-regular fa-calendar"></i> ${order.date}
+                <i class="fa-regular fa-calendar"></i> ${order.date || ''}
               </div>
             </div>
             <span class="oh-status ${st.cls}">
@@ -1500,25 +1236,29 @@
           <div class="oh-card-foot">
             <div class="oh-foot-info">
               <div class="oh-pay-method">
-                <i class="fa-solid ${payIcon(order.payMethod)}"></i>
-                ${order.payMethod}
+                <i class="fa-solid ${payIcon(order.paymentMethod || order.payMethod || '')}"></i>
+                ${humanizePaymentMethod(order.paymentMethod || order.payMethod || '')}
               </div>
+              <div>
+                <span class="oh-total-label">Phí vận chuyển: </span>
+                <span class="oh-total-value">${formatVND(order.shippingCost || 0)}</span>
+              </div>
+            </div>
+            <div class="oh-foot-info">
               <div>
                 <span class="oh-total-label">Tổng tiền: </span>
                 <span class="oh-total-value">${formatVND(total)}</span>
               </div>
             </div>
             <div class="oh-actions">
-              <button class="oh-btn oh-btn-detail" onclick="openDetail('${order.id}')">
+              <button class="oh-btn oh-btn-detail" onclick="openDetail('${orderId}')">
                 <i class="fa-solid fa-eye"></i> Xem chi tiết
               </button>
-              <button class="oh-btn oh-btn-rebuy" onclick="reBuy('${order.id}')">
+              <button class="oh-btn oh-btn-rebuy" onclick="reBuy('${orderId}')">
                 <i class="fa-solid fa-rotate-right"></i> Mua lại
               </button>
-              <button class="oh-btn oh-btn-cancel" onclick="cancelOrder('${order.id}')"
-                ${canCancel ? '' : 'disabled'}>
-                <i class="fa-solid fa-ban"></i> Hủy đơn
-              </button>
+              ${canCancel ? `<button class="oh-btn oh-btn-cancel" onclick="cancelOrder('${orderId}')"><i class="fa-solid fa-ban"></i> Hủy đơn</button>` : ''}
+              ${canDeliver ? `<button class="oh-btn oh-btn-detail" onclick="markDelivered('${orderId}')"><i class="fa-solid fa-check"></i> Đã nhận hàng</button>` : ''}
             </div>
           </div>
         </div>
@@ -1535,9 +1275,16 @@
       const list = document.getElementById('ohList');
       const empty = document.getElementById('ohEmpty');
 
-      const filtered = activeFilter === 'all'
-        ? ordersData
-        : ordersData.filter(o => o.status === activeFilter);
+      let filtered;
+      if (activeFilter === 'all') {
+        filtered = ordersData;
+      } else if (activeFilter === 'processing') {
+        filtered = ordersData.filter((o) => ['pending', 'confirmed'].includes(o.status));
+      } else if (activeFilter === 'completed') {
+        filtered = ordersData.filter((o) => o.status === 'delivered');
+      } else {
+        filtered = ordersData.filter((o) => o.status === activeFilter);
+      }
 
       if (filtered.length === 0) {
         list.innerHTML = '';
@@ -1565,27 +1312,91 @@
     /* ==========================================
        MUA LẠI
     ========================================== */
-    function reBuy(orderId) {
-      const order = ordersData.find(o => o.id === orderId);
+    async function reBuy(orderId) {
+      const order = ordersData.find((o) => (o.id || o._id) === orderId);
       if (!order) return;
-      alert(`✅ Đã thêm ${order.products.length} sản phẩm từ đơn hàng #${orderId} vào giỏ hàng!`);
+
+      const userId = getUserId();
+      if (!userId) {
+        showToast('Vui lòng đăng nhập để mua lại.', 'error');
+        return;
+      }
+
+      try {
+        const cartData = await apiRequest(`/cart/${userId}`, 'GET');
+        const existingItems = Array.isArray(cartData.cart?.items) ? cartData.cart.items : [];
+
+        for (const item of order.products) {
+          const productId =
+            item.productId?._id ||
+            item.productId?.id ||
+            item.productId ||
+            item.productId?.toString();
+          const quantity = Number(item.quantity || item.qty || 1);
+          if (!productId || quantity <= 0) continue;
+
+          const existing = existingItems.find((ci) => {
+            const existingId = ci.productId?._id || ci.productId?.id || ci.productId || ci.productId?.toString();
+            return existingId === productId;
+          });
+
+          const newQuantity = (existing?.quantity || 0) + quantity;
+          await apiRequest(`/cart/${userId}/update`, 'PUT', {
+            productId,
+            quantity: newQuantity,
+          });
+        }
+
+        showToast(`Đã thêm ${order.products.length} sản phẩm từ đơn #${orderId} vào giỏ hàng.`, 'success');
+        window.location.href = '/SmashShop/cart.html';
+      } catch (error) {
+        showToast(error.message || 'Không thể thêm sản phẩm vào giỏ hàng.', 'error');
+      }
     }
 
     /* ==========================================
        HỦY ĐƠN
     ========================================== */
-    function cancelOrder(orderId) {
-      const order = ordersData.find(o => o.id === orderId);
-      if (!order || order.status !== 'processing') return;
+    async function cancelOrder(orderId) {
+      const order = ordersData.find((o) => (o.id || o._id) === orderId);
+      if (!order || !['pending', 'confirmed'].includes(order.status)) return;
 
       const confirmed = confirm(`Bạn có chắc muốn hủy đơn hàng #${orderId}?`);
       if (!confirmed) return;
 
-      order.status = 'cancelled';
-      renderList();
+      try {
+        const userId = getUserId();
+        const data = await apiRequest(`/orders/${orderId}/status`, 'PUT', {
+          userId,
+          status: 'cancelled',
+        });
+        order.status = data.order.status;
+        renderList();
+        showToast(`Đơn hàng #${orderId} đã được hủy.`, 'error');
+      } catch (error) {
+        showToast(error.message || 'Không thể hủy đơn hàng.', 'error');
+      }
+    }
 
-      // Small toast-like notification
-      showToast(`Đơn hàng #${orderId} đã được hủy thành công.`, 'error');
+    /* ==========================================
+       ĐÁNH DẤU ĐÃ NHẬN HÀNG
+    ========================================== */
+    async function markDelivered(orderId) {
+      const order = ordersData.find((o) => (o.id || o._id) === orderId);
+      if (!order || order.status !== 'shipping') return;
+
+      try {
+        const userId = getUserId();
+        const data = await apiRequest(`/orders/${orderId}/status`, 'PUT', {
+          userId,
+          status: 'delivered',
+        });
+        order.status = data.order.status;
+        renderList();
+        showToast(`Đơn hàng #${orderId} đã được đánh dấu là đã nhận.`, 'success');
+      } catch (error) {
+        showToast(error.message || 'Không thể cập nhật trạng thái.', 'error');
+      }
     }
 
     /* ==========================================
@@ -1594,23 +1405,29 @@
     let currentDetailOrderId = null;
 
     function openDetail(orderId) {
-      const order = ordersData.find(o => o.id === orderId);
+      const order = ordersData.find((o) => (o.id || o._id) === orderId);
       if (!order) return;
 
       currentDetailOrderId = orderId;
-      const st = statusMap[order.status];
+      const st = statusMap[order.status] || { label: 'Chờ xử lý', icon: 'fa-clock', cls: 'processing' };
       const total = calcTotal(order.products);
 
-      const productsHTML = order.products.map(p => `
-        <div class="oh-modal-product">
-          <img src="${p.img}" alt="${p.name}" loading="lazy">
-          <div class="oh-modal-product-detail">
-            <div class="oh-modal-product-name">${p.name}</div>
-            <div class="oh-modal-product-meta">Số lượng: ${p.qty} &nbsp;|&nbsp; Đơn giá: ${formatVND(p.price)}</div>
+      const productsHTML = order.products.map((p) => {
+        const name = p.name || p.productName || `Sản phẩm ${p.productId || ''}`;
+        const qty = p.quantity || p.qty || 0;
+        const price = p.price || 0;
+        const img = getFullImageUrl(p.img || p.thumbnail || p.image);
+        return `
+          <div class="oh-modal-product">
+            <img src="${img}" alt="${name}" loading="lazy">
+            <div class="oh-modal-product-detail">
+              <div class="oh-modal-product-name">${name}</div>
+              <div class="oh-modal-product-meta">Số lượng: ${qty} &nbsp;|&nbsp; Đơn giá: ${formatVND(price)}</div>
+            </div>
+            <div class="oh-modal-product-price">${formatVND(price * qty)}</div>
           </div>
-          <div class="oh-modal-product-price">${formatVND(p.price * p.qty)}</div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
 
       document.getElementById('ohDetailBody').innerHTML = `
         <div class="oh-modal-section">
@@ -1626,11 +1443,11 @@
           <div class="oh-modal-section-title"><i class="fa-solid fa-circle-info"></i> Thông tin đơn hàng</div>
           <div class="oh-info-row">
             <label>Mã đơn hàng</label>
-            <span>#${order.id}</span>
+            <span>#${orderId}</span>
           </div>
           <div class="oh-info-row">
             <label>Ngày đặt hàng</label>
-            <span>${order.date}</span>
+            <span>${order.date || ''}</span>
           </div>
           <div class="oh-info-row">
             <label>Trạng thái</label>
@@ -1640,7 +1457,15 @@
           </div>
           <div class="oh-info-row">
             <label>Phương thức thanh toán</label>
-            <span>${order.payMethod}</span>
+            <span>${humanizePaymentMethod(order.paymentMethod || order.payMethod || '')}</span>
+          </div>
+          <div class="oh-info-row">
+            <label>Phương thức vận chuyển</label>
+            <span>${order.shippingMethod || 'Chưa chọn'}</span>
+          </div>
+          <div class="oh-info-row">
+            <label>Phí vận chuyển</label>
+            <span>${formatVND(order.shippingCost || 0)}</span>
           </div>
         </div>
 
@@ -1669,6 +1494,56 @@
       const modalEl = document.getElementById('ohDetailModal');
       const modal = new bootstrap.Modal(modalEl);
       modal.show();
+    }
+
+    function getUserId() {
+      const auth = currentAuth || getStoredAuth();
+      return auth?.user?._id || localStorage.getItem('userId') || null;
+    }
+
+    async function loadOrders() {
+      const userId = getUserId();
+      const empty = document.getElementById('ohEmpty');
+      if (!userId) {
+        ordersData = [];
+        renderList('all');
+        if (empty) {
+          empty.style.display = 'block';
+          empty.innerHTML = '<i class="fa-regular fa-folder-open"></i><p>Vui lòng đăng nhập để xem lịch sử đơn hàng.</p>';
+        }
+        return;
+      }
+
+      try {
+        const data = await apiRequest(`/orders/user/${userId}`, 'GET');
+        ordersData = (data.orders || []).map((order) => ({
+          ...order,
+          id: order._id,
+          date: formatDate(order.createdAt),
+          products: (order.products || []).map((item) => ({
+            ...item,
+            qty: item.quantity,
+            img: getFullImageUrl(
+              item.img ||
+              item.image ||
+              item.thumbnail ||
+              item.productId?.thumbnail ||
+              (item.productId?.images && item.productId.images[0]) ||
+              item.product?.thumbnail
+            ),
+            name:
+              item.name ||
+              item.productId?.name ||
+              item.product?.name ||
+              item.productName ||
+              item.title ||
+              "Sản phẩm",
+          })),
+        }));
+        renderList('all');
+      } catch (error) {
+        showToast(error.message || 'Không thể tải đơn hàng.', 'error');
+      }
     }
 
     /* ==========================================
@@ -1715,7 +1590,7 @@
     /* ==========================================
        INIT
     ========================================== */
-    renderList('all');
+    loadOrders();
   </script>
 
 </body>
