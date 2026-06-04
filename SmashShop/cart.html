@@ -208,7 +208,43 @@
       return thumbnail.startsWith('http') ? thumbnail : 'http://localhost:3000' + thumbnail;
     }
 
-    // 1. LẤY DỮ LIỆU TỪ SERVER VÀ RENDER
+    // Thêm hàm Toast Notification cho trang Cart
+    function showToast(message, type = 'success') {
+      let wrap = document.getElementById('toastWrap');
+      if (!wrap) {
+        wrap = document.createElement('div');
+        wrap.id = 'toastWrap';
+        wrap.className = 'toast-wrap';
+        document.body.appendChild(wrap);
+        
+        // Thêm nhanh style cho toast nếu chưa có
+        const style = document.createElement('style');
+        style.innerHTML = `
+          .toast-wrap { position: fixed; bottom: 30px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+          .toast-msg { background: #1E1E1E; border: 1px solid #2A2A2A; color: #fff; padding: 14px 20px; border-radius: 14px; font-size: 14px; display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); animation: slideIn .3s ease; }
+          .toast-msg i { font-size: 18px; }
+          .toast-msg.success i { color: #22c55e; }
+          .toast-msg.error i { color: #ef4444; }
+          @keyframes slideIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        `;
+        document.head.appendChild(style);
+      }
+
+      const toast = document.createElement('div');
+      toast.className = `toast-msg ${type}`;
+      let iconClass = type === 'error' ? 'fa-circle-xmark' : 'fa-circle-check';
+      toast.innerHTML = `<i class="fa-solid ${iconClass}"></i> ${message}`;
+      wrap.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(40px)';
+        toast.style.transition = 'all 0.4s ease';
+        setTimeout(() => toast.remove(), 400);
+      }, 3000);
+    }
+
+    // 1. LẤY DỮ LIỆU TỪ SERVER
     async function loadCartData() {
       const container = document.getElementById('cart-container');
       const userId = window.currentUserId || localStorage.getItem('userId');
@@ -231,41 +267,41 @@
         }
       } catch (error) {
         console.error("Lỗi lấy giỏ hàng:", error);
-        container.innerHTML = '<p style="text-align:center; color:#ff3c00; padding: 30px 0;">Đã xảy ra lỗi khi tải giỏ hàng.</p>';
+        container.innerHTML = '<p style="text-align:center; color:#ef4444; padding: 30px 0;">Đã xảy ra lỗi khi tải giỏ hàng.</p>';
       }
     }
 
-    // 2. RENDER HTML DỰA TRÊN MODEL CART.JS (items: { productId, quantity, price })
+    // 2. RENDER HTML
     function renderCart(items) {
       const container = document.getElementById('cart-container');
       let html = '';
       let subtotal = 0;
 
       items.forEach(item => {
-        // Do dùng .populate("productId") ở backend nên product chứa đủ info
         const product = item.productId || {}; 
         const pid = product._id || item._id; 
         const name = product.name || 'Sản phẩm không khả dụng';
         const imgUrl = getFullImageUrl(product.thumbnail);
-        
-        // Đồng bộ dữ liệu lấy từ cấu trúc Schema Cart.js
         const price = item.price || product.price || 0;
         const qty = item.quantity || 1;
+        const stock = product.stock || 0; // Lấy tồn kho
+        
         const itemTotal = price * qty;
         subtotal += itemTotal;
 
         html += `
-          <div class="cart-item" data-id="${pid}">
+          <div class="cart-item" id="item-${pid}">
             <img src="${imgUrl}" alt="${name}" class="cart-item-img" onerror="this.src='https://picsum.photos/300?random=99'">
             <div class="cart-item-details">
               <a href="/SmashShop/productdetail.html?id=${pid}"><h3>${name}</h3></a>
               <p>Danh mục: ${product.category || 'Mặc định'}</p>
+              ${stock <= 5 && stock > 0 ? `<p style="color:#f59e0b; font-size: 12px; margin-top:4px;">Chỉ còn ${stock} sản phẩm</p>` : ''}
             </div>
             <div class="cart-item-actions">
               <div class="quantity-control">
-                <button class="btn-minus" onclick="updateItemQuantity('${pid}', -1)"><i class="fa-solid fa-minus"></i></button>
+                <button class="btn-minus" onclick="updateItemQuantity('${pid}', -1, ${stock})"><i class="fa-solid fa-minus"></i></button>
                 <span class="quantity-value" id="qty-${pid}">${qty}</span>
-                <button class="btn-plus" onclick="updateItemQuantity('${pid}', 1)"><i class="fa-solid fa-plus"></i></button>
+                <button class="btn-plus" onclick="updateItemQuantity('${pid}', 1, ${stock})"><i class="fa-solid fa-plus"></i></button>
               </div>
               <div class="item-price-block">
                 <div class="item-total-price" id="total-${pid}">${formatMoney(itemTotal)}</div>
@@ -283,14 +319,13 @@
       updateSummary(subtotal);
     }
 
-    // 3. CẬP NHẬT TỔNG TIỀN BÊN PHẢI
     function updateSummary(total) {
       document.getElementById('subtotal-amount').textContent = formatMoney(total);
       document.getElementById('final-total-amount').textContent = formatMoney(total);
     }
 
-    // 4. CALL API: CẬP NHẬT SỐ LƯỢNG
-    async function updateItemQuantity(productId, change) {
+    // 3. XỬ LÝ NÚT +/- CÓ RÀNG BUỘC TỒN KHO
+    async function updateItemQuantity(productId, change, stock) {
       const userId = localStorage.getItem('userId');
       const qtySpan = document.getElementById(`qty-${productId}`);
       if (!qtySpan || !userId) return;
@@ -298,9 +333,19 @@
       let currentQty = parseInt(qtySpan.innerText);
       let newQty = currentQty + change;
 
-      if (newQty < 1) return; // Không cho giảm dưới 1
+      // Xử lý giảm xuống 0 -> Xóa
+      if (newQty < 1) {
+        removeCartItem(productId);
+        return;
+      }
 
-      // Cập nhật giao diện lập tức (Optimistic UI)
+      // Xử lý vượt quá tồn kho
+      if (newQty > stock) {
+        showToast(`Không thể thêm! Chỉ còn ${stock} sản phẩm trong kho.`, 'error');
+        return;
+      }
+
+      // Cập nhật giao diện lập tức (Optimistic UI) để user không thấy độ trễ
       qtySpan.innerText = newQty;
 
       try {
@@ -312,10 +357,10 @@
         const data = await res.json();
         
         if (data.success) {
-          loadCartData(); // Load lại toàn bộ để tính toán lại tổng tiền cho chuẩn
+          loadCartData(); // Gọi lại để đồng bộ lại tiền
         } else {
-          alert(data.message || "Lỗi cập nhật!");
-          qtySpan.innerText = currentQty; // Hoàn tác
+          showToast(data.message || "Lỗi cập nhật!", "error");
+          qtySpan.innerText = currentQty; // Hoàn tác nếu backend báo lỗi
         }
       } catch (error) {
         console.error(error);
@@ -323,7 +368,7 @@
       }
     }
 
-    // 5. CALL API: XÓA SẢN PHẨM KHỎI GIỎ HÀNG
+    // 4. XÓA SẢN PHẨM
     async function removeCartItem(productId) {
       const userId = localStorage.getItem('userId');
       if (!userId) return;
@@ -339,16 +384,24 @@
         const data = await res.json();
         
         if (data.success) {
-          loadCartData();
+          showToast("Đã xóa sản phẩm khỏi giỏ hàng", "success");
+          
+          // Tạo hiệu ứng fade-out trước khi load lại giỏ hàng cho mượt
+          const itemEl = document.getElementById(`item-${productId}`);
+          if (itemEl) {
+            itemEl.style.opacity = '0';
+            setTimeout(loadCartData, 300);
+          } else {
+            loadCartData();
+          }
         } else {
-          alert(data.message || "Lỗi xóa sản phẩm!");
+          showToast(data.message || "Lỗi xóa sản phẩm!", "error");
         }
       } catch (error) {
         console.error(error);
       }
     }
 
-    // Khởi chạy khi DOM đã sẵn sàng
     document.addEventListener('DOMContentLoaded', () => {
       loadHeaderComponent();
       loadCartData();

@@ -621,6 +621,7 @@ router.get("/cart/:userId", async (req, res) => {
   }
 });
 
+
 // 2. PUT: Thêm sản phẩm mới hoặc cập nhật số lượng của sản phẩm trong giỏ
 router.put("/cart/:userId/update", async (req, res) => {
   try {
@@ -628,41 +629,42 @@ router.put("/cart/:userId/update", async (req, res) => {
     const { productId, quantity } = req.body;
 
     if (!productId || quantity === undefined) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Thiếu dữ liệu cập nhật!" });
+      return res.status(400).json({ success: false, message: "Thiếu dữ liệu cập nhật!" });
     }
 
-    // Lấy thông tin giá bán mới nhất từ Product để đồng bộ
+    // Lấy thông tin giá bán mới nhất và tồn kho từ Product
     const product = await Product.findById(productId);
     if (!product) {
-      return res
-        .status(404)
-        .json({
-          success: false,
-          message: "Sản phẩm không tồn tại trong hệ thống",
-        });
+      return res.status(404).json({ success: false, message: "Sản phẩm không tồn tại trong hệ thống" });
     }
 
-    // Giá thực tế bán ra = Giá gốc - Giảm giá (nếu có)
-    const finalPrice = product.price - (product.discount || 0);
+    // KIỂM TRA TỒN KHO GẤT QUAN TRỌNG
+    if (Number(quantity) > product.stock) {
+      return res.status(400).json({ 
+        success: false, 
+        message: `Chỉ còn ${product.stock} sản phẩm trong kho.` 
+      });
+    }
 
     let cart = await Cart.findOne({ userId });
     if (!cart) {
       cart = new Cart({ userId, items: [] });
     }
 
-    // Kiểm tra sản phẩm đã tồn tại trong giỏ hàng chưa
-    const itemIndex = cart.items.findIndex(
-      (item) => item.productId.toString() === productId,
-    );
+    // Nếu quantity <= 0, tự động xóa sản phẩm khỏi giỏ hàng
+    if (Number(quantity) <= 0) {
+      cart.items = cart.items.filter(item => item.productId.toString() !== productId);
+      await cart.save();
+      return res.status(200).json({ success: true, message: "Đã xóa sản phẩm khỏi giỏ", cart });
+    }
+
+    const finalPrice = product.price - (product.discount || 0);
+    const itemIndex = cart.items.findIndex(item => item.productId.toString() === productId);
 
     if (itemIndex > -1) {
-      // Nếu có rồi thì thay thế/cập nhật số lượng mới và cập nhật lại đơn giá
       cart.items[itemIndex].quantity = Number(quantity);
       cart.items[itemIndex].price = finalPrice;
     } else {
-      // Nếu chưa có thì đẩy object item mới vào mảng theo đúng model Cart.js
       cart.items.push({
         productId,
         quantity: Number(quantity),
@@ -671,14 +673,11 @@ router.put("/cart/:userId/update", async (req, res) => {
     }
 
     await cart.save();
-    res
-      .status(200)
-      .json({ success: true, message: "Cập nhật giỏ hàng thành công!", cart });
+    res.status(200).json({ success: true, message: "Cập nhật giỏ hàng thành công!", cart });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 });
-
 // 3. DELETE: Xóa hoàn toàn một sản phẩm ra khỏi giỏ hàng của user
 router.delete("/cart/:userId/remove", async (req, res) => {
   try {

@@ -1815,6 +1815,18 @@
     document.addEventListener("DOMContentLoaded", () => {
     loadProductDetail();
 
+    // GẮN SỰ KIỆN CHO NÚT THÊM VÀO GIỎ VÀ MUA NGAY
+    const btnAddCartFinal = document.getElementById('btnCart');
+    const btnBuyNowFinal = document.getElementById('btnBuy');
+
+    if (btnAddCartFinal) {
+      btnAddCartFinal.addEventListener('click', handleAddToCart);
+    }
+
+    if (btnBuyNowFinal) {
+      btnBuyNowFinal.addEventListener('click', handleBuyNow);
+    }
+
     // 2. Điều khiển số lượng
     const qtyInput = document.getElementById('qtyInput');
     const btnMinus = document.getElementById('qtyMinus');
