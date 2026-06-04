@@ -158,6 +158,38 @@
     return (name || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
+  /**
+   * Wrapper an toàn cho showToast:
+   * - Ưu tiên dùng showToast() của trang host nếu đã được định nghĩa.
+   * - Fallback: tự vẽ toast tối giản để component luôn hoạt động độc lập.
+   */
+  function _cardToast(message, type = 'info') {
+    if (typeof showToast === 'function') {
+      showToast(message, type);
+      return;
+    }
+    const existing = document.getElementById('_productCardToast');
+    if (existing) existing.remove();
+    const colors = { success: '#22c55e', error: '#ef4444', info: '#2563EB', warning: '#F59E0B' };
+    const toast = document.createElement('div');
+    toast.id = '_productCardToast';
+    toast.textContent = message;
+    Object.assign(toast.style, {
+      position: 'fixed', bottom: '24px', right: '24px', zIndex: '99999',
+      background: colors[type] || colors.info, color: '#fff',
+      padding: '12px 20px', borderRadius: '10px', fontSize: '14px',
+      fontWeight: '600', boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+      opacity: '0', transition: 'opacity 0.3s ease', maxWidth: '320px',
+      fontFamily: 'inherit'
+    });
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => { toast.style.opacity = '1'; });
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+
   async function renderProducts(containerId, products, options = {}) {
     const {
       showDiscount = true,
@@ -228,9 +260,11 @@
         ? `<button type="button" class="${favClass}" onclick="event.preventDefault(); event.stopPropagation(); window.productCardComponent.handleFavorite(this, '${pid}')" aria-label="Thêm vào yêu thích"><i class="${favIcon}"></i></button>`
         : '';
 
+      // Truyền stock vào buyNow để kiểm tra tồn kho giống productdetail
+      const stockVal = p.stock !== undefined ? parseInt(p.stock) : null;
       const buttonHandler = onAddToCart
-        ? `onclick="window.productCardComponent.addToCart('${pid}', '${safeAttrName}')"`
-        : `onclick="event.preventDefault(); alert('Đã thêm sản phẩm vào giỏ hàng!')"`;
+        ? `onclick="window.productCardComponent.addToCart('${pid}', 1, ${stockVal})"`
+        : `onclick="event.preventDefault(); window.productCardComponent.buyNow('${pid}', ${stockVal})"`;
 
       return `
         <div class="product-card">
@@ -261,11 +295,98 @@
     getFullImageUrl: getFullImageUrl,
     formatPrice: formatPrice,
     sanitizeName: sanitizeName,
-    addToCart: function(productId, productName) {
-      alert(`Đã thêm "${productName}" vào giỏ hàng!`);
+
+    // ----------------------------------------------------------------
+    // HÀM DÙNG CHUNG: THÊM VÀO GIỎ HÀNG
+    // Đồng bộ hoàn toàn với logic addToCart() trong productdetail.html:
+    //   1. Kiểm tra đăng nhập
+    //   2. Kiểm tra tồn kho (stock)
+    //   3. Fetch giỏ hàng hiện tại → cộng dồn số lượng (finalQuantity)
+    //   4. Kiểm tra finalQuantity không vượt stock
+    //   5. Gọi PUT /cart/:userId/update (đồng nhất endpoint với detail)
+    //   6. Dispatch event 'cartUpdated' để các component khác lắng nghe
+    // ----------------------------------------------------------------
+    async addToCart(productId, qty = 1, stock = null, quiet = false) {
+      const userId = localStorage.getItem('userId');
+      if (!userId || userId === 'null' || userId === 'undefined') {
+        _cardToast("Vui lòng đăng nhập để mua hàng!", "error");
+        return false;
+      }
+
+      if (!productId) {
+        _cardToast("Lỗi: Không xác định được sản phẩm.", "error");
+        return false;
+      }
+
+      // Nếu có truyền stock vào thì kiểm tra hết hàng
+      if (stock !== null && stock <= 0) {
+        _cardToast("Sản phẩm này đã hết hàng!", "error");
+        return false;
+      }
+
+      try {
+        const API_BASE = 'http://localhost:3000/api';
+        let finalQuantity = qty;
+
+        // Lấy giỏ hàng hiện tại để cộng dồn số lượng
+        const cartRes = await fetch(`${API_BASE}/cart/${userId}`);
+        const cartData = await cartRes.json();
+
+        if (cartData.success && cartData.cart && cartData.cart.items) {
+          const existingItem = cartData.cart.items.find(item => {
+            const itemId = item.productId._id || item.productId;
+            return itemId.toString() === productId.toString();
+          });
+          if (existingItem) {
+            finalQuantity += existingItem.quantity;
+          }
+        }
+
+        // Kiểm tra vượt tồn kho sau khi cộng dồn
+        if (stock !== null && finalQuantity > stock) {
+          _cardToast(`Không thể thêm! Số lượng trong giỏ hàng đã đạt giới hạn tồn kho (${stock} sản phẩm).`, "error");
+          return false;
+        }
+
+        // Gọi API cập nhật giỏ hàng (đồng nhất endpoint với productdetail)
+        const updateRes = await fetch(`${API_BASE}/cart/${userId}/update`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productId, quantity: finalQuantity })
+        });
+        const updateData = await updateRes.json();
+
+        if (updateData.success) {
+          if (!quiet) {
+            window.dispatchEvent(new Event('cartUpdated'));
+            window.location.href = '/SmashShop/cart.html'; 
+          }
+          return true;
+        } else {
+          _cardToast(updateData.message || "Lỗi khi thêm vào giỏ hàng!", "error");
+          return false;
+        }
+      } catch (error) {
+        console.error("Lỗi addToCart (productCard):", error);
+        _cardToast("Đã xảy ra lỗi kết nối với máy chủ!", "error");
+        return false;
+      }
     },
-    
-    handleFavorite: async function(btnElement, productId) {
+
+    // ----------------------------------------------------------------
+    // HÀM MUA NGAY
+    // Đồng bộ với handleBuyNow() trong productdetail.html:
+    //   - Gọi addToCart với quiet = true (không hiện toast "đã thêm")
+    //   - Nếu thành công → chuyển hướng sang cart.html
+    // stock được lấy từ data-stock trên button (nếu có), mặc định null
+    // ----------------------------------------------------------------
+    async buyNow(productId, stock = null) {
+      const success = await this.addToCart(productId, 1, stock, true);
+      if (success) {
+        window.location.href = '/SmashShop/cart.html';
+      }
+    }
+    ,handleFavorite: async function(btnElement, productId) {
       let userId = window.currentUserId || localStorage.getItem('userId');
       
       if (!userId || userId === 'null' || userId === 'undefined') {
@@ -308,4 +429,6 @@
       }
     }
   };
+
+
 </script>
