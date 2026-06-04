@@ -279,7 +279,7 @@
 
       items.forEach(item => {
         const product = item.productId || {}; 
-        const pid = product._id || item._id; 
+        const pid = product.id || product._id || item._id; 
         const name = product.name || 'Sản phẩm không khả dụng';
         const imgUrl = getFullImageUrl(product.thumbnail);
         const price = item.price || product.price || 0;

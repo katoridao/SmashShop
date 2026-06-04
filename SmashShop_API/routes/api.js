@@ -658,7 +658,7 @@ router.put("/cart/:userId/update", async (req, res) => {
       return res.status(200).json({ success: true, message: "Đã xóa sản phẩm khỏi giỏ", cart });
     }
 
-    const finalPrice = product.price - (product.discount || 0);
+    const finalPrice = product.price - (product.price * (product.discount || 0) / 100);
     const itemIndex = cart.items.findIndex(item => item.productId.toString() === productId);
 
     if (itemIndex > -1) {
