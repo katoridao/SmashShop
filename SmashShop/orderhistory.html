@@ -10,6 +10,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+  <script>
+    (function() {
+      if (localStorage.getItem('theme') === 'light') {
+        document.documentElement.style.background = '#f0f2f5';
+      }
+    })();
+  </script>
+
   <style>
 
     :root {
@@ -35,6 +43,11 @@
         linear-gradient(180deg, #020617, #111827 50%, #0f172a);
       color: var(--text);
       min-height: 100vh;
+    }
+
+    body.light-mode {
+      background: #f0f2f5 !important;
+      color: #1a1a1a !important;
     }
 
     a { color: inherit; text-decoration: none; }
@@ -906,6 +919,46 @@
       .oh-filter-btn { font-size: 13px; padding: 8px 14px; }
       .oh-title { font-size: 26px; }
     }
+    /* Light Mode Overrides */
+    body.light-mode .oh-hero { background: #f0f2f5; border-bottom: 1px solid #e5e7eb; }
+    body.light-mode .oh-hero::before { background: radial-gradient(circle, rgba(37,99,235,0.05) 0%, transparent 70%); }
+    body.light-mode .oh-breadcrumb a, body.light-mode .oh-breadcrumb i { color: #6b7280; }
+    body.light-mode .oh-breadcrumb span { color: #1a1a1a; }
+    body.light-mode .oh-title { color: #1a1a1a; }
+    body.light-mode .oh-subtitle { color: #4b5563; }
+    body.light-mode .oh-filter-btn { background: #ffffff; border-color: #d1d5db; color: #4b5563; }
+    body.light-mode .oh-filter-btn:hover { background: #f3f4f6; border-color: #9ca3af; color: #1a1a1a; }
+    body.light-mode .oh-filter-btn.active { background: #2563eb; border-color: #2563eb; color: #ffffff; }
+    body.light-mode .oh-filter-btn .oh-count { background: #f3f4f6; color: #1a1a1a; }
+    body.light-mode .oh-filter-btn.active .oh-count { background: rgba(255,255,255,0.25); color: #ffffff; }
+    body.light-mode .oh-card { background: #ffffff; border-color: #e5e7eb; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    body.light-mode .oh-card:hover { border-color: #d1d5db; box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
+    body.light-mode .oh-card-head { border-bottom-color: #e5e7eb; }
+    body.light-mode .oh-order-id { color: #1a1a1a; }
+    body.light-mode .oh-order-date { color: #6b7280; }
+    body.light-mode .oh-product-img { border-color: #e5e7eb; }
+    body.light-mode .oh-product-name { color: #1a1a1a; }
+    body.light-mode .oh-product-qty { color: #6b7280; }
+    body.light-mode .oh-card-foot { border-top-color: #e5e7eb; background: #f9fafb; }
+    body.light-mode .oh-pay-method { color: #6b7280; }
+    body.light-mode .oh-total-label { color: #6b7280; }
+    body.light-mode .oh-total-value { color: #1a1a1a; }
+    body.light-mode .oh-btn-detail { background: #ffffff; border-color: #d1d5db; color: #1a1a1a; }
+    body.light-mode .oh-btn-detail:hover { background: #f3f4f6; border-color: #9ca3af; }
+    body.light-mode .oh-modal .modal-content { background: #ffffff; border-color: #e5e7eb; color: #1a1a1a; }
+    body.light-mode .oh-modal .modal-header, body.light-mode .oh-modal .modal-footer { border-color: #e5e7eb; }
+    body.light-mode .oh-modal .btn-close { filter: none; }
+    body.light-mode .oh-modal-section-title { color: #6b7280; }
+    body.light-mode .oh-modal-section-title::after { background: #e5e7eb; }
+    body.light-mode .oh-modal-product { background: #f9fafb; border-color: #e5e7eb; }
+    body.light-mode .oh-modal-product-name { color: #1a1a1a; }
+    body.light-mode .oh-modal-product-meta { color: #6b7280; }
+    body.light-mode .oh-info-block { background: #f9fafb; border-color: #e5e7eb; }
+    body.light-mode .oh-info-block p, body.light-mode .oh-info-block span { color: #4b5563; }
+    body.light-mode .oh-info-block strong { color: #1a1a1a; }
+    body.light-mode .oh-price-row { color: #6b7280; }
+    body.light-mode .oh-price-row.total { border-top-color: #e5e7eb; color: #1a1a1a; }
+    body.light-mode .oh-empty p, body.light-mode .oh-empty i { color: #6b7280; }
   </style>
 </head>
 <body>
@@ -1591,6 +1644,25 @@
        INIT
     ========================================== */
     loadOrders();
+
+    // ==========================================
+    // THEME KHỞI TẠO (LIGHT/DARK)
+    // ==========================================
+    (function() {
+      function applyTheme(theme) {
+        if (theme === 'light') {
+          document.body.classList.add('light-mode');
+        } else {
+          document.body.classList.remove('light-mode');
+        }
+      }
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) applyTheme(savedTheme);
+
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'theme') applyTheme(e.newValue || 'dark');
+      });
+    })();
   </script>
 
 </body>

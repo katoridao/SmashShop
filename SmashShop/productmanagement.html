@@ -10,6 +10,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+  <script>
+    (function() {
+      if (localStorage.getItem('theme') === 'light') {
+        document.documentElement.style.background = '#f0f2f5';
+      }
+    })();
+  </script>
+
   <style>
 
     :root {
@@ -35,6 +43,11 @@
         linear-gradient(180deg, #020617, #111827 50%, #0f172a);
       color: var(--text);
       min-height: 100vh;
+    }
+
+    body.light-mode {
+      background: #f0f2f5 !important;
+      color: #1a1a1a !important;
     }
 
     a { color: inherit; text-decoration: none; }
@@ -849,6 +862,42 @@
       from { opacity: 0; transform: translateX(40px); }
       to   { opacity: 1; transform: translateX(0); }
     }
+
+    /* ===== LIGHT MODE ===== */
+    body.light-mode .topbar { background: #ffffff !important; border-bottom-color: #e5e7eb; }
+    body.light-mode .brand { color: #2563eb; }
+    body.light-mode .topbar-btn { background: #f3f4f6 !important; color: #1a1a1a !important; border-color: #d1d5db !important; }
+    body.light-mode .hero-card, body.light-mode .profile-card, body.light-mode .guest-state { background: #ffffff !important; border-color: #e5e7eb !important; box-shadow: 0 4px 6px rgba(0,0,0,0.05) !important; }
+    body.light-mode .hero-card h1, body.light-mode .hero-card p { color: #1a1a1a; }
+    body.light-mode .stat-card { background: #ffffff !important; border-color: #e5e7eb !important; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    body.light-mode .stat-info p { color: #6b7280; }
+    body.light-mode .pm-toolbar { background: #ffffff !important; border-color: #e5e7eb !important; }
+    body.light-mode .pm-search input, body.light-mode .pm-filter select { background: #f9fafb !important; border-color: #d1d5db !important; color: #1a1a1a !important; }
+    body.light-mode .pm-search input::placeholder { color: #9ca3af; }
+    body.light-mode .pm-table-wrap { background: #ffffff !important; border-color: #e5e7eb !important; }
+    body.light-mode .pm-table thead tr { background: #f9fafb !important; }
+    body.light-mode .pm-table th { color: #6b7280 !important; border-bottom-color: #e5e7eb !important; }
+    body.light-mode .pm-table tbody tr { border-bottom-color: #f3f4f6; }
+    body.light-mode .pm-table tbody tr:hover { background: #f9fafb !important; }
+    body.light-mode .pm-table td { color: #1a1a1a !important; }
+    body.light-mode .prod-name { color: #1a1a1a !important; }
+    body.light-mode .prod-sku { color: #6b7280 !important; }
+    body.light-mode .price-cell { color: #1a1a1a !important; }
+    body.light-mode .category-badge { background: #e0f2fe !important; color: #0284c7 !important; border-color: #bae6fd !important; }
+    body.light-mode .pm-page-info { color: #6b7280; }
+    body.light-mode .pg-btn { border-color: #e5e7eb !important; color: #4b5563 !important; background: #ffffff !important; }
+    body.light-mode .pg-btn:hover { border-color: #2563eb !important; color: #2563eb !important; }
+    body.light-mode .pg-btn.active { background: #2563eb !important; border-color: #2563eb !important; color: #fff !important; }
+    body.light-mode .pm-modal-card { background: #ffffff !important; border-color: #e5e7eb !important; }
+    body.light-mode .pm-modal-title { color: #1a1a1a !important; border-bottom-color: #e5e7eb !important; }
+    body.light-mode .pm-field label { color: #374151 !important; }
+    body.light-mode .pm-field input, body.light-mode .pm-field select, body.light-mode .pm-field textarea { background: #f9fafb !important; border-color: #d1d5db !important; color: #1a1a1a !important; }
+    body.light-mode .pm-field input::placeholder, body.light-mode .pm-field textarea::placeholder { color: #9ca3af !important; }
+    body.light-mode .pm-modal-footer { border-top-color: #e5e7eb !important; }
+    body.light-mode .btn-cancel { background: #f3f4f6 !important; color: #374151 !important; border-color: #d1d5db !important; }
+    body.light-mode .confirm-card { background: #ffffff !important; border-color: #e5e7eb !important; color: #1a1a1a !important; }
+    body.light-mode .confirm-card p { color: #4b5563 !important; }
+    body.light-mode .btn-confirm-cancel { background: #f3f4f6 !important; color: #374151 !important; border-color: #d1d5db !important; }
   </style>
 </head>
 <body>
@@ -1722,6 +1771,16 @@
         }
       }
     });
+
+    // ===== THEME INIT (LIGHT/DARK) =====
+    (function() {
+      function applyTheme(theme) {
+        document.body.classList.toggle('light-mode', theme === 'light');
+      }
+      const saved = localStorage.getItem('theme');
+      if (saved) applyTheme(saved);
+      window.addEventListener('storage', e => { if (e.key === 'theme') applyTheme(e.newValue || 'dark'); });
+    })();
 </script>
 </body>
 </html>
