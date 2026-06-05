@@ -1597,19 +1597,19 @@
     function updateAuthUI() {
       const auth = currentAuth || getStoredAuth();
       if (auth && auth.user) {
-        loginBtn.style.display = 'none';
-        userAvatarBtn.style.display = 'flex';
-        userMenuName.textContent = auth.user.name || 'Người dùng';
-        userMenuRole.textContent = auth.user.role === 'admin' ? 'Admin' : 'Guest';
+        if (loginBtn) loginBtn.style.display = 'none';
+        if (userAvatarBtn) userAvatarBtn.style.display = 'flex';
+        if (userMenuName) userMenuName.textContent = auth.user.name || 'Người dùng';
+        if (userMenuRole) userMenuRole.textContent = auth.user.role === 'admin' ? 'Admin' : 'Guest';
         document.querySelectorAll('.admin-only').forEach((item) => {
           item.classList.toggle('show', auth.user.role === 'admin');
         });
       } else {
-        loginBtn.style.display = 'inline-block';
-        userAvatarBtn.style.display = 'none';
-        userMenu.classList.remove('show');
-        userMenuName.textContent = 'Khách';
-        userMenuRole.textContent = 'Guest';
+        if (loginBtn) loginBtn.style.display = 'inline-block';
+        if (userAvatarBtn) userAvatarBtn.style.display = 'none';
+        if (userMenu) userMenu.classList.remove('show');
+        if (userMenuName) userMenuName.textContent = 'Khách';
+        if (userMenuRole) userMenuRole.textContent = 'Guest';
         document.querySelectorAll('.admin-only').forEach((item) => {
           item.classList.remove('show');
         });
@@ -1735,8 +1735,8 @@
       }
     }
 
-    loginBtn.addEventListener('click', () => openAuthModal('login'));
-    userAvatarBtn.addEventListener('click', toggleUserMenu);
+    if (loginBtn) loginBtn.addEventListener('click', () => openAuthModal('login'));
+    if (userAvatarBtn) userAvatarBtn.addEventListener('click', toggleUserMenu);
     document.querySelectorAll('[data-close-auth]').forEach((button) => {
       button.addEventListener('click', closeAuthModal);
     });
